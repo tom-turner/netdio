@@ -1,0 +1,161 @@
+
+<div class="hidden h-screen w-full bg-black opacity-80 absolute spinner text-white">
+
+	<span class="flex flex-col space-y-4">
+
+		<p class="text-center mt-10"> Configuration received</p>
+
+		<svg class="w-10 mx-auto animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+			<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+			<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+		</svg>
+
+	</span>
+
+</div>
+
+
+<div class="flex items-center justify-center h-screen bg-blue-800 bg-opacity-30 flex flex-col p-4 space-y-2">
+
+<div class="w-full bg-white rounded shadow-lg flex  p-2 px-4 flex-col">
+	<div class="justify-between flex w-full">
+		<p>Settings:</p>
+		<img id="settings-gear" class="w-6 cursor-pointer" onclick="showSettings()" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADvUlEQVRoge2ZS2sUQRDHfxuyCSo+EhBFvZgQH8khJmj8APEo+Dj4uAgqeDLqIeBN1EsSMRrIUT+Anj2IekoUFD2IGBNFJKgRzE3dEBM3Dw/dg7PVPT09s5OosH8o2Jmq/lf1THdNdS1UUEEFWeIJsBgjj/9adDGoAgrET6Cgbf857CA++EC2Z+U0yyfRvkS2TmQ5gTZx3QPktPTG2C45cg7dFqAfc/0fCdkcwdwH/XpsGp+JsB8YRz3R1tD9PHAFmMW+zptCtk0RNrOaIx+y3YV6Y+Pad1moAd4Jp6Pa6YuIoBaB75Q+wZy+F2X/ArgKjIn773QMqdHtcGqTCR1Io4WrUesmEnJ2pw1+A/DN08ln4CR+T6tG23725P6uY0mMW4JoGvt6vwPUpeCv02Nt+2Ja3LudlLwNmBckXcA64ARwTzu6nCJwiTPADKoMOQ+sB84J3/PAHl/CHDAsCN5QmikAVkaMbwFuAiPAlJYR4AbQHDFmhbiu1j5lDeWVWo9ivtanxC+TGmAQmLOMD2QOGMB8GBJ12qccf8xnAnuBScvgUWCrI/hHjsClPHBMYqv2JcdMAh0+EwBoAN5aSL5ir2MGEwQfyICFp137kLZjOqZEqAeGLGRdwq4Fc9m8AQ4Aq7UcxPxIFYGdguusxd+QjiUVaoH3gnCfsLkp9KPAWgvXWssk+oVNp9C/1zGUhQ+CVH5lZbY44OA6JGxfC32j0H8oM3ZApcEw6Sqh/yH0qx1ca4TtD6FfJfRTccEt99EusxI5gM8EJsX1RnH9SVx3Orik7mMMt/RtIG4CtcCCuCe/BQ/FdQ/2TbxO68J4EMO9QBmb2DeNNmOm0beoDbtGy2HMc0UR1QgIo8viL1UabcBMea4P2YDFNk5kCgX3hyyqCjDQQfJSIo9aDr7B3yd5KfEVz1LimGWwTzGXR72JoiPwIqoq9SnmnlnGH/WZQA5VusrSoFrYyRI4QDNqebxGdR8K+vd1zDUfQJbmecy3MEyCNNyGuTHPUXqg+Qlc9CV04Dzwi9IDzQXhex7YnZT4tiDJ+khZD9y18NmOlLdS8LMBdyskLBPAKfwP9aeBL57c30h5qIf/vK0C9sbWmA4kSWOrCvfbfI5qlsmNW3ZjC/60FntRbb8AeVRXYiYiqHBrcVuEzQxwidIM14oqOTJpLQZwpa/NxDd3ZaOggEqrm1L6XBJcozTIcOHWJ3R9yx2cD47jvzG92iPLje34T2DbX4rRiSrM46VNMv2TL8sj5QLwysPuJeYhqYIKKkiJ358zZDnoKSOUAAAAAElFTkSuQmCC"/>
+	</div>
+
+	<div id="settings" class="w-full hidden">
+		<span class="flex flex-col space-y-2">
+			<label>IP Address:</label>
+			<input id="ipAddress" class="border rounded" type="text">
+			<button id="configure" class="button border px-2 rounded text-white bg-blue-600">Configure</button>
+			<button id="restart" class="button border px-2 rounded text-grey-400 bg-white">Restart</button>
+		</span>
+	</div>
+
+</div>
+
+<div class="w-full bg-white rounded shadow-lg flex  p-2 px-4 flex-col">
+	<div class="justify-between flex w-full">
+		<p>Devices:</p>
+		<img id="routing-gear" class="w-6 cursor-pointer" onclick="showRouting()" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADvUlEQVRoge2ZS2sUQRDHfxuyCSo+EhBFvZgQH8khJmj8APEo+Dj4uAgqeDLqIeBN1EsSMRrIUT+Anj2IekoUFD2IGBNFJKgRzE3dEBM3Dw/dg7PVPT09s5OosH8o2Jmq/lf1THdNdS1UUEEFWeIJsBgjj/9adDGoAgrET6Cgbf857CA++EC2Z+U0yyfRvkS2TmQ5gTZx3QPktPTG2C45cg7dFqAfc/0fCdkcwdwH/XpsGp+JsB8YRz3R1tD9PHAFmMW+zptCtk0RNrOaIx+y3YV6Y+Pad1moAd4Jp6Pa6YuIoBaB75Q+wZy+F2X/ArgKjIn773QMqdHtcGqTCR1Io4WrUesmEnJ2pw1+A/DN08ln4CR+T6tG23725P6uY0mMW4JoGvt6vwPUpeCv02Nt+2Ja3LudlLwNmBckXcA64ARwTzu6nCJwiTPADKoMOQ+sB84J3/PAHl/CHDAsCN5QmikAVkaMbwFuAiPAlJYR4AbQHDFmhbiu1j5lDeWVWo9ivtanxC+TGmAQmLOMD2QOGMB8GBJ12qccf8xnAnuBScvgUWCrI/hHjsClPHBMYqv2JcdMAh0+EwBoAN5aSL5ir2MGEwQfyICFp137kLZjOqZEqAeGLGRdwq4Fc9m8AQ4Aq7UcxPxIFYGdguusxd+QjiUVaoH3gnCfsLkp9KPAWgvXWssk+oVNp9C/1zGUhQ+CVH5lZbY44OA6JGxfC32j0H8oM3ZApcEw6Sqh/yH0qx1ca4TtD6FfJfRTccEt99EusxI5gM8EJsX1RnH9SVx3Orik7mMMt/RtIG4CtcCCuCe/BQ/FdQ/2TbxO68J4EMO9QBmb2DeNNmOm0beoDbtGy2HMc0UR1QgIo8viL1UabcBMea4P2YDFNk5kCgX3hyyqCjDQQfJSIo9aDr7B3yd5KfEVz1LimGWwTzGXR72JoiPwIqoq9SnmnlnGH/WZQA5VusrSoFrYyRI4QDNqebxGdR8K+vd1zDUfQJbmecy3MEyCNNyGuTHPUXqg+Qlc9CV04Dzwi9IDzQXhex7YnZT4tiDJ+khZD9y18NmOlLdS8LMBdyskLBPAKfwP9aeBL57c30h5qIf/vK0C9sbWmA4kSWOrCvfbfI5qlsmNW3ZjC/60FntRbb8AeVRXYiYiqHBrcVuEzQxwidIM14oqOTJpLQZwpa/NxDd3ZaOggEqrm1L6XBJcozTIcOHWJ3R9yx2cD47jvzG92iPLje34T2DbX4rRiSrM46VNMv2TL8sj5QLwysPuJeYhqYIKKkiJ358zZDnoKSOUAAAAAElFTkSuQmCC"/>
+	</div>
+</div>
+	<div id="routing" class="flex flex-row h-screen justify-between w-full space-x-2 hidden">
+
+		<div class="flex rounded shadow-lg flex-col p-4 bg-white w-full">
+			<h2 class="text-center"> Inputs </h2>
+			list all input devices, drag and drop to output, change names.
+			
+		</div>
+
+
+		<div class="flex rounded shadow-lg flex-col p-4 bg-white w-full">
+			<h2 class="text-center"> Destinations </h2>
+			<ul id="destinations" class="border rounded h-full">
+
+			</ul>
+		</div>
+
+	</div>
+
+	<div id="zone" class="flex flex-col h-screen w-full space-x-2 bg-white rounded shadow-lg p-2 px-4">
+		<div class="justify-between flex w-full">
+			<p>Zone Control:</p>
+		</div>
+
+		<div>
+			<p>change zone sources and volumes - list all zones by name.</p>
+		</div>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+
+	var socket = io();
+
+	socket.on("config", (config) => {	
+		loading(false)
+		console.log("config: ", config)
+		document.getElementById("ipAddress").value = config.ipAddress;
+	});
+
+	socket.on("newConfig", (config) => {
+		loading(false)
+		console.log("new config: " , config.ipAddress)
+		loading(true)
+		setTimeout(function(){
+			window.location.href = "http://" + config.ipAddress + ":5000"
+		}, 2000);
+	})
+
+	socket.on("devices", (devices) => {
+		console.log("devices", devices)
+		var destinations = document.getElementById("destinations")
+		destinations.innerHTML = '';
+
+		for (var device of devices) {
+			var li = document.createElement("li")
+			li.append(device.ipAddress)
+			destinations.append(li)
+		}
+
+	})
+	
+
+	function loading(isLoading) {
+		if (isLoading) {
+			document.querySelector(".button").disabled = true;
+			document.querySelector(".spinner").classList.remove("hidden");
+
+		} else {
+			document.querySelector(".button").disabled = false;
+			document.querySelector(".spinner").classList.add("hidden");
+		}
+	}
+	
+	function volume(input) {
+		console.log(input)
+		socket.emit("volume", input)
+	}
+
+	function source(input) {
+		console.log(input)
+		socket.emit("source", input)
+	}
+
+	function configureIp(input) {
+		loading(true)
+		console.log(input)
+		socket.emit("ip", input)
+	}
+
+	function showSettings() {
+		document.getElementById("settings").classList.toggle("hidden")
+		document.getElementById("settings-gear").classList.toggle("animate-spin")
+	}
+
+
+	function showRouting() {
+		document.getElementById("routing").classList.toggle("hidden")
+		document.getElementById("routing-gear").classList.toggle("animate-spin")
+	}
+
+	$('#volume').on("input" , function() {
+		volume(document.getElementById("volume").value)
+	})
+
+	$('#source').on("input" , function() {
+		source(document.getElementById("source").value)
+	})
+
+	$('#configure').on("click" , function() {
+		configureIp(document.getElementById("ipAddress").value)
+	})
+
+	$('#restart').on("click" , function() {
+		socket.emit("restart")
+		loading(true)
+	})
+
+</script>

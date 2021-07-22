@@ -8,8 +8,6 @@ const { spawn } = require('child_process');
 const { exec } = require('child_process');
 const pm2 = require('pm2')
 const fs = require('fs');
-var net = require('net'),
-  JsonSocket = require('json-socket');
 const port = process.env.port || 5000;
 
 app.use(bp.json())
@@ -26,38 +24,9 @@ var rootPassword = unitConfig.rootPassword
 if (unitConfig.ipAddress != networkConfig.ip) {
   console.log('IP does not match config file -', 'Configured IP: ' + unitConfig.ipAddress, '- Actual IP Address: ' + networkConfig.ip )
   //set IP address and restart process
- // exec(`echo ${unitConfig.rootPassword} | sudo -S ifconfig ${networkConfig.interface} ${unitConfig.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
- // pm2.restart('index')
+  //exec(`echo ${unitConfig.rootPassword} | sudo -S ifconfig ${networkConfig.interface} ${unitConfig.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
+  //pm2.restart('index')
 }
-
-var deviceList = []
-
-var testPort = 20010
-var connectPort = 20000
-
-var discover = net.createServer();
-discover.listen(testPort)
-discover.on('connection', function(socket){
-  socket = new JsonSocket(socket) 
-  socket.on('message', function(message) {
-    console.log("ping: ", message.server.ipAddress)
-    deviceList.push(message)
-  })
-})
-
-setInterval( function(){
-  var connectedClients = []
-
-  if (deviceList != connectedClients){
-
- for (var device of deviceList) {
-  connectedClients.push(device)
-   // start stream to server as a client
-  }
-}
-
-}, 1000)
- 
 
 
 // start application
@@ -66,12 +35,12 @@ pm2.connect(function(err) {
     console.error(err)
     process.exit(2)
   }
-  // start listen.js
+  // start transmit.js
   pm2.start({
-    script    : 'listen.js',
-    name      : 'listen'
+    script    : 'child_processes/transmit.js',
+    name      : 'tx'
   }, function(err, apps) {
-    console.log("listen.js started")
+    console.log("transmit.js started")
     if (err) {
       console.error(err)
     }
@@ -80,7 +49,7 @@ pm2.connect(function(err) {
     pm2.launchBus((err, bus) => {
       bus.on('process:msg', (packet) => {
         console.log(packet.data.message)
-        pm2.restart('listen') 
+        pm2.restart('transmit') 
       })
     })
   })
@@ -92,21 +61,16 @@ io.on('connection', (socket) => {
 
   socket.emit('config', unitConfig)
 
-  socket.on('volume', (input) => {
-    unitConfig.volume = input
-    spawn('amixer', ['set', 'Headphone', `${input}%`])
-  })
-
   socket.on('source', (input) => {
-    unitConfig.sourcePort = input
+    unitConfig.destPort = input
     console.log(input)
     saveConfig()
-    pm2.restart("listen")
+    pm2.restart("transmit")
   })
 
   socket.on('ip', (input) => {
-    var port = input
-    unitConfig.ipAddress = input
+    unitConfig.ipAddress = input.ipAddress
+    unitConfig.rxIp = input.rxIp
     saveConfig()
     socket.emit('newConfig', unitConfig)
     pm2.restart('index')
@@ -185,13 +149,13 @@ function saveConfig() {
 
 // Render index.ejs
 app.get('/', function (req, res) {
-  res.render('configure.ejs');
+  res.render('configure-tx.ejs');
 });
 
 
 //
 // Starting the App
 //
-const server = http.listen(process.env.PORT || 5000, function() {
+const server = http.listen(process.env.PORT || 5001, function() {
   console.log('listening on *:5000');
 });

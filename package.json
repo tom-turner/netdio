@@ -8,6 +8,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "jquery": "^3.6.0",
     "json-socket": "^0.3.0",
+    "local-devices": "^3.1.0",
     "local-ip": "^2.0.0",
     "node.js": "^0.0.1-security",
     "nodemon": "^2.0.12",
