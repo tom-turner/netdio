@@ -9,7 +9,8 @@ const { exec } = require('child_process');
 const pm2 = require('pm2')
 const fs = require('fs');
 var net = require('net'),
-  JsonSocket = require('json-socket');
+JsonSocket = require('json-socket');
+const Configuration = require('./lib/configuration')
 const port = process.env.port || 5000;
 
 app.use(bp.json())
@@ -19,12 +20,12 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
-var unitConfig = getUnitConfig()
+var unitConfig = new Configuration('./config/rx-config.json')
 var networkConfig = getNetworkConfig()
 var rootPassword = unitConfig.rootPassword
 
-if (unitConfig.ipAddress != networkConfig.ip) {
-  console.log('IP does not match config file -', 'Configured IP: ' + unitConfig.ipAddress, '- Actual IP Address: ' + networkConfig.ip )
+if (unitConfig.get('ipAddress') != networkConfig.ip) {
+  console.log('IP does not match config file -', 'Configured IP: ' + unitConfig.get('ipAddress'), '- Actual IP Address: ' + networkConfig.ip )
   //set IP address and restart process
  // exec(`echo ${unitConfig.rootPassword} | sudo -S ifconfig ${networkConfig.interface} ${unitConfig.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
  // pm2.restart('index')
@@ -45,7 +46,7 @@ discover.on('connection', function(socket){
   })
 })
 
-setInterval( function(){
+setInterval(function(){
   var connectedClients = []
 
   if (deviceList != connectedClients){
@@ -85,29 +86,26 @@ pm2.connect(function(err) {
     })
   })
 
-
 // Allow User configuration
 io.on('connection', (socket) => {
   console.log('user connected');
 
-  socket.emit('config', unitConfig)
+  socket.emit('config', unitConfig.configObject)
 
   socket.on('volume', (input) => {
-    unitConfig.volume = input
+    unitConfig.debouncedSet('volume', input)
     spawn('amixer', ['set', 'Headphone', `${input}%`])
   })
 
-  socket.on('source', (input) => {
-    unitConfig.sourcePort = input
+  socket.on('source', async (input) => {
+    await unitConfig.set('sourcePort', input)
     console.log(input)
-    saveConfig()
     pm2.restart("listen")
   })
 
-  socket.on('ip', (input) => {
+  socket.on('ip', async (input) => {
     var port = input
-    unitConfig.ipAddress = input
-    saveConfig()
+    await unitConfig.set('ipAddress', input)
     socket.emit('newConfig', unitConfig)
     pm2.restart('index')
   })
@@ -122,19 +120,6 @@ io.on('connection', (socket) => {
   });
 
 });
-
-// read config file & restore config on error
-function getUnitConfig(){
-  try {
-    var file = fs.readFileSync('config/config.json'), unitConfig
-    return JSON.parse(file);
-  }
-  catch (err) { 
-    console.log('Restoring from backup file: ', err)
-    spawn('cp', ["-R", "config/backupconfig.json", "config/config.json"])
-    pm2.restart('index')
-  }
-}
 
 // check if unit ip is configured correctly
 function getNetworkConfig(){
@@ -167,22 +152,6 @@ function getNetworkConfig(){
   }
 }
 
-
-function saveConfig() {
-
-  var data = JSON.stringify(unitConfig);
-
-  fs.writeFile('./config/config.json', data, function (err) {
-    if (err) {
-      console.log('There has been an error saving your configuration data.');
-      console.log(err.message);
-      return err
-    }
-    console.log('Configuration saved successfully.')
-  });
-  return
-}
-
 // Render index.ejs
 app.get('/', function (req, res) {
   res.render('configure-rx.ejs');
@@ -192,6 +161,6 @@ app.get('/', function (req, res) {
 //
 // Starting the App
 //
-const server = http.listen(process.env.PORT || 5002, function() {
+const server = http.listen(process.env.PORT || 5000, function() {
   console.log('listening on *:5000');
 });
