@@ -1,0 +1,43 @@
+{
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-layouts": "^1.0.0",
+    "ffmpeg": "^0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
+    "jquery": "^3.6.0",
+    "json-socket": "^0.3.0",
+    "local-ip": "^2.0.0",
+    "node.js": "^0.0.1-security",
+    "nodemon": "^2.0.12",
+    "pm2": "^5.1.0",
+    "socket.io": "^4.1.2",
+    "ytdl-core": "^4.8.3"
+  },
+  "name": "template",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "yarn build:css && node ./bin/www",
+    "build:css": "npx postcss public/css/tailwind.css -o public/css/app.css",
+    "logs": "pm2 monit"
+  },
+  "author": "tom turner",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.2.6",
+    "postcss": "^8.3.5",
+    "tailwindcss": "^2.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tom-turner/template.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tom-turner/template/issues"
+  },
+  "homepage": "https://github.com/tom-turner/template#readme",
+  "description": ""
+}
