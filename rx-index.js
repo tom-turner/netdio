@@ -33,18 +33,13 @@ if (config.ip != ip) {
     // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
 }
 
+//get list of devices on the network
+devices.startListening( (device) => {
+  console.log("device joined:", device)
+})
 
-devices.listenForNewDevices( (device) => {
-  console.log("New " + device.type + " Device:" , device)
-
-  if ( device.type == 'tx') {
-
-  }
-
-  if ( device.type == 'ctrl') {
-    
-  }
-
+devices.pingDevices( (device) => {
+  console.log("device found:", device)
 })
 
 

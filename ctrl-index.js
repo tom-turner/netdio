@@ -6,7 +6,6 @@ const bp = require('body-parser');
 const io = require('socket.io')(http);
 const { spawn } = require('child_process');
 const { exec } = require('child_process');
-const pm2 = require('pm2')
 const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
@@ -19,7 +18,7 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
-var configFile = new Configuration('./config/rx-config.json')
+var configFile = new Configuration('./config/ctrl-config.json')
 var config = {
   name : configFile.get('name'),
   type : configFile.get('type'),
@@ -32,18 +31,13 @@ if (config.ip != ip) {
     // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
 }
 
+//get list of devices on the network
+devices.startListening( (device) => {
+  console.log("device joined:", device)
+})
 
-devices.listenForNewDevices( (device) => {
-  console.log("New " + device.type + " Device:" , device)
-
-  if ( device.type == 'tx') {
-
-  }
-
-  if ( device.type == 'rx') {
-    
-  }
-
+devices.pingDevices( (device) => {
+  console.log("device found:", device)
 })
 
 
