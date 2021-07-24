@@ -6,6 +6,7 @@ const bp = require('body-parser');
 const io = require('socket.io')(http);
 const { spawn } = require('child_process');
 const { exec } = require('child_process');
+const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
 const ChildProcess = require('./lib/childProcess')
@@ -28,6 +29,9 @@ var config = {
 var start = new ChildProcess('receive.js')
 var devices = new Devices(config)
 
+if (config.ip != ip) {
+    // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
+}
 
 //get list of devices on the network
 devices.startListening( (device) => {
