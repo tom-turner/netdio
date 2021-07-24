@@ -10,7 +10,7 @@ const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
 const ChildProcess = require('./lib/childProcess')
-const port = process.env.port || 5001;
+const port = process.env.port || 5000;
 
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
@@ -19,53 +19,60 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
-var config = new Configuration('./config/rx-config.json')
-var start = new ChildProcess('receive.js')
-var devices = new Devices()
+var configFile = new Configuration('./config/rx-config.json')
+var config = {
+  name : configFile.get('name'),
+  type : configFile.get('type'),
+  ip : configFile.get('ip')
+}
 
-if (config.get('ip') != ip) {
+var start = new ChildProcess('receive.js')
+var devices = new Devices(config)
+
+if (config.ip != ip) {
     // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
 }
 
 
-//var connectedTx = devices.get('tx')
-//var connectedCtrl = devices.get('ctrl')
-
-devices.findDevicesAndListenForNewDevices(function (device) {
+devices.listenForNewDevices( (device) => {
   console.log("New " + device.type + " Device:" , device)
-  if(device.type == 'ctrl') {
-    // start comunication
-  }
-  if(device.type == 'tx') {
-    // add to list of transmitters and start communication
-  }
-})  
 
-start.childProcess(function (callback) {
-  console.log("Started Child Process:", callback)
-},'receive.js')
+  if ( device.type == 'tx') {
+
+  }
+
+  if ( device.type == 'ctrl') {
+    
+  }
+
+})
+
+
+start.childProcess(function (childProcess) {
+    console.log("Started Child Process:", childProcess)
+})
 
 
 // Allow User configuration
 io.on('connection', (socket) => {
   console.log('user connected');
 
-  socket.emit('config', config.configObject)
+  socket.emit('config', configFile.configObject)
 
   socket.on('volume', (input) => {
-    config.debouncedSet('volume', input)
+    configFile.debouncedSet('volume', input)
     spawn('amixer', ['set', 'Headphone', `${input}%`])
   })
 
   socket.on('source', async (input) => {
-    await config.set('sourcePort', input)
+    await configFile.set('sourcePort', input)
     console.log(input)
     pm2.restart("listen")
   })
 
   socket.on('ip', async (input) => {
     var port = input
-    await config.set('ipAddress', input)
+    await configFile.set('ipAddress', input)
     socket.emit('newConfig', config)
     pm2.restart('index')
   })

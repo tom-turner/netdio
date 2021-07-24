@@ -19,25 +19,32 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
-var config = new Configuration('./config/rx-config.json')
-var devices = new Devices('./config/rx-config.json')
+var configFile = new Configuration('./config/rx-config.json')
+var config = {
+  name : configFile.get('name'),
+  type : configFile.get('type'),
+  ip : configFile.get('ip')
+}
 
-if (config.get('ip') != ip) {
+var devices = new Devices(config)
+
+if (config.ip != ip) {
     // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
 }
 
-var connectedTx = [];
-var connectedRx = [];
 
-devices.findDevicesAndListenForNewDevices(function (device) {
+devices.listenForNewDevices( (device) => {
   console.log("New " + device.type + " Device:" , device)
-  if(device.type == 'tx') {
-    // add to list of transmitters and start comunication
+
+  if ( device.type == 'tx') {
+
   }
-  if(device.type == 'rx') {
-    // add to list of receivers and start comunication
+
+  if ( device.type == 'rx') {
+    
   }
-})  
+
+})
 
 
 // Allow User configuration
