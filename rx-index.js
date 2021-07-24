@@ -6,12 +6,11 @@ const bp = require('body-parser');
 const io = require('socket.io')(http);
 const { spawn } = require('child_process');
 const { exec } = require('child_process');
-const pm2 = require('pm2')
-const fs = require('fs');
-var net = require('net'),
-JsonSocket = require('json-socket');
+const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
-const port = process.env.port || 5000;
+const Devices = require('./lib/autoDiscovery')
+const ChildProcess = require('./lib/childProcess')
+const port = process.env.port || 5001;
 
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
@@ -20,93 +19,54 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
-var unitConfig = new Configuration('./config/rx-config.json')
-var networkConfig = getNetworkConfig()
-var rootPassword = unitConfig.rootPassword
+var config = new Configuration('./config/rx-config.json')
+var start = new ChildProcess('receive.js')
+var devices = new Devices()
 
-if (unitConfig.get('ipAddress') != networkConfig.ip) {
-  console.log('IP does not match config file -', 'Configured IP: ' + unitConfig.get('ipAddress'), '- Actual IP Address: ' + networkConfig.ip )
-  //set IP address and restart process
- // exec(`echo ${unitConfig.rootPassword} | sudo -S ifconfig ${networkConfig.interface} ${unitConfig.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
- // pm2.restart('index')
+if (config.get('ip') != ip) {
+    // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
 }
 
-var deviceList = []
 
-var testPort = 20010
-var connectPort = 20000
+//var connectedTx = devices.get('tx')
+//var connectedCtrl = devices.get('ctrl')
 
-var discover = net.createServer();
-discover.listen(testPort)
-discover.on('connection', function(socket){
-  socket = new JsonSocket(socket) 
-  socket.on('message', function(message) {
-    console.log("ping: ", message.server.ipAddress)
-    deviceList.push(message)
-  })
-})
-
-setInterval(function(){
-  var connectedClients = []
-
-  if (deviceList != connectedClients){
-
- for (var device of deviceList) {
-  connectedClients.push(device)
-   // start stream to server as a client
+devices.findDevicesAndListenForNewDevices(function (device) {
+  console.log("New " + device.type + " Device:" , device)
+  if(device.type == 'ctrl') {
+    // start comunication
   }
-}
-
-}, 1000)
- 
-
-
-// start application
-pm2.connect(function(err) {
-  if (err) {
-    console.error(err)
-    process.exit(2)
+  if(device.type == 'tx') {
+    // add to list of transmitters and start communication
   }
-  // start listen.js
-  pm2.start({
-    script    : 'child_processes/receive.js',
-    name      : 'rx'
-  }, function(err, apps) {
-    console.log("receive.js started")
-    if (err) {
-      console.error(err)
-    }
-  })
-    // listen for restart me
-    pm2.launchBus((err, bus) => {
-      bus.on('process:msg', (packet) => {
-        console.log(packet.data.message)
-        pm2.restart('listen') 
-      })
-    })
-  })
+})  
+
+start.childProcess(function (callback) {
+  console.log("Started Child Process:", callback)
+},'receive.js')
+
 
 // Allow User configuration
 io.on('connection', (socket) => {
   console.log('user connected');
 
-  socket.emit('config', unitConfig.configObject)
+  socket.emit('config', config.configObject)
 
   socket.on('volume', (input) => {
-    unitConfig.debouncedSet('volume', input)
+    config.debouncedSet('volume', input)
     spawn('amixer', ['set', 'Headphone', `${input}%`])
   })
 
   socket.on('source', async (input) => {
-    await unitConfig.set('sourcePort', input)
+    await config.set('sourcePort', input)
     console.log(input)
     pm2.restart("listen")
   })
 
   socket.on('ip', async (input) => {
     var port = input
-    await unitConfig.set('ipAddress', input)
-    socket.emit('newConfig', unitConfig)
+    await config.set('ipAddress', input)
+    socket.emit('newConfig', config)
     pm2.restart('index')
   })
 
@@ -121,36 +81,6 @@ io.on('connection', (socket) => {
 
 });
 
-// check if unit ip is configured correctly
-function getNetworkConfig(){
-
-  var eth = 'eth0';
-  var wlan = 'wlan0';
-  var networkConfig = {
-    ip: 'n/a',
-    interface: 'n/a',
-    subnetMask: '255.255.0.0'
-  }
-
-  try {
-    var ip = require('local-ip')(eth);
-    networkConfig.ip = ip
-    networkConfig.interface = eth
-    return networkConfig
-  }
-  catch {
-    try {
-      var ip = require('local-ip')(wlan)
-      networkConfig.ip = ip
-      networkConfig.interface = wlan
-      return networkConfig
-    }
-    catch {
-      console.log("Could not get local ip") 
-      return networkConfig
-    }
-  }
-}
 
 // Render index.ejs
 app.get('/', function (req, res) {
@@ -161,6 +91,6 @@ app.get('/', function (req, res) {
 //
 // Starting the App
 //
-const server = http.listen(process.env.PORT || 5000, function() {
-  console.log('listening on *:5000');
+const server = http.listen(process.env.PORT || port, function() {
+  console.log('listening on *:' + port);
 });

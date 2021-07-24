@@ -7,11 +7,9 @@ const io = require('socket.io')(http);
 const { spawn } = require('child_process');
 const { exec } = require('child_process');
 const pm2 = require('pm2')
-const find = require('local-devices');
-const fs = require('fs');
-var net = require('net'),
-  JsonSocket = require('json-socket');
-var socket = new JsonSocket(new net.Socket());
+const ip = require('./lib/getIp')
+const Configuration = require('./lib/configuration')
+const Devices = require('./lib/autoDiscovery')
 const port = process.env.port || 5000;
 
 app.use(bp.json())
@@ -21,99 +19,52 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
-var unitConfig = getUnitConfig()
-var networkConfig = getNetworkConfig()
-var rootPassword = unitConfig.rootPassword
-var networkDevices = [];
-var testPort = 20010
-var connectPort = 20000
-var connection = net.createServer();
+var config = new Configuration('./config/rx-config.json')
+var devices = new Devices('./config/rx-config.json')
 
-connection.listen(connectPort);
-connection.on('connection', function(socket) {
-  socket = new JsonSocket(socket)
-
-  // send messages to devices here
-
-  socket.on('message', function(message){
-    console.log(message)
-  })
-})
-
-
-if (unitConfig.ipAddress != networkConfig.ip) {
-  console.log('IP does not match config file -', 'Configured IP: ' + unitConfig.ipAddress, '- Actual IP Address: ' + networkConfig.ip )
-  //set IP address and restart process
-  // exec(`echo ${unitConfig.rootPassword} | sudo -S ifconfig ${networkConfig.interface} ``${unitConfig.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} ``);
-  // pm2.restart('index')
+if (config.get('ip') != ip) {
+    // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
 }
 
-var listOfConnectedDevices = []
+var connectedTx = [];
+var connectedRx = [];
 
-// continuously search for devices on the network
-setInterval( function() {
-
-  find().then(devices => {
-
-    // listOfConnectedDevices = [];
-
-    for ( var device of devices ) {
-    
-        JsonSocket.sendSingleMessageAndReceive(testPort, device.ip, { active: true, ip: unitConfig.ipAddress}, function(err, message) {
-          if (err) {}
-
-          try {
-
-            if (message.active) {
-
-
-            
-
-              listOfConnectedDevices.pushIfNotExist( message.unitConfig , function(e) { 
-              return e.name === element.name && e.text === element.text; 
-              });
-
-            }
-
-          } catch {}
-
-        })
-    }
-  })
-}, 1000)
-
-
-
-
-// gets message and responds 
+devices.findDevicesAndListenForNewDevices(function (device) {
+  console.log("New " + device.type + " Device:" , device)
+  if(device.type == 'tx') {
+    // add to list of transmitters and start comunication
+  }
+  if(device.type == 'rx') {
+    // add to list of receivers and start comunication
+  }
+})  
 
 
 // Allow User configuration
 io.on('connection', (socket) => {
   console.log('user connected');
-  socket.emit('config', unitConfig)
+  socket.emit('config', config.configObject)
   
   setInterval( function() {
     socket.emit('devices', listOfConnectedDevices)
   },1000)
 
-  socket.on('volume', (input) => {
-    unitConfig.volume = input
+  socket.on('volume', (input, device) => {
+    // send input to device
     spawn('amixer', ['set', 'Headphone', `${input}%`])
   })
 
-  socket.on('source', (input) => {
-    unitConfig.sourcePort = input
-    console.log(input)
+  socket.on('source', (input, device) => {
+    // send input to device
     saveConfig()
     pm2.restart("listen")
   })
 
-  socket.on('ip', (input) => {
+  socket.on('ip', (input, device) => {
     var port = input
-    unitConfig.ipAddress = input
+    // send input to device
     saveConfig()
-    socket.emit('newConfig', unitConfig)
+    socket.emit('newConfig', config.configObject)
     pm2.restart('index')
   })
 
@@ -128,92 +79,15 @@ io.on('connection', (socket) => {
 
 });
 
-// read config file & restore config on error
-function getUnitConfig(){
-  try {
-    var file = fs.readFileSync('config/config.json'), unitConfig
-    return JSON.parse(file);
-  }
-  catch (err) { 
-    console.log('Restoring from backup file: ', err)
-    spawn('cp', ["-R", "config/backupconfig.json", "config/config.json"])
-    pm2.restart('index')
-  }
-}
-
-// check if unit ip is configured correctly
-function getNetworkConfig(){
-
-  var eth = 'eth0';
-  var wlan = 'wlan0';
-  var networkConfig = {
-    ip: 'n/a',
-    interface: 'n/a',
-    subnetMask: '255.255.0.0'
-  }
-
-  try {
-    var ip = require('local-ip')(eth);
-    networkConfig.ip = ip
-    networkConfig.interface = eth
-    return networkConfig
-  }
-  catch {
-    try {
-      var ip = require('local-ip')(wlan)
-      networkConfig.ip = ip
-      networkConfig.interface = wlan
-      return networkConfig
-    }
-    catch {
-      console.log("Could not get local ip") 
-      return networkConfig
-    }
-  }
-}
-
-
-function saveConfig() {
-
-  var data = JSON.stringify(unitConfig);
-
-  fs.writeFile('./config/config.json', data, function (err) {
-    if (err) {
-      console.log('There has been an error saving your configuration data.');
-      console.log(err.message);
-      return;
-    }
-    console.log('Configuration saved successfully.')
-  });
-  return 
-}
-
-
-Array.prototype.inArray = function(comparer) { 
-    for(var i=0; i < this.length; i++) { 
-        if(comparer(this[i])) return true; 
-    }
-    return false; 
-}; 
-
-Array.prototype.pushIfNotExist = function(element, comparer) { 
-    if (!this.inArray(comparer)) {
-        this.push(element);
-    }
-}; 
-
-
-
 
 // Render index.ejs
 app.get('/', function (req, res) {
   res.render('configure-ctrl.ejs');
 });
 
-
 //
 // Starting the App
 //
-const server = http.listen(process.env.PORT || 5000, function() {
-  console.log('listening on *:5000');
+const server = http.listen(process.env.PORT || port, function() {
+  console.log('listening on *:' + port);
 });
