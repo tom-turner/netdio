@@ -28,7 +28,9 @@ var config = {
 var devices = new Devices(config)
 
 if (config.ip != ip) {
+    console.log("ip does not match config")
     // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
+    configFile.set("ip", ip)
 }
 
 //get list of devices on the network
@@ -39,6 +41,9 @@ devices.startListening( (device) => {
 devices.pingDevices( (device) => {
   console.log("device found:", device)
 })
+
+
+
 
 
 // Allow User configuration
@@ -57,14 +62,12 @@ io.on('connection', (socket) => {
 
   socket.on('source', (input, device) => {
     // send input to device
-    saveConfig()
     pm2.restart("listen")
   })
 
   socket.on('ip', (input, device) => {
     var port = input
     // send input to device
-    saveConfig()
     socket.emit('newConfig', config.configObject)
     pm2.restart('index')
   })
