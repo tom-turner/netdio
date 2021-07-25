@@ -18,19 +18,13 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
-var configFile = new Configuration('./config/ctrl-config.json')
-var config = {
-  name : configFile.get('name'),
-  type : configFile.get('type'),
-  ip : configFile.get('ip')
-}
+var config = new Configuration('./config/ctrl-config.json')
+var devices = new Devices(config.config())
 
-var devices = new Devices(config)
-
-if (config.ip != ip) {
-    console.log("ip does not match config")
-    // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
-    configFile.set("ip", ip)
+if (config.get('ip') != ip) {
+  console.log("ip does not match config")
+  // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
+  config.set("ip", ip)
 }
 
 //get list of devices on the network
@@ -42,15 +36,11 @@ devices.pingDevices( (device) => {
   console.log("device found:", device)
 })
 
-
-
-
-
 // Allow User configuration
 io.on('connection', (socket) => {
   console.log('user connected');
-  socket.emit('config', config.configObject)
-  
+  socket.emit('config', config.config())
+
   setInterval( function() {
     socket.emit('devices', listOfConnectedDevices)
   },1000)
@@ -68,7 +58,7 @@ io.on('connection', (socket) => {
   socket.on('ip', (input, device) => {
     var port = input
     // send input to device
-    socket.emit('newConfig', config.configObject)
+    socket.emit('newConfig', config.config())
     pm2.restart('index')
   })
 
@@ -82,7 +72,6 @@ io.on('connection', (socket) => {
   });
 
 });
-
 
 // Render index.ejs
 app.get('/', function (req, res) {
