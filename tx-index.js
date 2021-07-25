@@ -4,11 +4,9 @@ const app = express();
 const http = require('http').Server(app);
 const bp = require('body-parser');
 const io = require('socket.io')(http);
-const { spawn } = require('child_process');
-const { exec } = require('child_process');
+const { fork } = require('child_process');
 const pm2 = require('pm2')
-const fs = require('fs');
-const port = process.env.port || 5000;
+const Configuration = require('./lib/configuration')
 
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
@@ -17,62 +15,38 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
-var unitConfig = getUnitConfig()
+var config = new Configuration('./config/tx-config.json')
 var networkConfig = getNetworkConfig()
-var rootPassword = unitConfig.rootPassword
 
-if (unitConfig.ipAddress != networkConfig.ip) {
-  console.log('IP does not match config file -', 'Configured IP: ' + unitConfig.ipAddress, '- Actual IP Address: ' + networkConfig.ip )
+console.log(config.config())
+
+if (config.get('ip') != networkConfig.ip) {
+  console.log('IP does not match config file -', 'Configured IP: ' + config.get('ip'), '- Actual IP Address: ' + networkConfig.ip )
   //set IP address and restart process
   //exec(`echo ${unitConfig.rootPassword} | sudo -S ifconfig ${networkConfig.interface} ${unitConfig.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
   //pm2.restart('index')
 }
 
-
-// start application
-pm2.connect(function(err) {
-  if (err) {
-    console.error(err)
-    process.exit(2)
-  }
-  // start transmit.js
-  pm2.start({
-    script    : 'child_processes/transmit.js',
-    name      : 'tx'
-  }, function(err, apps) {
-    console.log("transmit.js started")
-    if (err) {
-      console.error(err)
-    }
-  })
-    // listen for restart me
-    pm2.launchBus((err, bus) => {
-      bus.on('process:msg', (packet) => {
-        console.log(packet.data.message)
-        pm2.restart('transmit') 
-      })
-    })
-  })
-
+var transmit = fork('./child_processes/transmit.js')
+transmit.send({ type: 'start', config: config.config() })
+transmit.on('message', packet => console.log(packet))
 
 // Allow User configuration
 io.on('connection', (socket) => {
   console.log('user connected');
 
-  socket.emit('config', unitConfig)
+  socket.emit('config', config.config())
 
   socket.on('source', (input) => {
-    unitConfig.destPort = input
+    config.set('destPort', input)
     console.log(input)
-    saveConfig()
     pm2.restart("transmit")
   })
 
   socket.on('ip', (input) => {
-    unitConfig.ipAddress = input.ipAddress
-    unitConfig.rxIp = input.rxIp
-    saveConfig()
-    socket.emit('newConfig', unitConfig)
+    config.set('ipAddress', input.ipAddress)
+    config.set('rxIp', input.rxIp)
+    socket.emit('newConfig', config.config())
     pm2.restart('index')
   })
 
@@ -86,19 +60,6 @@ io.on('connection', (socket) => {
   });
 
 });
-
-// read config file & restore config on error
-function getUnitConfig(){
-  try {
-    var file = fs.readFileSync('config/config.json'), unitConfig
-    return JSON.parse(file);
-  }
-  catch (err) { 
-    console.log('Restoring from backup file: ', err)
-    spawn('cp', ["-R", "config/backupconfig.json", "config/config.json"])
-    pm2.restart('index')
-  }
-}
 
 // check if unit ip is configured correctly
 function getNetworkConfig(){
@@ -129,22 +90,6 @@ function getNetworkConfig(){
       return networkConfig
     }
   }
-}
-
-
-function saveConfig() {
-
-  var data = JSON.stringify(unitConfig);
-
-  fs.writeFile('./config/config.json', data, function (err) {
-    if (err) {
-      console.log('There has been an error saving your configuration data.');
-      console.log(err.message);
-      return;
-    }
-    console.log('Configuration saved successfully.')
-  });
-  return 
 }
 
 // Render index.ejs

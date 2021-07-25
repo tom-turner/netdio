@@ -1,7 +1,4 @@
 const { spawn } = require('child_process');
-const fs = require('fs');
-const Configuration = require('../lib/configuration')
-const path = require('path')
 
 process.on('message', packet => {
   switch (packet.type) {
