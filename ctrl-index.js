@@ -11,14 +11,6 @@ const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
 const port = process.env.port || 5000;
 
-var configFile = new Configuration('./config/ctrl-config.json')
-var config = {
-  name : configFile.get('name'),
-  type : configFile.get('type'),
-  ip : configFile.get('ip')
-}
-var devices = new Devices(config)
-
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public'));
@@ -26,42 +18,46 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
-if (config.ip != ip) {
+var config = new Configuration('./config/ctrl-config.json')
+
+if (config.get('ip') != ip) {
     // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
     console.log("ip does not match config")
-    configFile.set("ip", ip)
+    config.set("ip", ip)
 }
 
+var devices = new Devices(config.configObject)
+devices.connect()
 
-devices.connect((socket) => {
-  console.log(socket)
-
-  // i wana make these return connection/disconnection events
-  
-  socket.on('connect', (device) => {
-    console.log(device)
-  })
-
-  socket.on('disconnect', (device) => {
-
-  })
+devices.on('message', (message, key) => {
+  console.log(message)
+  // do thing in message
 })
 
-
+var connectedDevices = [];
 
 // Allow User configuration
 io.on('connection', (socket) => {
   console.log('user connected');
-  socket.emit('config', config.configObject)
-  
-  setInterval( function() {
-    socket.emit('devices', listOfConnectedDevices)
-  },1000)
+  socket.emit('config',{
+    name : config.get('name'),
+    type : config.get('type'),
+    ip : config.get('ip')
+  })
+  socket.emit('devices', connectedDevices)
 
+  devices.on('connection', (device) => {
+    console.log(device)
+    connectedDevices.push(device.config)
+    socket.emit('devices', device.config)
+  })
+
+  devices.on('disconnect', (device) => {
+    connectedDevices.filter(device.config)
+   socket.emit('device', device.config)
+  })
+  
   socket.on('volume', (input, device) => {
-    devices.sendMessage((callback) => {
-      console.log(callback)
-    }, { 'volume' : input } , device)
     spawn('amixer', ['set', 'Headphone', `${input}%`])
   })
 

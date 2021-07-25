@@ -25,6 +25,8 @@
 
 	<div id="settings" class="w-full hidden">
 		<span class="flex flex-col space-y-2">
+			<label>Name:</label>
+			<input id="unitName" class="border rounded" type="text">
 			<label>IP Address:</label>
 			<input id="ipAddress" class="border rounded" type="text">
 			<button id="configure" class="button border px-2 rounded text-white bg-blue-600">Configure</button>
@@ -77,7 +79,8 @@
 	socket.on("config", (config) => {	
 		loading(false)
 		console.log("config: ", config)
-		document.getElementById("ipAddress").value = config.ipAddress;
+		document.getElementById("ipAddress").value = config.ip;
+		document.getElementById("unitName").value = config.name;
 	});
 
 	socket.on("newConfig", (config) => {
@@ -90,13 +93,15 @@
 	})
 
 	socket.on("devices", (devices) => {
-		console.log("devices", devices)
+		console.log("device", devices)
 		var destinations = document.getElementById("destinations")
-		destinations.innerHTML = '';
 
-		for (var device of devices) {
+
+
+		for (device of devices) {
+
 			var li = document.createElement("li")
-			li.append(device.ipAddress)
+			li.append(device.ip)
 			destinations.append(li)
 		}
 
