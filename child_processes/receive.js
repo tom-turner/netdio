@@ -1,32 +1,45 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
+const Configuration = require('../lib/configuration')
+const path = require('path')
 
-var unitConfig = getUnitConfig()
-var sourcePort = Number(unitConfig.sourcePort).toString()
-var repairPort = getRepairPort(sourcePort)
-var rocSend = spawn('roc-recv', ['-vv', '-s', `rtp+rs8m::${sourcePort}`, '-r', `rs8m::${repairPort}`, '-d', 'alsa']);
-
-
-rocSend.stdout.on('data', (data) => {
-  console.log('stdout: ', data )
-})
-rocSend.stderr.on('data', (data) => {
-  console.error('ps stderr: ', data );
-  // restartProcess(data)
-});
-rocSend.on('close', (code) => {
-  if (code !== 0) {
-    console.log('ps process exited with code: ', code );
-    rocSend.stdin.end();
-    // restartProcess()
+process.on('message', packet => {
+  switch (packet.type) {
+    case 'start':
+      start(packet.config)
+      break
+    default:
+      console.log(`Recieve: didn't understand message type ${packet.type}`)
   }
-});
+})
 
+function start(config) {
+  var sourcePort = Number(config.sourcePort).toString()
+  var repairPort = getRepairPort(sourcePort)
 
-function getUnitConfig() {
-  var file = fs.readFileSync('./config/config.json'), configfile
-  return JSON.parse(file);
+  console.log('Started Receive Process')
+
+  driver = process.platform === 'linux'
+    ? '-d alsa'
+    : ''
+
+  var rocSend = spawn('roc-recv', ['-vv', '-s', `rtp+rs8m::${sourcePort}`, '-r', `rs8m::${repairPort}`, driver]);
+  rocSend.stdout.on('data', (data) => {
+    console.log('stdout: ', data )
+  })
+  rocSend.stderr.on('data', (data) => {
+    console.error('ps stderr: ', data.toString('utf8'));
+    // restartProcess(data)
+  });
+  rocSend.on('close', (code) => {
+    if (code !== 0) {
+      console.log('ps process exited with code: ', code );
+      rocSend.stdin.end();
+      // restartProcess()
+    }
+  });
 }
+
 
 function getRepairPort(input) {
   var input = Number(input)
