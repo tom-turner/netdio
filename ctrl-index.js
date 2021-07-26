@@ -29,22 +29,8 @@ if (config.get('ip') != ip) {
 var devices = new Devices(config.configObject)
 devices.connect()
 
-devices.on('message', (message, key) => {
-  console.log(message)
-  // do thing in message
-})
 
-var connectedDevices = [];
-
-// Allow User configuration
-io.on('connection', (socket) => {
-  console.log('user connected');
-  socket.emit('config',{
-    name : config.get('name'),
-    type : config.get('type'),
-    ip : config.get('ip')
-  })
-  socket.emit('devices', connectedDevices)
+  var connectedDevices = [];
 
   devices.on('connection', (device) => {
     console.log(device)
@@ -54,28 +40,44 @@ io.on('connection', (socket) => {
 
   devices.on('disconnect', (device) => {
     connectedDevices.filter(device.config)
-   socket.emit('device', device.config)
+    socket.emit('device', device.config)
+  })
+
+  devices.on('message', (message) => {
+    console.log(message)
+  })
+
+
+
+// Allow User configuration
+io.on('connection', (socket) => {
+  console.log('user connected');
+  socket.emit('config', config.configObject)
+
+  devices.on('connection', (device) => {
+    socket.emit('devices', connectedDevices)
   })
   
-  socket.on('volume', (input, device) => {
-    spawn('amixer', ['set', 'Headphone', `${input}%`])
+  socket.on('ctrlMessage', (message) => {
+    var device = message.device.ip
+
+    // sends message to device
+    devices.emit(device, message)
+
   })
 
-  socket.on('source', (input, device) => {
-    // send input to device
-    pm2.restart("listen")
-  })
-
-  socket.on('ip', (input, device) => {
-    var port = input
-    // send input to device
+  // listens for new config
+  socket.on('config', (newConfig) => {
+    config.set('name', newConfig.name)
+    config.set('ip', newConfig.ip)
     socket.emit('newConfig', config.configObject)
-    pm2.restart('index')
+
   })
 
   socket.on('restart', () => {
     console.log('restart')
-    pm2.restart('index')
+    //pm2.restart('ctrl-index')
+
   });
 
   socket.on('disconnect', () => {

@@ -20,7 +20,7 @@
 <div class="w-full bg-white rounded shadow-lg flex  p-2 px-4 flex-col">
 	<div class="justify-between flex w-full">
 		<p>Settings:</p>
-		<img id="settings-gear" class="w-6 cursor-pointer" onclick="showSettings()" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADvUlEQVRoge2ZS2sUQRDHfxuyCSo+EhBFvZgQH8khJmj8APEo+Dj4uAgqeDLqIeBN1EsSMRrIUT+Anj2IekoUFD2IGBNFJKgRzE3dEBM3Dw/dg7PVPT09s5OosH8o2Jmq/lf1THdNdS1UUEEFWeIJsBgjj/9adDGoAgrET6Cgbf857CA++EC2Z+U0yyfRvkS2TmQ5gTZx3QPktPTG2C45cg7dFqAfc/0fCdkcwdwH/XpsGp+JsB8YRz3R1tD9PHAFmMW+zptCtk0RNrOaIx+y3YV6Y+Pad1moAd4Jp6Pa6YuIoBaB75Q+wZy+F2X/ArgKjIn773QMqdHtcGqTCR1Io4WrUesmEnJ2pw1+A/DN08ln4CR+T6tG23725P6uY0mMW4JoGvt6vwPUpeCv02Nt+2Ja3LudlLwNmBckXcA64ARwTzu6nCJwiTPADKoMOQ+sB84J3/PAHl/CHDAsCN5QmikAVkaMbwFuAiPAlJYR4AbQHDFmhbiu1j5lDeWVWo9ivtanxC+TGmAQmLOMD2QOGMB8GBJ12qccf8xnAnuBScvgUWCrI/hHjsClPHBMYqv2JcdMAh0+EwBoAN5aSL5ir2MGEwQfyICFp137kLZjOqZEqAeGLGRdwq4Fc9m8AQ4Aq7UcxPxIFYGdguusxd+QjiUVaoH3gnCfsLkp9KPAWgvXWssk+oVNp9C/1zGUhQ+CVH5lZbY44OA6JGxfC32j0H8oM3ZApcEw6Sqh/yH0qx1ca4TtD6FfJfRTccEt99EusxI5gM8EJsX1RnH9SVx3Orik7mMMt/RtIG4CtcCCuCe/BQ/FdQ/2TbxO68J4EMO9QBmb2DeNNmOm0beoDbtGy2HMc0UR1QgIo8viL1UabcBMea4P2YDFNk5kCgX3hyyqCjDQQfJSIo9aDr7B3yd5KfEVz1LimGWwTzGXR72JoiPwIqoq9SnmnlnGH/WZQA5VusrSoFrYyRI4QDNqebxGdR8K+vd1zDUfQJbmecy3MEyCNNyGuTHPUXqg+Qlc9CV04Dzwi9IDzQXhex7YnZT4tiDJ+khZD9y18NmOlLdS8LMBdyskLBPAKfwP9aeBL57c30h5qIf/vK0C9sbWmA4kSWOrCvfbfI5qlsmNW3ZjC/60FntRbb8AeVRXYiYiqHBrcVuEzQxwidIM14oqOTJpLQZwpa/NxDd3ZaOggEqrm1L6XBJcozTIcOHWJ3R9yx2cD47jvzG92iPLje34T2DbX4rRiSrM46VNMv2TL8sj5QLwysPuJeYhqYIKKkiJ358zZDnoKSOUAAAAAElFTkSuQmCC"/>
+		<img id="settings-gear" class="w-6 cursor-pointer transform" onclick="toggleSettings('settings','settings-gear')" src="./public/images/gear.svg"/>
 	</div>
 
 	<div id="settings" class="w-full hidden">
@@ -39,14 +39,16 @@
 <div class="w-full bg-white rounded shadow-lg flex  p-2 px-4 flex-col">
 	<div class="justify-between flex w-full">
 		<p>Devices:</p>
-		<img id="routing-gear" class="w-6 cursor-pointer" onclick="showRouting()" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADvUlEQVRoge2ZS2sUQRDHfxuyCSo+EhBFvZgQH8khJmj8APEo+Dj4uAgqeDLqIeBN1EsSMRrIUT+Anj2IekoUFD2IGBNFJKgRzE3dEBM3Dw/dg7PVPT09s5OosH8o2Jmq/lf1THdNdS1UUEEFWeIJsBgjj/9adDGoAgrET6Cgbf857CA++EC2Z+U0yyfRvkS2TmQ5gTZx3QPktPTG2C45cg7dFqAfc/0fCdkcwdwH/XpsGp+JsB8YRz3R1tD9PHAFmMW+zptCtk0RNrOaIx+y3YV6Y+Pad1moAd4Jp6Pa6YuIoBaB75Q+wZy+F2X/ArgKjIn773QMqdHtcGqTCR1Io4WrUesmEnJ2pw1+A/DN08ln4CR+T6tG23725P6uY0mMW4JoGvt6vwPUpeCv02Nt+2Ja3LudlLwNmBckXcA64ARwTzu6nCJwiTPADKoMOQ+sB84J3/PAHl/CHDAsCN5QmikAVkaMbwFuAiPAlJYR4AbQHDFmhbiu1j5lDeWVWo9ivtanxC+TGmAQmLOMD2QOGMB8GBJ12qccf8xnAnuBScvgUWCrI/hHjsClPHBMYqv2JcdMAh0+EwBoAN5aSL5ir2MGEwQfyICFp137kLZjOqZEqAeGLGRdwq4Fc9m8AQ4Aq7UcxPxIFYGdguusxd+QjiUVaoH3gnCfsLkp9KPAWgvXWssk+oVNp9C/1zGUhQ+CVH5lZbY44OA6JGxfC32j0H8oM3ZApcEw6Sqh/yH0qx1ca4TtD6FfJfRTccEt99EusxI5gM8EJsX1RnH9SVx3Orik7mMMt/RtIG4CtcCCuCe/BQ/FdQ/2TbxO68J4EMO9QBmb2DeNNmOm0beoDbtGy2HMc0UR1QgIo8viL1UabcBMea4P2YDFNk5kCgX3hyyqCjDQQfJSIo9aDr7B3yd5KfEVz1LimGWwTzGXR72JoiPwIqoq9SnmnlnGH/WZQA5VusrSoFrYyRI4QDNqebxGdR8K+vd1zDUfQJbmecy3MEyCNNyGuTHPUXqg+Qlc9CV04Dzwi9IDzQXhex7YnZT4tiDJ+khZD9y18NmOlLdS8LMBdyskLBPAKfwP9aeBL57c30h5qIf/vK0C9sbWmA4kSWOrCvfbfI5qlsmNW3ZjC/60FntRbb8AeVRXYiYiqHBrcVuEzQxwidIM14oqOTJpLQZwpa/NxDd3ZaOggEqrm1L6XBJcozTIcOHWJ3R9yx2cD47jvzG92iPLje34T2DbX4rRiSrM46VNMv2TL8sj5QLwysPuJeYhqYIKKkiJ358zZDnoKSOUAAAAAElFTkSuQmCC"/>
+		<img id="routing-gear" class="w-6 cursor-pointer transform" onclick="toggleSettings('routing','routing-gear')" src="./public/images/gear.svg"/>
 	</div>
 </div>
 	<div id="routing" class="flex flex-row h-screen justify-between w-full space-x-2 hidden">
 
 		<div class="flex rounded shadow-lg flex-col p-4 bg-white w-full">
 			<h2 class="text-center"> Inputs </h2>
-			list all input devices, drag and drop to output, change names.
+			<ul id="inputs" class="border rounded h-full">
+
+			</ul>
 			
 		</div>
 
@@ -60,13 +62,34 @@
 
 	</div>
 
-	<div id="zone" class="flex flex-col h-screen w-full space-x-2 bg-white rounded shadow-lg p-2 px-4">
+	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded shadow-lg p-2 px-4">
 		<div class="justify-between flex w-full">
 			<p>Zone Control:</p>
 		</div>
 
-		<div>
-			<p>change zone sources and volumes - list all zones by name.</p>
+		<div class="h-full py-2">
+			<ul id="zones" class="border rounded h-full flex flex-col">
+
+				<div class="p-2 m-2 border rounded flex flex-col">
+
+					<span class="flex flex-row justify-between">
+						<p class="">Name:</p>
+						<span class="">
+							<label>Zone Input: </label>
+							<select class="text-right">
+								<option>iPod</option>
+								<option>TV</option>
+								<option>Games</option>
+								<option>Radio</option>
+							</select>
+						</span>
+					</span>
+
+					<input type="range" name="volume" class="w-full"></input>
+
+				</div>
+
+			</ul>
 		</div>
 	</div>
 
@@ -75,38 +98,6 @@
 <script type="text/javascript">
 
 	var socket = io();
-
-	socket.on("config", (config) => {	
-		loading(false)
-		console.log("config: ", config)
-		document.getElementById("ipAddress").value = config.ip;
-		document.getElementById("unitName").value = config.name;
-	});
-
-	socket.on("newConfig", (config) => {
-		loading(false)
-		console.log("new config: " , config.ipAddress)
-		loading(true)
-		setTimeout(function(){
-			window.location.href = "http://" + config.ipAddress + ":5000"
-		}, 2000);
-	})
-
-	socket.on("devices", (devices) => {
-		console.log("device", devices)
-		var destinations = document.getElementById("destinations")
-
-
-
-		for (device of devices) {
-
-			var li = document.createElement("li")
-			li.append(device.ip)
-			destinations.append(li)
-		}
-
-	})
-	
 
 	function loading(isLoading) {
 		if (isLoading) {
@@ -118,44 +109,51 @@
 			document.querySelector(".spinner").classList.add("hidden");
 		}
 	}
-	
-	function volume(input) {
-		console.log(input)
-		socket.emit("volume", input)
+
+	function toggleSettings(id, button) {
+		document.getElementById(id).classList.toggle("hidden")
+		document.getElementById(button).classList.toggle("rotate-90")
 	}
 
-	function source(input) {
-		console.log(input)
-		socket.emit("source", input)
-	}
+	// receives config on page load
+	socket.on("config", (config) => {	
+		loading(false)
+		console.log("config: ", config)
+		document.getElementById("ipAddress").value = config.ip;
+		document.getElementById("unitName").value = config.name;
+	});
 
-	function configureIp(input) {
+	// listens for new config
+	socket.on("newConfig", (config) => {
 		loading(true)
-		console.log(input)
-		socket.emit("ip", input)
-	}
-
-	function showSettings() {
-		document.getElementById("settings").classList.toggle("hidden")
-		document.getElementById("settings-gear").classList.toggle("animate-spin")
-	}
-
-
-	function showRouting() {
-		document.getElementById("routing").classList.toggle("hidden")
-		document.getElementById("routing-gear").classList.toggle("animate-spin")
-	}
-
-	$('#volume').on("input" , function() {
-		volume(document.getElementById("volume").value)
+		setTimeout(function(){
+			window.location.href = "http://" + config.ip + ":5000"
+		}, 2000);
 	})
 
-	$('#source').on("input" , function() {
-		source(document.getElementById("source").value)
+
+	socket.on("devices", (devices) => {
+		console.log("device", devices)
+		var destinations = document.getElementById("destinations")
+
+		for (device of devices) {
+
+			var li = document.createElement("li")
+			li.append(device.ip)
+			destinations.append(li)
+
+		}
+
 	})
+	
 
 	$('#configure').on("click" , function() {
-		configureIp(document.getElementById("ipAddress").value)
+		loading(true)
+		var config = {
+			name : document.getElementById("unitName").value,
+			ip : document.getElementById("ipAddress").value
+		}
+		socket.emit("config", config)
 	})
 
 	$('#restart').on("click" , function() {
