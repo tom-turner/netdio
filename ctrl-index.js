@@ -6,7 +6,6 @@ const bp = require('body-parser');
 const io = require('socket.io')(http);
 const { spawn } = require('child_process');
 const { exec } = require('child_process');
-const pm2 = require('pm2')
 const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
@@ -19,65 +18,66 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
-var configFile = new Configuration('./config/rx-config.json')
-var config = {
-  name : configFile.get('name'),
-  type : configFile.get('type'),
-  ip : configFile.get('ip')
-}
+var config = new Configuration('./config/ctrl-config.json')
 
-var devices = new Devices(config)
-
-if (config.ip != ip) {
+if (config.get('ip') != ip) {
     // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
+    console.log("ip does not match config")
+    config.set("ip", ip)
 }
 
+var devices = new Devices(config.configObject)
+devices.connect()
 
-devices.listenForNewDevices( (device) => {
-  console.log("New " + device.type + " Device:" , device)
 
-  if ( device.type == 'tx') {
+  var connectedDevices = [];
 
-  }
+  devices.on('connection', (device) => {
+    console.log(device)
+    connectedDevices.push(device.config)
+    socket.emit('devices', device.config)
+  })
 
-  if ( device.type == 'rx') {
-    
-  }
+  devices.on('disconnect', (device) => {
+    connectedDevices.filter(device.config)
+    socket.emit('device', device.config)
+  })
 
-})
+  devices.on('message', (message) => {
+    console.log(message)
+  })
+
 
 
 // Allow User configuration
 io.on('connection', (socket) => {
   console.log('user connected');
   socket.emit('config', config.configObject)
+
+  devices.on('connection', (device) => {
+    socket.emit('devices', connectedDevices)
+  })
   
-  setInterval( function() {
-    socket.emit('devices', listOfConnectedDevices)
-  },1000)
+  socket.on('ctrlMessage', (message) => {
+    var device = message.device.ip
 
-  socket.on('volume', (input, device) => {
-    // send input to device
-    spawn('amixer', ['set', 'Headphone', `${input}%`])
+    // sends message to device
+    devices.emit(device, message)
+
   })
 
-  socket.on('source', (input, device) => {
-    // send input to device
-    saveConfig()
-    pm2.restart("listen")
-  })
-
-  socket.on('ip', (input, device) => {
-    var port = input
-    // send input to device
-    saveConfig()
+  // listens for new config
+  socket.on('config', (newConfig) => {
+    config.set('name', newConfig.name)
+    config.set('ip', newConfig.ip)
     socket.emit('newConfig', config.configObject)
-    pm2.restart('index')
+
   })
 
   socket.on('restart', () => {
     console.log('restart')
-    pm2.restart('index')
+    //pm2.restart('ctrl-index')
+
   });
 
   socket.on('disconnect', () => {
