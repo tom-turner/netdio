@@ -25,52 +25,67 @@ var receive = fork('./child_processes/receive.js')
 receive.send({ type: 'start', config: config.config() })
 receive.on('message', packet => console.log(packet))
 
-var devices = new Devices(config.config())
 
 if (config.get('ip') != ip) {
     // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
 }
 
-//get list of devices on the network
-devices.startListening( (device) => {
-  console.log("device joined:", device)
-})
+var devices = new Devices(config.config())
+devices.connect()
 
-devices.pingDevices( (device) => {
-  console.log("device found:", device)
-})
+  var connectedDevices = [];
+
+  devices.on('connection', (device) => {
+    console.log(device)
+    connectedDevices.push(device.config)
+    socket.emit('devices', device.config)
+  })
+
+  devices.on('disconnect', (device) => {
+    connectedDevices.filter(device.config)
+    socket.emit('device', device.config)
+  })
+
+  devices.on('message', (message) => {
+    console.log(message)
+  })
+
+
 
 // Allow User configuration
 io.on('connection', (socket) => {
   console.log('user connected');
+  socket.emit('config', config.configObject)
 
-  socket.emit('config', config.config())
+  socket.emit('devices', connectedDevices)
 
-  socket.on('volume', (input) => {
-    config.debouncedSet('volume', input)
-    spawn('amixer', ['set', 'Headphone', `${input}%`])
+  devices.on('connection', (device) => {
+    socket.emit('devices', connectedDevices)
   })
 
-  socket.on('source', async (input) => {
-    await config.set('sourcePort', input)
-    console.log(input)
-    pm2.restart("listen")
+
+  // listens for new config
+  socket.on('config', (newConfig) => {
+    config.set('name', newConfig.name)
+    config.set('ip', newConfig.ip)
+    socket.emit('newConfig', config.configObject)
+
   })
 
-  socket.on('ip', async (input) => {
-    await config.set('ipAddress', input)
-    socket.emit('newConfig', config.config())
-    pm2.restart('index')
-  })
+  socket.on('restart', () => {
+    console.log('restart')
+    //pm2.restart('ctrl-index')
+
+  });
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 
-  socket.on('restart', () => {
-    console.log('restart')
-    pm2.restart('index')
-  });
+  socket.on('forward', (message) =>{
+    console.log(message)
+   // devices.emit(message.ip, message)
+  } )
 
 });
 
