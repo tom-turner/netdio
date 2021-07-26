@@ -44,7 +44,7 @@
 </div>
 	<div id="routing" class="flex flex-row h-screen justify-between w-full space-x-2 hidden">
 
-		<div class="flex rounded shadow-lg flex-col p-4 bg-white w-full">
+		<div class="flex rounded shadow-lg flex-col p-4 bg-white w-1/2">
 			<h2 class="text-center"> Inputs </h2>
 			<ul id="inputs" class="border rounded h-full">
 
@@ -53,7 +53,7 @@
 		</div>
 
 
-		<div class="flex rounded shadow-lg flex-col p-4 bg-white w-full">
+		<div class="flex rounded shadow-lg flex-col p-4 bg-white w-1/2">
 			<h2 class="text-center"> Destinations </h2>
 			<ul id="destinations" class="border rounded h-full">
 
@@ -69,25 +69,6 @@
 
 		<div class="h-full py-2">
 			<ul id="zones" class="border rounded h-full flex flex-col">
-
-				<div class="p-2 m-2 border rounded flex flex-col">
-
-					<span class="flex flex-row justify-between">
-						<p class="">Name:</p>
-						<span class="">
-							<label>Zone Input: </label>
-							<select class="text-right">
-								<option>iPod</option>
-								<option>TV</option>
-								<option>Games</option>
-								<option>Radio</option>
-							</select>
-						</span>
-					</span>
-
-					<input type="range" name="volume" class="w-full"></input>
-
-				</div>
 
 			</ul>
 		</div>
@@ -115,6 +96,48 @@
 		document.getElementById(button).classList.toggle("rotate-90")
 	}
 
+	function createZone(device) {
+		
+		console.log(device)
+
+		return	$(`<li id="'+ device.ip+ '" class="bg-blue-400 bg-opacity-20 hover:bg-opacity-10 border rounded flex flex-col p-2 m-2" onclick="selectInput('${device.ip}')" />`).append(
+            		$('<div class="flex flex-col"/>').append(
+              			$('<div class"w-full flex flex-row justify-between"/>').append(
+              				$('<span class="font-bold" />').text(device.name)
+              			),
+              			$('<input type="range" class="w-full volume-' + device.ip + '" />')
+            		)
+        		)
+	}
+
+	function createDeviceLi(device) {
+
+		console.log(device)
+
+		return	$('<li id="'+ device.ip + '" class="border rounded flex flex-col md:flex-row px-2 py-1 m-2 justify-between"/>').append(
+					$('<div class="flex flex-row space-x-2"/>').append(
+						$('<label />').text("Name: "),
+						$('<input type="text" class="w-full font-bold name-' + device.name + '" value="' + device.name + '" />')
+					),
+					$('<div class="flex flex-row space-x-2"/>').append(
+						$('<lable/>').text("IP: "),
+						$('<input type="text" class="w-full ip-' + device.ip + '" value="' + device.ip + '" />'),
+						$('<button class="text-white rounded-full px-2 bg-blue-600 att-' + device.ip +'" />').text("Blink")
+					)
+				)
+
+	}
+
+
+
+	function selectInput(device) {
+		console.log("you selected this zone: ", device )
+		
+
+	}
+
+
+
 	// receives config on page load
 	socket.on("config", (config) => {	
 		loading(false)
@@ -131,17 +154,19 @@
 		}, 2000);
 	})
 
-
+	// listens for devices
 	socket.on("devices", (devices) => {
 		console.log("device", devices)
-		var destinations = document.getElementById("destinations")
 
 		for (device of devices) {
 
-			var li = document.createElement("li")
-			li.append(device.ip)
-			destinations.append(li)
+			if(device.type == 'rx') {
+				var zone = createZone(device)
+				$('#zones').append(zone)
 
+				var li = createDeviceLi(device)
+				$('#destinations').append(li)
+			}
 		}
 
 	})

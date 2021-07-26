@@ -53,6 +53,8 @@ devices.connect()
 io.on('connection', (socket) => {
   console.log('user connected');
   socket.emit('config', config.configObject)
+  
+  socket.emit('devices', connectedDevices)
 
   devices.on('connection', (device) => {
     socket.emit('devices', connectedDevices)
