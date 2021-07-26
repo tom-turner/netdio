@@ -68,9 +68,9 @@
 		</div>
 
 		<div class="h-full py-2">
-			<ul id="zones" class="border rounded h-full flex flex-col">
+			<ol id="zones" class="border rounded h-full flex flex-col">
 
-			</ul>
+			</ol>
 		</div>
 	</div>
 
@@ -79,6 +79,7 @@
 <script type="text/javascript">
 
 	var socket = io();
+	var inputDevices = [];
 
 	function loading(isLoading) {
 		if (isLoading) {
@@ -96,49 +97,92 @@
 		document.getElementById(button).classList.toggle("rotate-90")
 	}
 
-	function createZone(device) {
+	function createZone(zone,) {
 		
-		console.log(device)
+		console.log(zone)
 
-		return	$(`<li id="'+ device.ip+ '" class="bg-blue-400 bg-opacity-20 hover:bg-opacity-10 border rounded flex flex-col p-2 m-2" onclick="selectInput('${device.ip}')" />`).append(
+		var inputOptions = getInputOptions()
+
+		return	$(`<li id="${zone.ip}" class="bg-blue-400 bg-opacity-20 hover:bg-opacity-10 border rounded flex flex-col p-2 m-2" />`).append(
             		$('<div class="flex flex-col"/>').append(
               			$('<div class"w-full flex flex-row justify-between"/>').append(
-              				$('<span class="font-bold" />').text(device.name)
+              				$('<span class="font-bold" />').text(zone.name)
               			),
-              			$('<input type="range" class="w-full volume-' + device.ip + '" />')
+              			$(`<input type="range" class="w-full" oninput="edit('volume', this)"/>`),
+              			inputOptions
             		)
         		)
+	}
+
+	function getInputOptions(){
+
+		var select = $(`<select id="input" class="rounded my-2" onchange="edit('input', this)"/>`) 
+
+		for (input of inputDevices) {
+			console.log(1, input)
+			select.append(
+				$(`<option value="${input.ip}"/>`).text(input.name)
+			)
+		}
+
+		return select
 	}
 
 	function createDeviceLi(device) {
 
 		console.log(device)
 
-		return	$('<li id="'+ device.ip + '" class="border rounded flex flex-col md:flex-row px-2 py-1 m-2 justify-between"/>').append(
+		return	$('<li id="'+ device.ip + '" class="border rounded flex flex-col md:flex-row px-2 py-1 m-2 justify-between space-x-2"/>').append(
 					$('<div class="flex flex-row space-x-2"/>').append(
 						$('<label />').text("Name: "),
-						$('<input type="text" class="w-full font-bold name-' + device.name + '" value="' + device.name + '" />')
+						$(`<input type="text" class="w-full font-bold" value="${device.name}" onkeyup="edit('name', this)"/>`)
 					),
-					$('<div class="flex flex-row space-x-2"/>').append(
+					$('<div class="flex flex-row space-x-2 hidden"/>').append(
 						$('<lable/>').text("IP: "),
-						$('<input type="text" class="w-full ip-' + device.ip + '" value="' + device.ip + '" />'),
-						$('<button class="text-white rounded-full px-2 bg-blue-600 att-' + device.ip +'" />').text("Blink")
-					)
+						$(`<p type="text" class="w-full"/>`).text(device.ip)
+					),
+					$(`<button class="text-white rounded-full px-2 bg-blue-600" value="true" onclick="edit('blink' , this)" />`).text("Blink")
 				)
-
 	}
 
 
-
-	function selectInput(device) {
-		console.log("you selected this zone: ", device )
+	function edit(key, input){
 		
-
+		message = {
+			ip : input.closest('li').id, 
+			[key] : input.value 
+		}
+		console.log(message)
+		socket.emit('forward', message)
 	}
 
 
 
-	// receives config on page load
+	// listens for devices
+	socket.on("devices", (devices) => {
+
+		console.log("device", devices)
+
+		for (device of devices) {
+
+			if(device.type === 'rx') {
+				var zone = createZone(device)
+				$('#zones').append(zone)
+
+				var li = createDeviceLi(device)
+				$('#destinations').append(li)
+			}
+			if(device.type === 'tx') {
+				inputDevices.push(device)
+				var li = createDeviceLi(device)
+				$('#inputs').append(li)
+			}
+
+		}
+
+	})
+	
+		// receives config on page load
 	socket.on("config", (config) => {	
 		loading(false)
 		console.log("config: ", config)
@@ -153,24 +197,6 @@
 			window.location.href = "http://" + config.ip + ":5000"
 		}, 2000);
 	})
-
-	// listens for devices
-	socket.on("devices", (devices) => {
-		console.log("device", devices)
-
-		for (device of devices) {
-
-			if(device.type == 'rx') {
-				var zone = createZone(device)
-				$('#zones').append(zone)
-
-				var li = createDeviceLi(device)
-				$('#destinations').append(li)
-			}
-		}
-
-	})
-	
 
 	$('#configure').on("click" , function() {
 		loading(true)

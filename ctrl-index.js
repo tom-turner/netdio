@@ -53,7 +53,7 @@ devices.connect()
 io.on('connection', (socket) => {
   console.log('user connected');
   socket.emit('config', config.configObject)
-  
+
   socket.emit('devices', connectedDevices)
 
   devices.on('connection', (device) => {
@@ -85,6 +85,11 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
+
+  socket.on('forward', (message) =>{
+    console.log(message)
+    devices.emit(message.ip, message)
+  } )
 
 });
 
