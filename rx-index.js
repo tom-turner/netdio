@@ -32,8 +32,10 @@ if (config.get('ip') != ip) {
     config.set("ip", ip)
 }
 
-var devices = new Devices(config.config())
+var devices = new Devices(config.configObject)
 devices.connect()
+
+
 
   var connectedDevices = [];
 
@@ -44,12 +46,15 @@ devices.connect()
 
   devices.on('disconnect', (device) => {
     connectedDevices = connectedDevices.filter((element) => {
-      return !(element.ip == device.config.ip)
+      return !(element.ip == device.ip)
       console.log("Connected Devices:", connectedDevices)
     })
   })
 
   devices.on('message', (message) => {
+    if (message.volume) {
+      config.set('volume', message.volume)
+    }
     console.log(message)
   })
 
