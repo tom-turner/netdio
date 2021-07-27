@@ -28,6 +28,8 @@ receive.on('message', packet => console.log(packet))
 
 if (config.get('ip') != ip) {
     // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
+    console.log("ip does not match config")
+    config.set("ip", ip)
 }
 
 var devices = new Devices(config.config())
