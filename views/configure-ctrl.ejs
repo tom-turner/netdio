@@ -1,5 +1,5 @@
 
-<div class="hidden h-screen w-full bg-black opacity-80 absolute spinner text-white">
+<div class="hidden h-screen w-full bg-black opacity-80 absolute spinner text-white ">
 
 	<span class="flex flex-col space-y-4">
 
@@ -20,15 +20,17 @@
 <div class="w-full bg-white rounded shadow-lg flex  p-2 px-4 flex-col">
 	<div class="justify-between flex w-full">
 		<p>Settings:</p>
-		<img id="settings-gear" class="w-6 cursor-pointer transform" onclick="toggleSettings('settings','settings-gear')" src="./public/images/gear.svg"/>
+		<img id="settings-gear" class="w-6 cursor-pointer transform duration-500" onclick="toggleSettings('settings','settings-gear')" src="images/gear.svg"/>
 	</div>
 
-	<div id="settings" class="w-full hidden">
-		<span class="flex flex-col space-y-2">
-			<label>Name:</label>
-			<input id="unitName" class="border rounded" type="text">
-			<label>IP Address:</label>
-			<input id="ipAddress" class="border rounded" type="text">
+	<div id="settings" class="w-full hidden pt-1">
+		<span class="flex flex-col space-y-1">
+
+				<label>Name:</label>
+				<input id="unitName" class="border rounded" type="text">
+				<label>IP Address:</label>
+				<input id="ipAddress" class="border rounded" type="text">
+
 			<button id="configure" class="button border px-2 rounded text-white bg-blue-600">Configure</button>
 			<button id="restart" class="button border px-2 rounded text-grey-400 bg-white">Restart</button>
 		</span>
@@ -39,7 +41,7 @@
 <div class="w-full bg-white rounded shadow-lg flex  p-2 px-4 flex-col">
 	<div class="justify-between flex w-full">
 		<p>Devices:</p>
-		<img id="routing-gear" class="w-6 cursor-pointer transform" onclick="toggleSettings('routing','routing-gear')" src="./public/images/gear.svg"/>
+		<img id="routing-gear" class="w-6 cursor-pointer transform duration-500" onclick="toggleSettings('routing','routing-gear')" src="images/gear.svg"/>
 	</div>
 </div>
 	<div id="routing" class="flex flex-row h-screen justify-between w-full space-x-2 hidden">
@@ -94,7 +96,7 @@
 
 	function toggleSettings(id, button) {
 		document.getElementById(id).classList.toggle("hidden")
-		document.getElementById(button).classList.toggle("rotate-90")
+		document.getElementById(button).classList.toggle("rotate-180")
 	}
 
 	function createZone(zone,) {
@@ -161,11 +163,17 @@
 	// listens for devices
 	socket.on("devices", (devices) => {
 
+
 		console.log("device", devices)
+
+		console.log(1, devices)
 
 		for (device of devices) {
 
 			if(device.type === 'rx') {
+				$('#zones').html('')
+				$('#destinations').html('')
+
 				var zone = createZone(device)
 				$('#zones').append(zone)
 
@@ -173,6 +181,8 @@
 				$('#destinations').append(li)
 			}
 			if(device.type === 'tx') {
+				$('#inputs').html('')
+
 				inputDevices.push(device)
 				var li = createDeviceLi(device)
 				$('#inputs').append(li)
