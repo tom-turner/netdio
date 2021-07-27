@@ -81,8 +81,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('forward', (message) =>{
-    console.log(message)
-    devices.emit(message.ip, message)
+    console.log("forward:",message)
+    devices.forward(message.ip, message)
   } )
 
 });
