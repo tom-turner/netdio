@@ -8,7 +8,7 @@ const { spawn } = require('child_process');
 const { exec } = require('child_process');
 const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
-const Devices = require('./lib/autoDiscovery')
+const ConnectedDevices = require('./lib/autoDiscovery')
 const port = process.env.port || 5000;
 
 app.use(bp.json())
@@ -26,44 +26,21 @@ if (config.get('ip') != ip) {
     config.set("ip", ip)
 }
 
-var devices = new Devices(config.configObject)
-devices.connect()
-
-
-  var connectedDevices = [];
-
-  devices.on('connection', (device) => {
-    console.log(device)
-    connectedDevices.push(device.config)
-    socket.emit('devices', device.config)
-  })
-
-  devices.on('disconnect', (device) => {
-    connectedDevices.filter(device.config)
-    socket.emit('device', device.config)
-  })
-
-  devices.on('message', (message) => {
-    console.log(message)
-  })
-
-
+var connectedDevices = new ConnectedDevices(config)
+connectedDevices.listenForAnnouncements()
+connectedDevices.announce()
 
 // Allow User configuration
 io.on('connection', (socket) => {
   console.log('user connected');
   socket.emit('config', config.configObject)
 
-  devices.on('connection', (device) => {
-    socket.emit('devices', connectedDevices)
+  connectedDevices.on('announcement', () => {
+    socket.emit('devices', connectedDevices.devices())
   })
-  
+
   socket.on('ctrlMessage', (message) => {
-    var device = message.device.ip
-
-    // sends message to device
-    devices.emit(device, message)
-
+    connectedDevices.forward(message)
   })
 
   // listens for new config
@@ -89,7 +66,7 @@ io.on('connection', (socket) => {
 
 // Render index.ejs
 app.get('/', function (req, res) {
-  res.render('configure-ctrl.ejs');
+  res.render('configure-ctrl.ejs', { connectedDevices: connectedDevices.devices() });
 });
 
 //
