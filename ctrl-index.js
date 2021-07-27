@@ -33,12 +33,15 @@ devices.connect()
   var connectedDevices = [];
 
   devices.on('connection', (device) => {
-    console.log(device)
     connectedDevices.push(device.config)
+    console.log("Connected Devices:", connectedDevices)
   })
 
   devices.on('disconnect', (device) => {
-    connectedDevices.filter(device.config)
+    connectedDevices = connectedDevices.filter((element) => {
+      return !(element.ip == device.config.ip)
+      console.log("Connected Devices:", connectedDevices)
+    })
   })
 
   devices.on('message', (message) => {
@@ -57,13 +60,7 @@ io.on('connection', (socket) => {
     socket.emit('devices', connectedDevices)
   })
   
-  socket.on('ctrlMessage', (message) => {
-    var device = message.device.ip
 
-    // sends message to device
-    devices.emit(device, message)
-
-  })
 
   // listens for new config
   socket.on('config', (newConfig) => {

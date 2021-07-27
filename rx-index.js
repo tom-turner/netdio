@@ -36,14 +36,15 @@ devices.connect()
   var connectedDevices = [];
 
   devices.on('connection', (device) => {
-    console.log(device)
     connectedDevices.push(device.config)
-    socket.emit('devices', device.config)
+    console.log("Connected Devices:", connectedDevices)
   })
 
   devices.on('disconnect', (device) => {
-    connectedDevices.filter(device.config)
-    socket.emit('device', device.config)
+    connectedDevices = connectedDevices.filter((element) => {
+      return !(element.ip == device.config.ip)
+      console.log("Connected Devices:", connectedDevices)
+    })
   })
 
   devices.on('message', (message) => {
@@ -56,12 +57,12 @@ devices.connect()
 io.on('connection', (socket) => {
   console.log('user connected');
   socket.emit('config', config.configObject)
-
   socket.emit('devices', connectedDevices)
 
   devices.on('connection', (device) => {
     socket.emit('devices', connectedDevices)
   })
+
 
 
   // listens for new config

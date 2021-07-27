@@ -166,12 +166,13 @@
 
 		console.log("device", devices)
 
-		console.log(1, devices)
+		$('#zones').html('')
+		$('#destinations').html('')
+		$('#inputs').html('')
 
 		for (device of devices) {
 
 			if(device.type === 'rx') {
-				$('#zones').html('')
 				$('#destinations').html('')
 
 				var zone = createZone(device)
@@ -181,7 +182,7 @@
 				$('#destinations').append(li)
 			}
 			if(device.type === 'tx') {
-				$('#inputs').html('')
+
 
 				inputDevices.push(device)
 				var li = createDeviceLi(device)
