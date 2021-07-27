@@ -38,8 +38,9 @@ devices.connect()
   })
 
   devices.on('disconnect', (device) => {
+    console.log(device)
     connectedDevices = connectedDevices.filter((element) => {
-      return !(element.ip == device.config.ip)
+      return !(element.ip == device.ip)
       console.log("Connected Devices:", connectedDevices)
     })
   })

@@ -110,7 +110,7 @@
               			$('<div class"w-full flex flex-row justify-between"/>').append(
               				$('<span class="font-bold" />').text(zone.name)
               			),
-              			$(`<input type="range" class="w-full" oninput="edit('volume', this)"/>`),
+              			$(`<input type="range" class="w-full" value="${zone.volume}" oninput="edit('volume', this)"/>`),
               			inputOptions
             		)
         		)
