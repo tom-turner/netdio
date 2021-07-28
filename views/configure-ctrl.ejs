@@ -151,7 +151,8 @@
 	function edit(key, input){
 		
 		message = {
-			ip : input.closest('li').id, 
+			ip : input.closest('li').id,
+			type : key, 
 			[key] : input.value 
 		}
 		console.log(message)
