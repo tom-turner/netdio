@@ -54,6 +54,10 @@ io.on('connection', (socket) => {
   devices.on('connection', (device) => {
     socket.emit('devices', devices.getDevices())
   })
+
+  devices.on('disconnect', (device) => {
+    socket.emit('devices', devices.getDevices())
+  })
   
 
 
