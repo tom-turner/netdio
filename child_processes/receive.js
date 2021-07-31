@@ -14,7 +14,7 @@ process.on('message', packet => {
 })
 
 function start(config) {
-  var sourcePort = Number(config.sourcePort).toString()
+  var sourcePort = 20000
   var repairPort = getRepairPort(sourcePort)
 
   console.log('Started Receive Process')

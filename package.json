@@ -11,10 +11,8 @@
     "local-devices": "^3.1.0",
     "local-ip": "^2.0.0",
     "node.js": "^0.0.1-security",
-    "nodemon": "^2.0.12",
     "pm2": "^5.1.0",
-    "socket.io": "^4.1.2",
-    "ytdl-core": "^4.8.3"
+    "socket.io": "^4.1.2"
   },
   "name": "template",
   "version": "1.0.0",

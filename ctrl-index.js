@@ -4,8 +4,7 @@ const app = express();
 const http = require('http').Server(app);
 const bp = require('body-parser');
 const io = require('socket.io')(http);
-const { spawn } = require('child_process');
-const { exec } = require('child_process');
+const { spawn, exec, fork } = require('child_process');
 const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
@@ -14,6 +13,7 @@ const port = process.env.port || 5000;
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public'));
+app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'));
 app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
@@ -30,20 +30,19 @@ var devices = new Devices(config.configObject)
 devices.connect()
 
 
+/* - Just console.logs connections/disconnections
+devices.on('connection', (device) => {
+  console.log("Connected Devices:", devices.getDevices())
+})
 
-  devices.on('connection', (device) => {
-    console.log("Connected Devices:", devices.getDevices())
-  })
+devices.on('disconnect', (device) => {
+  console.log("Connected Devices:", devices.getDevices())
+})
 
-  devices.on('disconnect', (device) => {
-    console.log("Connected Devices:", devices.getDevices())
-  })
-
-  devices.on('message', (message) => {
-    console.log(message)
-  })
-
-
+devices.on('message', (message) => {
+  console.log(message)
+})
+*/
 
 // Allow User configuration
 io.on('connection', (socket) => {
@@ -51,6 +50,7 @@ io.on('connection', (socket) => {
   socket.emit('config', config.configObject)
   socket.emit('devices', devices.getDevices())  
 
+
   devices.on('connection', (device) => {
     socket.emit('devices', devices.getDevices())
   })
@@ -58,7 +58,6 @@ io.on('connection', (socket) => {
   devices.on('disconnect', (device) => {
     socket.emit('devices', devices.getDevices())
   })
-  
 
 
   // listens for new config
@@ -66,13 +65,12 @@ io.on('connection', (socket) => {
     config.set('name', newConfig.name)
     config.set('ip', newConfig.ip)
     socket.emit('newConfig', config.configObject)
-
   })
+
 
   socket.on('restart', () => {
     console.log('restart')
     //pm2.restart('ctrl-index')
-
   });
 
   socket.on('disconnect', () => {

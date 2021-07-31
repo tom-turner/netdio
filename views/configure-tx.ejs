@@ -16,43 +16,11 @@
 
 <div class="flex items-center justify-center h-screen bg-blue-800 bg-opacity-30">
 
-<div class="flex rounded shadow-lg flex-col p-4 bg-white">
-
-<h2 class="text-center text-lg font-bold">Broadcast Configuration</h2>
-<br>
-<label>Receiver IP Address:</label>
-<input id="rxIp" type="text" class="border rounded">
-
-<label>Receiver Source:</label>
-<select name="source" id="source" type="number" class="border rounded">
-  <option value="10001">1</option>
-  <option value="10002">2</option>
-  <option value="10003">3</option>
-  <option value="10004">4</option>
-  <option value="10005">5</option>
-  <option value="10006">6</option>
-  <option value="10007">7</option>
-  <option value="10008">8</option>
-  <option value="10009">9</option>
-  <option value="100010">10</option>
-  <option value="100011">11</option>
-  <option value="100012">12</option>
-  <option value="100013">13</option>
-  <option value="100014">14</option>
-  <option value="100015">15</option>
-  <option value="100016">16</option>
-  <option value="100017">17</option>
-  <option value="100018">18</option>
-  <option value="100019">19</option>
-  <option value="100020">20</option>
-</select>
-
-<br>
-
-<br>
-
-
+<div class="flex rounded w-full max-w-lg shadow-lg flex-col p-4 bg-white">
+	
 <span class="flex flex-col space-y-2">
+<label>Name: </label>
+<input name="name" id="unitName" type="text" class="border rounded"/>
 <label>IP Address:</label>
 <input id="ipAddress" class="border rounded" type="text">
 <button id="configure" class="button border px-2 rounded text-white bg-blue-600">Configure</button>
@@ -65,24 +33,6 @@
 
 	var socket = io();
 
-	socket.on("config", (config) => {	
-		loading(false)
-		console.log("config: ", config)
-		document.getElementById("ipAddress").value = config.ipAddress;
-		document.getElementById("rxIp").value = config.rxIp;
-		document.getElementById("source").value = config.destPort;
-	});
-
-	socket.on("newConfig", (config) => {
-		loading(false)
-		console.log("new config: " , config.ipAddress)
-		loading(true)
-		setTimeout(function(){
-			window.location.href = "http://" + config.ipAddress + ":5000"
-		}, 2000);
-	})
-	
-
 	function loading(isLoading) {
 		if (isLoading) {
 			document.querySelector(".button").disabled = true;
@@ -94,34 +44,38 @@
 		}
 	}
 	
+	socket.on("config", (config) => {	
+		loading(false)
+		console.log("config: ", config)
+		document.getElementById("ipAddress").value = config.ip;
+		document.getElementById("unitName").value = config.name;
+	});
 
-	function source(input) {
-		console.log(input)
-		socket.emit("source", input)
-	}
-
-	function configureIp(input) {
+	// listens for new config
+	socket.on("newConfig", (config) => {
 		loading(true)
-		console.log(input)
-		socket.emit("ip", input)
-	}
+		setTimeout(function(){
+			window.location.href = "http://" + config + ":5000"
+		}, 2000);
+	})	
 
+	$('#unitName').on("input" , function() {
 
-	$('#volume').on("input" , function() {
-		volume(document.getElementById("volume").value)
-	})
+		var message = {
+			type: 'name', 
+			value: $('#unitName').val()
+		}
 
-	$('#source').on("input" , function() {
-		source(document.getElementById("source").value)
-	})
+		socket.emit('setConfig', message)	
+	})	
 
 	$('#configure').on("click" , function() {
-		var config = {
-			ipAddress : document.getElementById("ipAddress").value,
-			rxIp : document.getElementById("rxIp").value
+		loading(true)
+		var message = {
+			type : 'ip',
+			value : $('#ipAddress').val()
 		}
-		configureIp(config)
-
+		socket.emit("setConfig", message)
 	})
 
 	$('#restart').on("click" , function() {

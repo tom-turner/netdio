@@ -99,7 +99,7 @@
 		document.getElementById(button).classList.toggle("rotate-180")
 	}
 
-	function createZone(zone,) {
+	function createZone(zone) {
 		
 		console.log(zone)
 
@@ -123,7 +123,7 @@
 		for (input of inputDevices) {
 			console.log(1, input)
 			select.append(
-				$(`<option value="${input.ip}"/>`).text(input.name)
+				$(`<option value="${input.source}"/>`).text(input.name)
 			)
 		}
 
@@ -148,12 +148,12 @@
 	}
 
 
-	function edit(key, input){
+	function edit(type, input){
 		
 		message = {
 			ip : input.closest('li').id,
-			type : key, 
-			[key] : input.value 
+			type : type, 
+			value : input.value 
 		}
 		console.log(message)
 		socket.emit('forward', message)
@@ -184,14 +184,11 @@
 			}
 			if(device.type === 'tx') {
 
-
 				inputDevices.push(device)
 				var li = createDeviceLi(device)
 				$('#inputs').append(li)
 			}
-
 		}
-
 	})
 	
 		// receives config on page load

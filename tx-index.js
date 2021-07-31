@@ -18,13 +18,9 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
-var config = new Configuration('./config/rx-config.json')
+var config = new Configuration('./config/tx-config.json')
 
-// We can just use `fork()` instead of pm2, it provides a way for use to
-// send data to the child_process!
-var receive = fork('./child_processes/receive.js')
-receive.send({ type: 'start', config: config.config() })
-receive.on('message', packet => console.log(packet))
+// add pm2 again
 
 if (config.get('ip') != ip) {
     // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
@@ -32,51 +28,33 @@ if (config.get('ip') != ip) {
     config.set("ip", ip)
 }
 
+function rng(){
+  return Math.floor(Math.random() * (max - min + 1 )) + min 
+}
+
+var source = config.get('source') || rng()
+var multicastAddress = '224.0.0.1'
+
+config.set('source', source )
+
 var devices = new Devices(config.configObject)
 devices.connect()
 
 
+function rng(){
+  var min = 10000
+  var max = 49000
+  return Math.floor(Math.random() * (max - min + 1 )) + min 
+}
+
 devices.on('ctrlMessage', (message) => {
     console.log(message)
-    config.set(message.type, message.value)
-    if (message.type == 'source') {
-      // restart roc with source
-    }
-
-    if (message.type == 'volume') {
-      console.log(process.platform === 'linux')
-      if (process.platform === 'linux') {
-        spawn('amixer', ['set', 'Headphone', `${input}%`])
-      }
-    }     
 })
 
 // Allow User configuration
 io.on('connection', (socket) => {
   console.log('user connected');
   socket.emit('config', config.configObject)
-  socket.emit('devices', devices.getDevices())
-
-  devices.on('connection', (device) => {
-    socket.emit('devices', devices.getDevices())
-  })
-
-    devices.on('disconnect', (device) => {
-    socket.emit('devices', devices.getDevices())
-  })
-
-  socket.on('volume', (input) => {
-    config.set('volume' , input.value)
-    if (process.platform === 'linux') {
-        spawn('amixer', ['set', 'Headphone', `${input}%`])
-    }
-  })
-
-  socket.on('source', (input) => {
-    config.set('source', input)
-    // restart roc with new source
-  })
-
 
   // listens for new config
   socket.on('setConfig', (input) => {
@@ -86,7 +64,7 @@ io.on('connection', (socket) => {
       socket.emit('newConfig', input.value)
     }
 
-    config.set(input.type , input.value)
+    config.set(input.type, input.value)
 
   })
 
@@ -104,7 +82,7 @@ io.on('connection', (socket) => {
 
 // Render index.ejs
 app.get('/', function (req, res) {
-  res.render('configure-rx.ejs');
+  res.render('configure-tx.ejs');
 });
 
 //
