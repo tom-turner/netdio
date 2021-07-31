@@ -22,7 +22,7 @@
 		<br>
 
 		<label>Input Source:</label>
-		<select name="source" id="source" type="number" class="border rounded">
+		<select name="source" id="source" type="number" class="border rounded" >
 
 		</select>
 
@@ -67,7 +67,7 @@
 
 			if(device.type === 'tx') {
 
-				var option = $(`<option value="${device.source}" onmouseup="onSelect(this)"/>`).text(device.name)
+				var option = $(`<option id="${device.source}" value="${device.source}"/>`).text(device.name)
 
 				$('#source').append(option)
 			}
@@ -84,7 +84,8 @@
 		document.getElementById("unitName").value = config.name;
 		document.getElementById("volume").value = config.volume;	
 		if (config.source) {
-			document.getElementById(config.source.ip).selected = true
+			var id = config.source.value.toString()
+			document.getElementById(id).selected = 'selected'
 		}
 	});
 
@@ -97,7 +98,7 @@
 	})
 
 
-	$('#volume').on("input" , function(input) {
+	$('#volume').on("input" , () => {
 
 		var message = {
 			value: $('#volume').val()
@@ -107,16 +108,18 @@
 		
 	})
 
-	function onSelect(option) {
+	$('#source').on("input" , () => {
+
 		var message = {
-			source : this.value,
-			name : this.innerHTML,
+			value : $('#source').val(),
+			name : $('#source option:selected').text(),
 		}
+		console.log(message)
 		socket.emit('source', message)
-	}
+	})
 
 
-	$('#unitName').on("input" , function() {
+	$('#unitName').on("input" , () => {
 		var message = {
 			type: 'name', 
 			value: $('#unitName').val()

@@ -1,1 +1,1 @@
-{"name":"rx","type":"rx","ipAddress":"192.168.1.139","volume":"100","ip":"192.168.1.136"}
+{"name":"rx","type":"rx","ipAddress":"192.168.1.139","volume":"100","ip":"192.168.1.136","source":{"value":"18053","name":"Transmitter"}}
