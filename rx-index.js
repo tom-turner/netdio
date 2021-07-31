@@ -20,12 +20,6 @@ app.set('view engine', 'ejs');
 
 var config = new Configuration('./config/rx-config.json')
 
-// We can just use `fork()` instead of pm2, it provides a way for use to
-// send data to the child_process!
-//var receive = fork('./child_processes/receive.js')
-//receive.send({ type: 'start', config: config.config() })
-//receive.on('message', packet => console.log(packet))
-
 if (config.get('ip') != ip) {
     // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
     console.log("ip does not match config")
@@ -34,6 +28,10 @@ if (config.get('ip') != ip) {
 
 var devices = new Devices(config.configObject)
 devices.connect()
+
+var receive = fork('./child_processes/roc.js')
+receive.send({ type: 'startReceive', config: config.config() })
+receive.on('message', packet => console.log(packet))
 
 
 devices.on('ctrlMessage', (message) => {

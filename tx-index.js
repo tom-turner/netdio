@@ -20,32 +20,31 @@ app.set('view engine', 'ejs');
 
 var config = new Configuration('./config/tx-config.json')
 
-// add pm2 again
-
-if (config.get('ip') != ip) {
-    // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
-    console.log("ip does not match config")
-    config.set("ip", ip)
-}
-
-function rng(){
-  return Math.floor(Math.random() * (max - min + 1 )) + min 
-}
-
 var source = config.get('source') || rng()
-var multicastAddress = '224.0.0.1'
 
 config.set('source', source )
-
-var devices = new Devices(config.configObject)
-devices.connect()
-
+// add pm2 again
 
 function rng(){
   var min = 10000
   var max = 49000
-  return Math.floor(Math.random() * (max - min + 1 )) + min 
+  var num = Math.floor(Math.random() * (max - min + 1 )) + min 
+  return num.toString()
 }
+
+if (config.get('ip') != ip) {
+    // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ip}` , (err, stdout, stderr) => {console.log(stdout)} );
+    console.log("ip does not match config")
+    config.set("ip", ip)
+}
+
+var devices = new Devices(config.configObject)
+devices.connect()
+
+var transmit = fork('./child_processes/roc.js')
+transmit.send({ type: 'startTransmit', config: config.config() })
+transmit.on('message', packet => console.log(packet))
+
 
 devices.on('ctrlMessage', (message) => {
     console.log(message)
