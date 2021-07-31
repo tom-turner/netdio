@@ -22,8 +22,8 @@
 		<br>
 
 		<label>Input Source:</label>
-		<select name="source" id="source" type="number" class="border rounded" >
-
+		<select name="source" id="source" type="number" class="border rounded">
+			<option selected disabled>-Select-</option>
 		</select>
 
 		<br>
@@ -114,7 +114,6 @@
 			value : $('#source').val(),
 			name : $('#source option:selected').text(),
 		}
-		console.log(message)
 		socket.emit('source', message)
 	})
 

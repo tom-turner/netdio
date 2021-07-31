@@ -30,7 +30,11 @@ var devices = new Devices(config.configObject)
 devices.connect()
 
 var receive = fork('./child_processes/roc.js')
-receive.send({ type: 'startReceive', config: config.config() })
+
+receive.send({ 
+  type: config.get("source") ? 'startReceive' : '',
+  config: config.config() 
+})
 receive.on('message', packet => console.log(packet))
 
 
@@ -38,7 +42,8 @@ devices.on('ctrlMessage', (message) => {
     console.log(message)
     config.set(message.type, message.value)
     if (message.type == 'source') {
-      // restart roc with source
+      receive.send({ type: 'end'})
+      receive.send({ type: 'startReceive', config: config.config() })
     }
 
     if (message.type == 'volume') {
@@ -72,8 +77,10 @@ io.on('connection', (socket) => {
   })
 
   socket.on('source', (input) => {
+    console.log(input)
     config.set('source', input)
-    // restart roc with new source
+    receive.send({ type: 'end'})
+    receive.send({ type: 'startReceive', config: config.config() })
   })
 
 
@@ -90,9 +97,9 @@ io.on('connection', (socket) => {
   })
 
   socket.on('restart', () => {
-    console.log('restart')
-    //pm2.restart('rx-index')
-
+    receive.send({ type: 'end'})
+    receive.send({ type: 'startReceive', config: config.config() })
+    socket.emit('config', config.configObject)
   });
 
   socket.on('disconnect', () => {

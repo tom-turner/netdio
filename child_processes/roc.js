@@ -2,6 +2,8 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const Configuration = require('../lib/configuration')
 const path = require('path')
+const EventEmitter = require('events');
+const emitter = new EventEmitter();
 const multicastIp = '224.0.0.1'
 
 process.on('message', packet => {
@@ -11,6 +13,9 @@ process.on('message', packet => {
       break
     case 'startTransmit':
       startTx(packet.config)
+      break
+    case 'end':
+      emitter.emit('end')
       break
     default:
       console.log(`Recieve: didn't understand message type ${packet.type}`)
@@ -32,10 +37,12 @@ function startRx(config) {
   var rocRecv = spawn('roc-recv', ['-vv', '-s', `rtp+rs8m:${multicastIp}:${sourcePort}`, '-r', `rs8m:${multicastIp}:${repairPort}`, driver]);
   rocRecv.stdout.on('data', (data) => {
     console.log('stdout: ', data )
+
   })
   rocRecv.stderr.on('data', (data) => {
     console.error('ps stderr: ', data.toString('utf8'));
     // restartProcess(data)
+    
   });
   rocRecv.on('close', (code) => {
     if (code !== 0) {
@@ -44,6 +51,10 @@ function startRx(config) {
       // restartProcess()
     }
   });
+  emitter.on('end', () => {
+    rocRecv.kill()
+  })
+
 }
 
 function startTx(config) {
@@ -73,6 +84,9 @@ function startTx(config) {
       // restartProcess()
     }
   });
+  emitter.on('end', () => {
+    rocSend.kill()
+  })
 }
 
 function getRepairPort(input) {

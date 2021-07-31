@@ -23,7 +23,6 @@ var config = new Configuration('./config/tx-config.json')
 var source = config.get('source') || rng()
 
 config.set('source', source )
-// add pm2 again
 
 function rng(){
   var min = 10000
@@ -69,8 +68,9 @@ io.on('connection', (socket) => {
 
   socket.on('restart', () => {
     console.log('restart')
-    //pm2.restart('rx-index')
-
+    transmit.send({ type: 'end'})
+    transmit.send({ type: 'startTransmit', config: config.config() })
+    socket.emit('config', config.configObject)
   });
 
   socket.on('disconnect', () => {
