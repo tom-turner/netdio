@@ -23,7 +23,8 @@
 		<img id="settings-gear" class="w-6 cursor-pointer transform duration-500" onclick="toggleSettings('settings','settings-gear')" src="images/gear.svg"/>
 	</div>
 
-	<div id="settings" class="w-full hidden pt-1">
+</div>
+	<div id="settings" class="w-full bg-white rounded shadow-lg flex  p-2 px-4 flex-col hidden">
 		<span class="flex flex-col space-y-1">
 
 				<label>Name:</label>
@@ -36,7 +37,7 @@
 		</span>
 	</div>
 
-</div>
+
 
 <div class="w-full bg-white rounded shadow-lg flex  p-2 px-4 flex-col">
 	<div class="justify-between flex w-full">
@@ -82,7 +83,6 @@
 <script type="text/javascript">
 
 	var socket = io();
-	var inputDevices = [];
 
 	function loading(isLoading) {
 		if (isLoading) {
@@ -104,31 +104,20 @@
 		
 		console.log(zone)
 
-		var inputOptions = getInputOptions()
-
 		return	$(`<li id="${zone.ip}" class="bg-blue-400 bg-opacity-20 hover:bg-opacity-10 border rounded flex flex-col p-2 m-2" />`).append(
             		$('<div class="flex flex-col"/>').append(
               			$('<div class"w-full flex flex-row justify-between"/>').append(
               				$('<span class="font-bold" />').text(zone.name)
               			),
               			$(`<input type="range" class="w-full" value="${zone.volume}" oninput="edit('volume', this)"/>`),
-              			inputOptions
+              			$(`<select class="rounded my-2 zoneinput" onchange="edit('source', this)"/>`) .append($('<option id="muted" value="Muted"/>').text("-Mute-"))
             		)
         		)
 	}
 
-	function getInputOptions(){
-
-		var select = $(`<select id="input" class="rounded my-2" onchange="edit('source', this)"/>`) .append($('<option id="muted" value="muted"/>').text("-Mute-"))
-
-		for (input of inputDevices) {
-			console.log(1, input)
-			select.append(
-				$(`<option value="${input.source}"/>`).text(input.name)
-			)
-		}
-
-		return select
+	function getInputAsOption(device){
+			
+		return $(`<option value="${device.source}"/>`).text(device.name)
 	}
 
 	function createDeviceLi(device) {
@@ -165,29 +154,34 @@
 	// listens for devices
 	socket.on("devices", (devices) => {
 
-
-		console.log("device", devices)
-
 		$('#zones').html('')
 		$('#destinations').html('')
 		$('#inputs').html('')
 
+		devices = devices.sort((a,b) => {		
+			return a.type == b.type ? 0 : a.type > b.type ? 1 : -1
+		})
+
 		for (device of devices) {
 
 			if(device.type === 'rx') {
-				$('#destinations').html('')
 
 				var zone = createZone(device)
 				$('#zones').append(zone)
 
 				var li = createDeviceLi(device)
 				$('#destinations').append(li)
+
+				$('.zoneinput').append($('<option disabled selected/>').text(`${device.source}`))
 			}
 			if(device.type === 'tx') {
+				
+				$('.zoneinput').append(getInputAsOption(device))
 
-				inputDevices.push(device)
 				var li = createDeviceLi(device)
 				$('#inputs').append(li)
+
+
 			}
 		}
 	})
