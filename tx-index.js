@@ -47,6 +47,7 @@ transmit.on('message', packet => console.log(packet))
 
 devices.on('ctrlMessage', (message) => {
     console.log(message)
+    config.set(message.type, message.value)
 })
 
 // Allow User configuration

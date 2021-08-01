@@ -70,7 +70,8 @@ io.on('connection', (socket) => {
 
   socket.on('restart', () => {
     console.log('restart')
-    //pm2.restart('ctrl-index')
+    process.exit()
+    pm2.restart('ctrl-index')
   });
 
   socket.on('disconnect', () => {

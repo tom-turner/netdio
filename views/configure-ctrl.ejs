@@ -67,6 +67,7 @@
 	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded shadow-lg p-2 px-4">
 		<div class="justify-between flex w-full">
 			<p>Zone Control:</p>
+			<img id="routing-gear" class="w-6 cursor-pointer transform duration-500" onclick="location.reload()" src="images/reload.svg"/>
 		</div>
 
 		<div class="h-full py-2">
@@ -118,7 +119,7 @@
 
 	function getInputOptions(){
 
-		var select = $(`<select id="input" class="rounded my-2" onchange="edit('input', this)"/>`) 
+		var select = $(`<select id="input" class="rounded my-2" onchange="edit('source', this)"/>`) .append($('<option value=""/>').text("-Mute-"))
 
 		for (input of inputDevices) {
 			console.log(1, input)
