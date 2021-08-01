@@ -23,7 +23,7 @@
 
 		<label>Input Source:</label>
 		<select name="source" id="source" type="number" class="border rounded">
-			<option selected disabled>-Select-</option>
+			<option id="muted" value="muted">-Mute-</option>
 		</select>
 
 		<br>
@@ -84,8 +84,10 @@
 		document.getElementById("unitName").value = config.name;
 		document.getElementById("volume").value = config.volume;	
 		if (config.source) {
-			var id = config.source.value
-			document.getElementById(id).selected = 'selected'
+			console.log(config.source.value)
+			var id = config.source.value.toString()
+			console.log(document.getElementById(id))
+			document.getElementById(id).selected = 'true'
 		}
 	});
 

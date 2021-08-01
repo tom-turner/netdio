@@ -20,6 +20,8 @@ app.set('view engine', 'ejs');
 
 var config = new Configuration('./config/rx-config.json')
 
+console.log(ip)
+
 if (config.get('ip') != ip) {
     // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
     console.log("ip does not match config")
