@@ -1,5 +1,5 @@
 
-<div class="hidden h-screen w-full bg-black opacity-80 absolute spinner text-white ">
+<div class="hidden h-screen w-full bg-black opacity-80 absolute spinner text-white z-10">
 
 	<span class="flex flex-col space-y-4">
 
@@ -15,7 +15,7 @@
 </div>
 
 
-<div class="flex items-center justify-center h-screen bg-blue-800 bg-opacity-30 flex flex-col p-4 space-y-2">
+<div class="flex items-center justify-center h-screen bg-blue-100 flex flex-col p-4 space-y-2">
 
 <div class="w-full bg-white rounded shadow-lg flex  p-2 px-4 flex-col">
 	<div class="justify-between flex w-full">
@@ -25,15 +25,44 @@
 
 </div>
 	<div id="settings" class="w-full bg-white rounded shadow-lg flex  p-2 px-4 flex-col hidden">
-		<span class="flex flex-col space-y-1">
+		<span class="flex flex-col space-y-2">
 
+			<span class="flex flex-row space-x-2">
 				<label>Name:</label>
-				<input id="unitName" class="border rounded" type="text">
-				<label>IP Address:</label>
-				<input id="ipAddress" class="border rounded" type="text">
+				<input id="unitName" class="font-bold w-full" type="text">
+			</span>	
+				
+				<span class="flex flex-row w-full space-x-2">
+					
+					<p>DHCP:</p>
+					
+					<div id="dhcp" class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+    					<input id="toggle" type="checkbox" name="toggle" class="absolute block w-6 h-6 rounded-full bg-white border-2 appearance-none cursor-pointer transform transition duration-500 translate-x-4"/>
+    					<span id="toggle-bg" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer transition duration-500 blue"></span>
+					</div>
 
-			<button id="configure" class="button border px-2 rounded text-white bg-blue-600">Configure</button>
-			<button id="restart" class="button border px-2 rounded text-grey-400 bg-white">Restart</button>
+				</span>
+
+				<form id="staticForm" class="hidden w-full">
+					<input id="static" type="checkbox" hidden>
+					<span class="flex flex-row space-x-2">
+						<label>IP Address:</label>
+						<input id="ipAddress" type="text" name="ip">
+					</span>
+					<span class="flex flex-row space-x-2 hidden">
+						<label>Subnet: </label>
+						<input id="subnet" type="text" name="subnet">
+					</span>
+
+					<span class="flex flex-row space-x-2 hidden">
+						<label>Router: </label>
+						<input id="router" type="text" name="router">
+					</span>
+				</form>
+			
+			<button id="configure" class="button border px-2 rounded-full text-white blue">Configure</button>
+			
+			<button id="restart" class="button border px-2 rounded-full text-grey-400 bg-white">Restart</button>
 		</span>
 	</div>
 
@@ -42,14 +71,14 @@
 <div class="w-full bg-white rounded shadow-lg flex  p-2 px-4 flex-col">
 	<div class="justify-between flex w-full">
 		<p>Devices:</p>
-		<img id="routing-gear" class="w-6 cursor-pointer transform duration-500" onclick="toggleSettings('routing','routing-gear')" src="images/gear.svg"/>
+		<img id="routing-gear" class="w-6 cursor-pointer transform duration-500" onclick="toggleSettings('routing','routing-gear')" src="images/menu.svg"/>
 	</div>
 </div>
 	<div id="routing" class="flex flex-row h-screen justify-between w-full space-x-2 hidden">
 
 		<div class="flex rounded shadow-lg flex-col p-4 bg-white w-1/2">
-			<h2 class="text-center"> Inputs </h2>
-			<ul id="inputs" class="border rounded h-full">
+			<h2 class="">Inputs: </h2>
+			<ul id="inputs" class="h-full">
 
 			</ul>
 			
@@ -57,8 +86,8 @@
 
 
 		<div class="flex rounded shadow-lg flex-col p-4 bg-white w-1/2">
-			<h2 class="text-center"> Destinations </h2>
-			<ul id="destinations" class="border rounded h-full">
+			<h2 class="">Destinations: </h2>
+			<ul id="destinations" class="h-full">
 
 			</ul>
 		</div>
@@ -68,11 +97,11 @@
 	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded shadow-lg p-2 px-4">
 		<div class="justify-between flex w-full">
 			<p>Zone Control:</p>
-			<img id="routing-gear" class="w-6 cursor-pointer transform duration-500" onclick="location.reload()" src="images/reload.svg"/>
+			<img id="reload" class="w-6 cursor-pointer" src="images/reload.svg"/>
 		</div>
 
 		<div class="h-full py-2">
-			<ol id="zones" class="border rounded h-full flex flex-col">
+			<ol id="zones" class="h-full flex flex-col">
 
 			</ol>
 		</div>
@@ -97,20 +126,24 @@
 
 	function toggleSettings(id, button) {
 		document.getElementById(id).classList.toggle("hidden")
-		document.getElementById(button).classList.toggle("rotate-180")
+		document.getElementById(button).classList.toggle("rotate-45")
+		
+		setTimeout( () => {
+			document.getElementById(button).classList.toggle("rotate-45")
+		},100)
 	}
 
 	function createZone(zone) {
 		
 		console.log(zone)
 
-		return	$(`<li id="${zone.ip}" class="bg-blue-400 bg-opacity-20 hover:bg-opacity-10 border rounded flex flex-col p-2 m-2" />`).append(
-            		$('<div class="flex flex-col"/>').append(
+		return	$(`<li id="${zone.ip}" class="bg-white shadow-lg border rounded flex flex-col p-2 m-2" />`).append(
+            		$('<div class="flex flex-col space-y-2"/>').append(
               			$('<div class"w-full flex flex-row justify-between"/>').append(
               				$('<span class="font-bold" />').text(zone.name)
               			),
-              			$(`<input type="range" class="w-full" value="${zone.volume}" oninput="edit('volume', this)"/>`),
-              			$(`<select class="rounded my-2 zoneinput" onchange="edit('source', this)"/>`) .append($('<option id="muted" value="Muted"/>').text("-Mute-"))
+              			$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none bg-blue-100 rounded-full" value="${zone.volume}" oninput="edit('volume', this)"/>`),
+              			$(`<select class="rounded zoneinput" onchange="edit('source', this)"/>`) .append($('<option id="muted" value="Muted"/>').text("-Mute-"))
             		)
         		)
 	}
@@ -124,7 +157,7 @@
 
 		console.log(device)
 
-		return	$('<li id="'+ device.ip + '" class="border rounded flex flex-col md:flex-row px-2 py-1 m-2 justify-between space-x-2"/>').append(
+		return	$('<li id="'+ device.ip + '" class="bg-white shadow-lg border rounded flex flex-row p-2 my-2 md:space-x-2 justify-between"/>').append(
 					$('<div class="flex flex-row space-x-2"/>').append(
 						$('<label />').text("Name: "),
 						$(`<input type="text" class="w-full font-bold" value="${device.name}" onkeyup="edit('name', this)"/>`)
@@ -133,7 +166,7 @@
 						$('<lable/>').text("IP: "),
 						$(`<p type="text" class="w-full"/>`).text(device.ip)
 					),
-					$(`<button class="text-white rounded-full px-2 bg-blue-600" value="true" onclick="edit('blink' , this)" />`).text("Blink")
+					$(`<button class="text-white rounded-full px-2 blue" value="true" onclick="edit('blink' , this)" />`).text("Blink")
 				)
 	}
 
@@ -200,6 +233,19 @@
 		setTimeout(function(){
 			window.location.href = "http://" + config.ip + ":5000"
 		}, 2000);
+	})
+
+	$('#reload').on('click' , function(){
+		loading(true)
+		setTimeout( () => {
+			location.reload()
+		}, 1000)
+	})
+
+	$('#dhcp').on("click" , function(){
+		$('#toggle').toggleClass("translate-x-4")
+		$('#toggle-bg').toggleClass("blue")
+		$('#staticForm').toggleClass("hidden")
 	})
 
 	$('#configure').on("click" , function() {

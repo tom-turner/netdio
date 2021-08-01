@@ -14,36 +14,77 @@
 
 </div>
 
-<div class="flex items-center justify-center h-screen bg-blue-800 bg-opacity-30">
+<div class="flex items-center justify-center h-screen bg-blue-100 flex flex-col p-4 space-y-2">
 
-	<div class="flex rounded shadow-lg flex-col p-4 bg-white w-full max-w-lg mx-4">
-		<label>Name: </label>
-		<input name="name" id="unitName" type="text" class="border rounded"/>
-		<br>
-
-		<label>Input Source:</label>
-		<select name="source" id="source" type="number" class="border rounded">
-			<option id="muted" value="Muted">-Mute-</option>
-		</select>
-
-		<br>
-
-		<label>Volume:</label>
-		<input id="volume" type="range">
-
-		<br>
-
-
-
-
+	<div id="settings" class="w-full max-w-lg bg-white rounded shadow-lg flex  p-2 px-4 flex-col">
 		<span class="flex flex-col space-y-2">
-			<label>IP Address:</label>
-			<input id="ipAddress" class="border rounded" type="text">
-			<button id="configure" class="button border px-2 rounded text-white bg-blue-600">Configure</button>
-			<button id="restart" class="button border px-2 rounded text-grey-400 bg-white">Restart</button>
+
+			<span class="flex flex-row space-x-2 my-auto">
+				<label class="w-1/5" >Name:</label>
+				<input id="unitName" class="font-bold w-full" type="text">
+			</span>
+
+			<span class="flex flex-row space-x-2 my-auto">
+				<label class="w-1/5" >Volume:</label>
+				<input class="w-full rounded-lg overflow-hidden appearance-none bg-blue-100 rounded-full" id="volume" type="range">
+			</span>
+
+			<span class="flex flex-row -space-x-2">
+				<label class="w-1/5">Input:</label>
+				<span>
+					<select name="source" id="source" type="number" class="border rounded">
+						<option id="muted" value="Muted">-Mute-</option>
+					</select>		
+				</span>
+
+			</span>
+
+
+
+			<span class="flex flex-row -space-x-2 my-auto">
+				<lable class="w-1/5">DHCP:</lable>
+
+				<div id="dhcp" class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+					<input id="toggle" type="checkbox" name="toggle" class="absolute block w-6 h-6 rounded-full bg-white border-2 appearance-none cursor-pointer transform transition duration-500 translate-x-4"/>
+					<span id="toggle-bg" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer transition duration-500 blue"></span>
+				</div>
+			</span>
+
+
+
+			<form id="staticForm" class="hidden w-full">
+				<input id="static" type="checkbox" hidden>
+				<span class="flex flex-row space-x-2">
+					<label>IP Address:</label>
+					<input id="ipAddress" type="text" name="ip">
+				</span>
+				<span class="flex flex-row space-x-2 hidden">
+					<label>Subnet: </label>
+					<input id="subnet" type="text" name="subnet">
+				</span>
+
+				<span class="flex flex-row space-x-2 hidden">
+					<label>Router: </label>
+					<input id="router" type="text" name="router">
+				</span>
+			</form>
+
+
+
+			<button id="configure" class="button border px-2 rounded-full text-white blue">Configure</button>
+			
+			<button id="restart" class="button border px-2 rounded-full text-grey-400 bg-white">Restart</button>
 		</span>
 	</div>
 </div>
+
+<div class="hidden flex items-center justify-center h-screen bg-blue-100">
+
+
+</div>
+
+
+
 
 <script type="text/javascript">
 
@@ -126,6 +167,12 @@
 			value: $('#unitName').val()
 		}
 		socket.emit('setConfig', message)	
+	})
+
+	$('#dhcp').on("click" , function(){
+		$('#toggle').toggleClass("translate-x-4")
+		$('#toggle-bg').toggleClass("blue")
+		$('#staticForm').toggleClass("hidden")
 	})
 
 	$('#configure').on("click" , function() {
