@@ -119,7 +119,7 @@
 
 	function getInputOptions(){
 
-		var select = $(`<select id="input" class="rounded my-2" onchange="edit('source', this)"/>`) .append($('<option value=""/>').text("-Mute-"))
+		var select = $(`<select id="input" class="rounded my-2" onchange="edit('source', this)"/>`) .append($('<option id="muted" value="muted"/>').text("-Mute-"))
 
 		for (input of inputDevices) {
 			console.log(1, input)
