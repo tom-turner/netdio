@@ -155,15 +155,12 @@
 
 	function createDeviceLi(device) {
 
-		var source = {
-			name : device.name,
-			value : device.source
-		}
+		console.log(device)
 
 		return	$('<li id="'+ device.ip + '" class="bg-white shadow-lg border rounded flex flex-row p-2 my-2 md:space-x-2 justify-between"/>').append(
 					$('<div class="flex flex-row space-x-2"/>').append(
 						$('<label />').text("Name: "),
-						$(`<input type="text" class="w-full font-bold" value="${source}" onkeyup="edit('name', this)"/>`)
+						$(`<input type="text" class="w-full font-bold" value="${device.name}" onkeyup="edit('name', this)"/>`)
 					),
 					$('<div class="flex flex-row space-x-2 hidden"/>').append(
 						$('<lable/>').text("IP: "),
@@ -208,7 +205,7 @@
 				var li = createDeviceLi(device)
 				$('#destinations').append(li)
 
-				$('.zoneinput').append($('<option disabled selected/>').text(`${device.source.name}`))
+				$('.zoneinput').append($('<option disabled selected/>').text(`${device.source}`))
 			}
 			if(device.type === 'tx') {
 				
