@@ -8,6 +8,7 @@ const { spawn, exec, fork } = require('child_process');
 const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
+const Logs = require("./lib/logs")
 const port = process.env.port || 5000;
 
 app.use(bp.json())
@@ -18,7 +19,13 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
+
 var config = new Configuration('./config/ctrl-config.json')
+var logs = new Logs()
+
+logs.write("hello!")
+
+
 
 if (config.get('ip') != ip) {
     // exec(`echo ${config.rootPassword} | sudo -S ifconfig ${local.interface} ${config.ipAddress}` , (err, stdout, stderr) => {console.log(stdout)} );
