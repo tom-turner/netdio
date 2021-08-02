@@ -26,14 +26,14 @@
 
 			<span class="flex flex-row space-x-2 my-auto">
 				<label class="w-1/5" >Volume:</label>
-				<input class="w-full rounded-lg overflow-hidden appearance-none bg-blue-100 rounded-full" id="volume" type="range">
+				<input class="w-full rounded-lg overflow-hidden appearance-none h-6 bg-blue-100 rounded-full" id="volume" type="range">
 			</span>
 
 			<span class="flex flex-row -space-x-2">
 				<label class="w-1/5">Input:</label>
 				<span>
 					<select name="source" id="source" type="number" class="border rounded">
-						<option id="muted" value="Muted">-Mute-</option>
+						<option id="muted" value="muted">-Mute-</option>
 					</select>		
 				</span>
 
@@ -46,7 +46,7 @@
 
 				<div id="dhcp" class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
 					<input id="toggle" type="checkbox" name="toggle" class="absolute block w-6 h-6 rounded-full bg-white border-2 appearance-none cursor-pointer transform transition duration-500 translate-x-4"/>
-					<span id="toggle-bg" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer transition duration-500 blue"></span>
+					<span id="toggle-bg" class="toggle-label block overflow-hidden h-6 rounded-full bg-blue-100 cursor-pointer transition duration-500 blue"></span>
 				</div>
 			</span>
 
@@ -125,10 +125,7 @@
 		document.getElementById("unitName").value = config.name;
 		document.getElementById("volume").value = config.volume;	
 		if (config.source) {
-			console.log(config.source.value)
-			var id = config.source.value.toString()
-			console.log(document.getElementById(id))
-			document.getElementById(id).selected = 'true'
+			$('#source').append($('<option disabled selected/>').text(`${config.source.name}`))
 		}
 	});
 
