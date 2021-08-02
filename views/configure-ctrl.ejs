@@ -143,14 +143,17 @@
               				$('<span class="font-bold" />').text(zone.name)
               			),
               			$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none bg-blue-100 rounded-full" value="${zone.volume}" oninput="edit('volume', this)"/>`),
-              			$(`<select class="rounded zoneinput" onchange="edit('source', this)"/>`) .append($('<option id="muted" value="muted"/>').text("-Mute-"))
+              			$(`<select class="rounded zoneinput" />`) .append(getInputAsOption({
+              					name : "-Mute-",
+              					source : "muted"
+              				}))
             		)
         		)
 	}
 
 	function getInputAsOption(device){
-			
-		return $(`<option value="${device.source}"/>`).text(device.name)
+		
+		return $(`<option value="${device.source}" name="${device.name}"/>`).text(device.name)
 	}
 
 	function createDeviceLi(device) {
@@ -173,15 +176,16 @@
 
 	function edit(type, input){
 		
-		message = {
+		var message = {
 			ip : input.closest('li').id,
 			type : type, 
-			value : input.value 
+			value : input.value
 		}
-		console.log(message)
+
+		console.log("message", message)
+
 		socket.emit('forward', message)
 	}
-
 
 
 	// listens for devices
@@ -205,7 +209,7 @@
 				var li = createDeviceLi(device)
 				$('#destinations').append(li)
 
-				$('.zoneinput').append($('<option disabled selected/>').text(`${device.source}`))
+				$('.zoneinput').append($('<option disabled selected/>').text(`${device.source.name}`))
 			}
 			if(device.type === 'tx') {
 				
@@ -213,9 +217,9 @@
 
 				var li = createDeviceLi(device)
 				$('#inputs').append(li)
-
-
 			}
+
+			loadHandlers()
 		}
 	})
 	
@@ -233,6 +237,22 @@
 		setTimeout(function(){
 			window.location.href = "http://" + config.ip + ":5000"
 		}, 2000);
+	})
+
+
+function loadHandlers(){
+
+	$('select').on('change', function () {
+		var message = {
+			ip : this.closest('li').id,
+			type : 'source', 
+			value : {
+				value: $('option:selected',this).val(),
+				name: $('option:selected',this).text()
+			}
+		}
+		console.log(message)
+		socket.emit('forward', message)
 	})
 
 	$('#reload').on('click' , function(){
@@ -261,5 +281,7 @@
 		socket.emit("restart")
 		loading(true)
 	})
+
+}
 
 </script>
