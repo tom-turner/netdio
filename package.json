@@ -9,7 +9,6 @@
     "jquery": "^3.6.0",
     "json-socket": "^0.3.0",
     "local-devices": "^3.1.0",
-    "local-ip": "^2.0.0",
     "node.js": "^0.0.1-security",
     "pm2": "^5.1.0",
     "socket.io": "^4.1.2"
