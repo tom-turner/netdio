@@ -18,7 +18,7 @@ process.on('message', packet => {
       emitter.emit('end')
       break
     default:
-      console.log(`Recieve: didn't understand message type ${packet.type}, most likely be because a source is not chosen`)
+      console.log(`Roc: didn't understand message.`)
   }
 })
 
