@@ -211,7 +211,9 @@
 				var li = createDeviceLi(device)
 				$('#destinations').append(li)
 
-				$('.zoneinput').append($('<option disabled selected/>').text(`${device.source.name}`))
+				if(device.source) {
+					$('.zoneinput').append($('<option disabled selected/>').text(`${device.source.name}`))
+				}
 			}
 			if(device.type === 'tx') {
 				
