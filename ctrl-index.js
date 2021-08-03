@@ -20,7 +20,7 @@ app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
 
-var config = new Configuration('./config/ctrl-config.json')
+var config = new Configuration('./config/ctrl-config.json', 'ctrl')
 var logs = new Logs()
 
 logs.write("application started")

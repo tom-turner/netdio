@@ -113,6 +113,8 @@
 
 	var socket = io();
 
+	loadHandlers()
+
 	function loading(isLoading) {
 		if (isLoading) {
 			document.querySelector(".button").disabled = true;

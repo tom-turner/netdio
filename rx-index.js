@@ -18,7 +18,7 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs');
 
-var config = new Configuration('./config/rx-config.json')
+var config = new Configuration('./config/rx-config.json', 'rx')
 
 console.log(ip)
 
