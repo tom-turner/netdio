@@ -31,7 +31,7 @@ function startRx(config) {
   console.log('Started Receive Process')
 
   driver = process.platform === 'linux'
-    ? '-d alsa'
+    ? ''
     : ''
 
   var rocRecv = spawn('roc-recv', ['-vv', '-s', `rtp+rs8m::${sourcePort}`, '-r', `rs8m::${repairPort}`, driver]);
