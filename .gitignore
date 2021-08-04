@@ -1,4 +1,4 @@
-logs/
+logs/*
 config/rx-config.json
 config/tx-config.json
 config/ctrl-config.json
