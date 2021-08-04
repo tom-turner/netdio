@@ -31,10 +31,10 @@ function startRx(config) {
   console.log('Started Receive Process')
 
   driver = process.platform === 'linux'
-    ? '-d alsa'
+    ? ''
     : ''
 
-  var rocRecv = spawn('roc-recv', ['-vv', '-s', `rtp+rs8m:${multicastIp}:${sourcePort}`, '-r', `rs8m:${multicastIp}:${repairPort}`, driver]);
+  var rocRecv = spawn('roc-recv', ['-vv', '-s', `rtp+rs8m::${sourcePort}`, '-r', `rs8m::${repairPort}`, driver]);
   rocRecv.stdout.on('data', (data) => {
     console.log('stdout: ', data )
 
@@ -66,7 +66,7 @@ function startTx(config) {
   console.log('Started Receive Process')
 
   driver = process.platform === 'linux'
-    ? '-d alsa'
+    ? ''
     : ''
 
   var rocSend = spawn('roc-send', ['-vv', '-s', `rtp+rs8m:${multicastIp}:${sourcePort}`, '-r', `rs8m:${multicastIp}:${repairPort}`, driver]);
