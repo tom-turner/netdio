@@ -51,7 +51,7 @@ devices.on('ctrlMessage', (message) => {
     if (message.type == 'volume') {
       console.log(process.platform === 'linux')
       if (process.platform === 'linux') {
-        spawn('amixer', ['set', 'Headphone', `${input}%`])
+        exec(`amixer set Master ${message.value}%`)
       }
     }     
 })
@@ -71,10 +71,12 @@ io.on('connection', (socket) => {
     socket.emit('devices', devices.getDevices())
   })
 
-  socket.on('volume', (input) => {
-    config.set('volume' , input.value)
+  socket.on('volume', (message) => {
+	console.log(message.value)
+    config.set('volume' , message.value)
     if (process.platform === 'linux') {
-        spawn('amixer', ['set', 'Headphone', `${input}%`])
+	console.log(`amixer set Master ${message.value}%`)
+        exec(`amixer set Master ${message.value}%`)
     }
   })
 
