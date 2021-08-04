@@ -1,0 +1,4 @@
+Bug Reports:
+
+1. link local addresses break the program, possibly in the find() finction of autoDiscovery. Also wipes the config file so bricks the unit.
+
