@@ -10,6 +10,6 @@ Bug Reports:
 Stuff to do:
 
 1. set IP/DHCP/Static from user interface
-2. apple air play as input device
-3. BT audio as input device
+2. apple air play as input device on tx-index
+3. BT audio as input device on tx-index
 4. add hidden inputs on rx devices for things like doorbells, alerts etc. could possibly use an always listenening alert socket? if you can merge roc send on the same socket. if not then create another device type called alert and make all receivers create a new roc-recv when and alert device is found. 
