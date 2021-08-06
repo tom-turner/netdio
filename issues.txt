@@ -3,3 +3,13 @@ Bug Reports:
 1. link local addresses break the program, possibly in the find() finction of autoDiscovery, or in getIp/configure. Also wipes the config file so bricks the unit.
 
 2. sometimes the file gets corupted whilst writing. either get a blank file or extra charicters where they are not meant to be, maybe look at the debounce thing.
+
+3. If devices get powered off without closing the node app and shutting down correctly the devices will apear to still be online from the user interface. solution: poll the connected devies at some time interval and remove unconnected devices. 
+
+
+Stuff to do:
+
+1. set IP/DHCP/Static from user interface
+2. apple air play as input device
+3. BT audio as input device
+4. add hidden inputs on rx devices for things like doorbells, alerts etc. could possibly use an always listenening alert socket? if you can merge roc send on the same socket. if not then create another device type called alert and make all receivers create a new roc-recv when and alert device is found. 
