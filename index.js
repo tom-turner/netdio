@@ -1,25 +1,35 @@
 const express = require('express');
+const expressLayouts = require('express-layouts')
 const app = express();
 const http = require('http').Server(app);
-const port = process.env.port || 5000;
+const bp = require('body-parser');
+const io = require('socket.io')(http);
 const { spawn, exec, fork } = require('child_process');
-const fs = require('fs')
 const ip = require('./lib/getIp')
-const Devices = require('./lib/autoDiscovery')
 const Configuration = require('./lib/configuration')
+const Devices = require('./lib/autoDiscovery')
+const port = process.env.port || 5000;
+const fs = require('fs')
 
 var config = new Configuration('./config/config.json')
-var newId = require('./lib/getNewId') 
+var newId = require('./lib/getNewId')
 
-//sets ip & ids
+app.use(bp.json())
+app.use(bp.urlencoded({ extended: true }))
+app.use(express.static(__dirname + '/public'));
+app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'));
+app.use(expressLayouts);
+app.set('layout', 'application');
+app.set('view engine', 'ejs'); 
+
+//sets ip
 config.set("device.ip", ip)
-config.set("tx.id", newId)
-config.set("rx.id", newId)
 
-/* roc stuff
+// roc stuff
 var txSourcePort = config.get('tx')['source'] || getNewPort()
 config.set('tx.source', txSourcePort )
 
+/*
 var transmit = fork('./lib/roc.js')
 transmit.send({ type: 'startTransmit', config: config.get('tx') })
 transmit.on('message', packet => console.log(packet))
@@ -32,6 +42,7 @@ receive.send({
 receive.on('message', packet => console.log(packet))
 */
 
+// discovery stuff
 var devices = new Devices(config.configObject)
 
 devices.listen((device) => {
@@ -39,10 +50,48 @@ devices.listen((device) => {
 })
 
 devices.find((device) => {
-	console.log(device, "joined")
+	console.log(device, "was found")
+})
+
+devices.on('ctrlMessage', (message) => {
+    console.log(message)
+    config.set(message.type, message.value)
 })
 
 
+// Allow User configuration
+io.on('connection', (socket) => {
+  console.log('user connected');
+  socket.emit('devices', devices.getDevices())  
+
+  devices.on('connection', (device) => {
+    socket.emit('devices', devices.getDevices())
+  })
+
+  devices.on('disconnect', (device) => {
+    socket.emit('devices', devices.getDevices())
+  })
+
+  socket.on('forward', (message) =>{
+    //console.log("forward:",message)
+    devices.forward(message.ip, message)
+  })
+
+  socket.on('restart', () => {
+    console.log('restart')
+    process.exit()
+  });
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+
+});
+
+// Render index.ejs
+app.get('/', function (req, res) {
+  res.render('configure-ctrl.ejs');
+});
 
 function getNewPort(){
   var min = 10000

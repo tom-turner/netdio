@@ -1,1 +1,1 @@
-{"alert":{"name":"Alerts","type":"alert"},"ctrl":{"name":"Controller","type":"ctrl"},"tx":{"name":"Transmitter","type":"tx","id":"WCc4s6rI","source":"40622"},"rx":{"name":"Receiver","type":"rx","volume":"83","id":"WCc4s6rI"},"device":{"ip":"192.168.1.139"}}
+{"alert":{"name":"Alerts","type":"alert"},"ctrl":{"name":"Controller","type":"ctrl"},"tx":{"name":"Transmitter","type":"tx","source":"16550","blink":"true"},"rx":{"name":"Receiver","type":"rx","volume":"0","blink":"true","source":{"value":"16550","name":"Transmitter"}},"device":{"ip":"192.168.1.139"}}
