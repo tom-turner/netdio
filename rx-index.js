@@ -31,7 +31,7 @@ if (config.get('ip') != ip) {
 var devices = new Devices(config.configObject)
 devices.connect()
 
-var receive = fork('./child_processes/roc.js')
+var receive = fork('./lib/roc.js')
 
 receive.send({ 
   type: config.get("source") ? 'startReceive' : '',

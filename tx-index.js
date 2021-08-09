@@ -8,7 +8,7 @@ const { spawn, exec, fork } = require('child_process');
 const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
-const port = process.env.port || 5000;
+const port = process.env.port || 5001;
 
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
@@ -40,7 +40,7 @@ if (config.get('ip') != ip) {
 var devices = new Devices(config.configObject)
 devices.connect()
 
-var transmit = fork('./child_processes/roc.js')
+var transmit = fork('./lib/roc.js')
 transmit.send({ type: 'startTransmit', config: config.config() })
 transmit.on('message', packet => console.log(packet))
 
