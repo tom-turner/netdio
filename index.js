@@ -8,9 +8,8 @@ const ip = require('./lib/getIp')
 const Devices = require('./lib/autoDiscovery')
 const Configuration = require('./lib/configuration')
 
-var services = new Configuration('./config/services.json')
-
-console.log(services.set("device",ip)['ip'])
+var config = new Configuration('./config/config.json')
+config.set("device.ip", ip)
 
 
 function rng(){
