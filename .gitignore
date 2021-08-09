@@ -1,5 +1,3 @@
 logs/*
-config/rx-config.json
-config/tx-config.json
-config/ctrl-config.json
+config/config.json
 .DS_Store
