@@ -1,1 +1,1 @@
-{"alert":{"name":"Alerts","type":"alert"},"ctrl":{"name":"Controller","type":"ctrl"},"tx":{"name":"Transmitter","type":"tx","source":"16550","blink":"true"},"rx":{"name":"Receiver","type":"rx","volume":"0","blink":"true","source":{"value":"16550","name":"Transmitter"}},"device":{"ip":"192.168.1.139"}}
+{"alert":{"name":"Alerts","type":"alert"},"ctrl":{"name":"Controller","type":"ctrl"},"tx":{"name":"Transmitter","type":"tx","source":"18060"},"rx":{"name":"Receiver","type":"rx","volume":"43","source":{"value":"muted","name":"-Mute-"}},"device":{"ip":"192.168.1.139"}}

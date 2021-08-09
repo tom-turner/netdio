@@ -29,7 +29,7 @@ config.set("device.ip", ip)
 var txSourcePort = config.get('tx')['source'] || getNewPort()
 config.set('tx.source', txSourcePort )
 
-/*
+
 var transmit = fork('./lib/roc.js')
 transmit.send({ type: 'startTransmit', config: config.get('tx') })
 transmit.on('message', packet => console.log(packet))
@@ -40,7 +40,7 @@ receive.send({
   config: config.get("rx") 
 })
 receive.on('message', packet => console.log(packet))
-*/
+
 
 // discovery stuff
 var devices = new Devices(config.configObject)
@@ -56,6 +56,18 @@ devices.find((device) => {
 devices.on('ctrlMessage', (message) => {
     console.log(message)
     config.set(message.type, message.value)
+
+
+    if (message.type == 'rx.source') {
+      receive.send({ type: 'end'})
+      receive.send({ type: 'startReceive', config: config.get('rx') })
+    }
+
+    if (message.type == 'rx.volume' && process.platform === 'linux') {
+        exec(`amixer set Master ${message.value}%`)
+    }  
+
+
 })
 
 
@@ -90,7 +102,7 @@ io.on('connection', (socket) => {
 
 // Render index.ejs
 app.get('/', function (req, res) {
-  res.render('configure-ctrl.ejs');
+  res.render('configure.ejs');
 });
 
 function getNewPort(){
