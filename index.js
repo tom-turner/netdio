@@ -100,13 +100,6 @@ function getNewPort(){
   return num.toString()
 }
 
-
-// Render index.ejs
-//app.get('/', function (req, res) {
-//  res.render('configure-tx.ejs');
-//});
-
-
 //
 // Starting the App
 //
