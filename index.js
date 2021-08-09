@@ -65,9 +65,7 @@ devices.on('ctrlMessage', (message) => {
 
     if (message.type == 'rx.volume' && process.platform === 'linux') {
         exec(`amixer set Master ${message.value}%`)
-    }  
-
-
+    }
 })
 
 
