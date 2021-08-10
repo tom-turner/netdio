@@ -1,1 +1,1 @@
-{"alert":{"name":"Alerts","type":"alert"},"ctrl":{"name":"Controller","type":"ctrl"},"rx":{"name":"Toms Macbook RX","type":"rx","volume":"44","source":{"value":"18060","name":"Toms Macbook TX"}},"device":{"ip":"192.168.1.139"}}
+{"alert":{"name":"Alerts","type":"alert"},"ctrl":{"name":"Controller","type":"ctrl"},"rx":{"name":"Toms Macbook RX","type":"rx","volume":"53","source":{"value":"muted","name":"-Mute-"}},"device":{"ip":"192.168.1.139"}}

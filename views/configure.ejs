@@ -87,9 +87,9 @@
 		},100)
 	}
 
-	function createZone(zone, ip) {
+	function createZone(zone) {
 		
-		return	$(`<li id="${ip}" class="bg-white shadow-lg border rounded flex flex-col p-2 m-2" />`).append(
+		return	$(`<li id="${zone.ip}" class="bg-white shadow-lg border rounded flex flex-col p-2 m-2" />`).append(
             		$('<div class="flex flex-col space-y-2"/>').append(
               			$('<div class"w-full flex flex-row justify-between"/>').append(
               				$('<span class="font-bold" />').text(zone.name)
@@ -108,16 +108,16 @@
 		return $(`<option value="${device.source}" name="${device.name}"/>`).text(device.name)
 	}
 
-	function createDeviceLi(device, ip) {
+	function createDeviceLi(device) {
 
-		return	$('<li id="'+ ip + '" class="bg-white shadow-lg border rounded flex flex-row p-2 my-2 md:space-x-2 justify-between"/>').append(
+		return	$('<li id="'+ device.ip + '" class="bg-white shadow-lg border rounded flex flex-row p-2 my-2 md:space-x-2 justify-between"/>').append(
 					$('<div class="flex flex-row space-x-2"/>').append(
 						$('<label />').text("Name: "),
 						$(`<input type="text" class="w-full font-bold" name="${device.type}.name" value="${device.name}"/>`)
 					),
 					$('<div class="flex flex-row space-x-2 hidden"/>').append(
 						$('<lable/>').text("IP: "),
-						$(`<p type="text" class="w-full"/>`).text(ip)
+						$(`<p type="text" class="w-full"/>`).text(device.ip)
 					),
 					$(`<button class="text-white rounded-full px-2 blue" value="true" name="${device.type}.blink"/>`).text("Blink")
 				)
@@ -130,34 +130,43 @@
 		$('#destinations').html('')
 		$('#inputs').html('')
 
-		/* Used to fix a rending bug, duno if its needed anymore?
-		device = device.sort((a,b) => {		
-			return a.type == b.type ? 0 : a.type > b.type ? 1 : -1
-		})
-		*/
+		var rxDevices = []
+		var txDevices = []
+		
 		for (device of devices) {
-			
-			var rx = device.rx
-			var tx = device.tx 
-			var ip = device.device.ip
-
-			var zone = createZone(rx, ip)
+			if (device.rx) {
+				var rx = device.rx
+				rx.ip = device.device.ip
+				rxDevices.push(rx)
+			}
+			if (device.tx) {
+				var tx = device.tx
+				tx.ip = device.device.ip
+				txDevices.push(tx)
+			}
+		}
+		
+		for (rx of rxDevices) {
+			var zone = createZone(rx)
 			$('#zones').append(zone)
 
-			var li = createDeviceLi(rx, ip)
+			var li = createDeviceLi(rx)
 			$('#destinations').append(li)
 
 			if(rx.source) {
 				$('.zoneinput').append($('<option disabled selected/>').text(`${rx.source.name}`))
 			}
-			
-			$('.zoneinput').append(getInputAsOption(device.tx))
-
-			var li = createDeviceLi(device.tx, ip)
-			$('#inputs').append(li)
-			
-			loadHandlers()
 		}
+			
+		for (tx of txDevices) {
+			$('.zoneinput').append(getInputAsOption(tx))
+
+			var li = createDeviceLi(tx)
+			$('#inputs').append(li)
+		}
+
+		loadHandlers()
+		
 	})
 	
 
