@@ -58,7 +58,6 @@ devices.on('ctrlMessage', (message) => {
     console.log(message)
     config.set(message.type, message.value)
 
-
     if (message.type == 'rx.source') {
       receive.send({ type: 'end'})
       receive.send({ type: 'startReceive', config: config.get('rx') })
@@ -74,6 +73,7 @@ devices.on('ctrlMessage', (message) => {
 io.on('connection', (socket) => {
   console.log('user connected');
   socket.emit('devices', devices.getDevices())  
+  devices.find((device) => {})
 
   devices.on('connection', (device) => {
     socket.emit('devices', devices.getDevices())
