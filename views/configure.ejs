@@ -87,8 +87,14 @@
 		},100)
 	}
 
+	function getInputAsOption(device){
+		return $(`<option value="${device.source}" name="${device.name}"/>`).text(device.name)
+	}
+
 	function createZone(zone) {
 		
+		var source = zone.source ? 'Input: ' + zone.source.name : 'Input: -Mute-'
+
 		return	$(`<li id="${zone.ip}" class="bg-white shadow-lg border rounded flex flex-col p-2 m-2" />`).append(
             		$('<div class="flex flex-col space-y-2"/>').append(
               			$('<div class"w-full flex flex-row justify-between"/>').append(
@@ -98,14 +104,11 @@
               			$(`<select class="rounded zoneinput" />`) .append(getInputAsOption({
               					name : "-Mute-",
               					source : "muted"
-              				}))
+              				}), 
+              				($('<option disabled selected/>').text(`${source}`))
+              			)
             		)
         		)
-	}
-
-	function getInputAsOption(device){
-		
-		return $(`<option value="${device.source}" name="${device.name}"/>`).text(device.name)
 	}
 
 	function createDeviceLi(device) {
@@ -148,21 +151,15 @@
 		
 		for (rx of rxDevices) {
 			var zone = createZone(rx)
-			$('#zones').append(zone)
-
 			var li = createDeviceLi(rx)
+			$('#zones').append(zone)
 			$('#destinations').append(li)
-
-			if(rx.source) {
-				$('.zoneinput').append($('<option disabled selected/>').text(`${rx.source.name}`))
-			}
 		}
 			
 		for (tx of txDevices) {
-			$('.zoneinput').append(getInputAsOption(tx))
-
 			var li = createDeviceLi(tx)
 			$('#inputs').append(li)
+			$('.zoneinput').append(getInputAsOption(tx))
 		}
 
 		loadHandlers()
