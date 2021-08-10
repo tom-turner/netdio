@@ -92,7 +92,9 @@ io.on('connection', (socket) => {
 
   socket.on('restart', () => {
     console.log('restart')
-    process.exit()
+    receive.send({ type: 'end' })
+    transmit.send({ type: 'end' })
+    process.exit(0)
   });
 
   socket.on('disconnect', () => {
