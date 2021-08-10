@@ -50,9 +50,12 @@ devices.listen((device) => {
 	console.log(device, "joined")
 })
 
-devices.find((device) => {
-	console.log(device, "was found")
-})
+
+  devices.find((device) => {
+    console.log(device, "was found")
+  })  
+
+
 
 devices.on('ctrlMessage', (message) => {
     console.log(message)
@@ -67,7 +70,6 @@ devices.on('ctrlMessage', (message) => {
         exec(`amixer set Master ${message.value}%`)
     }
 })
-
 
 // Allow User configuration
 io.on('connection', (socket) => {
@@ -84,7 +86,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('forward', (message) =>{
-    //console.log("forward:",message)
+    console.log("forward:",message)
     devices.forward(message.ip, message)
   })
 
