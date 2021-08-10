@@ -25,20 +25,21 @@ app.set('view engine', 'ejs');
 //sets ip
 config.set("device.ip", ip)
 
-// roc stuff
-var txSourcePort = config.get('tx')['source'] || getNewPort()
-config.set('tx.source', txSourcePort )
 
+if (config.get('tx')) {
+  // roc stuff
+  var txSourcePort = config.get('tx')['source'] || getNewPort()
+  config.set('tx.source', txSourcePort )
 
-var transmit = fork('./lib/roc.js')
-transmit.send({ type: 'startTransmit', config: config.get('tx') })
-transmit.on('message', packet => console.log(packet))
+  var transmit = fork('./lib/roc.js')
+  transmit.send({ type: 'startTransmit', config: config.get('tx') })
+  transmit.on('message', packet => console.log(packet))
+}
+
 
 var receive = fork('./lib/roc.js')
-receive.send({ 
-  type: config.get("rx.source") ? 'startReceive' : '',
-  config: config.get("rx") 
-})
+var rxType = config.get("rx")["source"] ? 'startReceive' : '' ;
+receive.send({ type: rxType , config: config.get("rx") })
 receive.on('message', packet => console.log(packet))
 
 
