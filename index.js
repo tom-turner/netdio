@@ -22,12 +22,11 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs'); 
 
-//sets ip
+// sets ip
 config.set("device.ip", ip)
 
-
+// roc stuff
 if (config.get('tx')) {
-  // roc stuff
   var txSourcePort = config.get('tx')['source'] || getNewPort()
   config.set('tx.source', txSourcePort )
 
@@ -36,10 +35,9 @@ if (config.get('tx')) {
   transmit.on('message', packet => console.log(packet))
 }
 
-
 var receive = fork('./lib/roc.js')
-var rxType = config.get("rx")["source"] ? 'startReceive' : '' ;
-receive.send({ type: rxType , config: config.get("rx") })
+var startRx = config.get("rx")["source"] ? 'startReceive' : '' ;
+receive.send({ type: startRx , config: config.get("rx") })
 receive.on('message', packet => console.log(packet))
 
 
@@ -51,10 +49,9 @@ devices.listen((device) => {
 })
 
 
-  devices.find((device) => {
-    console.log(device, "was found")
-  })  
-
+devices.find((device) => {
+  console.log(device, "was found")
+})  
 
 
 devices.on('ctrlMessage', (message) => {
@@ -75,7 +72,6 @@ devices.on('ctrlMessage', (message) => {
 io.on('connection', (socket) => {
   console.log('user connected');
   socket.emit('devices', devices.getDevices())  
-  devices.find((device) => {})
 
   devices.on('connection', (device) => {
     socket.emit('devices', devices.getDevices())
@@ -103,7 +99,7 @@ io.on('connection', (socket) => {
 
 // Render index.ejs
 app.get('/', function (req, res) {
-  res.render('configure.ejs');
+  res.render('user.ejs');
 });
 
 function getNewPort(){
