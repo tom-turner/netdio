@@ -53,6 +53,10 @@ devices.find((device) => {
   console.log(device, "was found")
 })  
 
+devices.on('disconnect', (device) => {
+  console.log(device, "left")
+})
+
 
 devices.on('ctrlMessage', (message) => {
     console.log(message)
