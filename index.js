@@ -24,7 +24,9 @@ app.set('view engine', 'ejs');
 
 // sets ip
 config.set("device.ip", ip)
+console.log("ip:", ip)
 
+/*
 // roc stuff
 if (config.get('tx')) {
   var txSourcePort = config.get('tx')['source'] || getNewPort()
@@ -39,7 +41,7 @@ var receive = fork('./lib/roc.js')
 var startRx = config.get("rx")["source"] ? 'startReceive' : '' ;
 receive.send({ type: startRx , config: config.get("rx") })
 receive.on('message', packet => console.log(packet))
-
+*/
 
 // discovery stuff
 var devices = new Devices(config.configObject)
