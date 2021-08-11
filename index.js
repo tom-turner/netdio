@@ -54,8 +54,9 @@ devices.on('ctrlMessage', (message) => {
     config.set(message.type, message.value)
 
     if (message.type == 'rx.source') {
+      console.log('hello')
       roc.kill(roc.get('rx'))
-      roc.startRocRecv()
+      roc.startRocRecv(config.configObject)
     }
 
     if (message.type == 'rx.volume' && process.platform === 'linux') {
