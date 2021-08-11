@@ -10,9 +10,17 @@ const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
 const port = process.env.port || 5000;
 const fs = require('fs')
+const Roc = require('./lib/roc')
 
-var config = new Configuration('./config/config.json')
-var newId = require('./lib/getNewId')
+let config = new Configuration('./config/config.json')
+
+config.set("device.ip", ip)
+
+config.get('tx') ?
+  config.get('tx')['source'] 
+  ? console.log( "running tx source", config.get('tx')['source'] ) 
+  : config.set( "tx.source", getNewPort() )
+: console.log('no tx')
 
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
@@ -22,25 +30,10 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs'); 
 
-// sets ip
-config.set("device.ip", ip)
-console.log("ip:", ip)
-
-
-// roc stuff
-if (config.get('tx')) {
-  var txSourcePort = config.get('tx')['source'] || getNewPort()
-  config.set('tx.source', txSourcePort )
-
-  var transmit = fork('./lib/roc.js')
-  transmit.send({ type: 'startTransmit', config: config.get('tx') })
-  transmit.on('message', packet => console.log(packet))
-}
-
-var receive = fork('./lib/roc.js')
-var startRx = config.get("rx")["source"] ? 'startReceive' : '' ;
-receive.send({ type: startRx , config: config.get("rx") })
-receive.on('message', packet => console.log(packet))
+// start roc
+let roc = new Roc(config.configObject)
+roc.startRocRecv()
+roc.startRocSend()
 
 
 // discovery stuff
@@ -50,7 +43,6 @@ devices.listen((device) => {
 	console.log(device, "joined")
 })
 
-
 devices.find((device) => {
   console.log(device, "was found")
 })  
@@ -59,14 +51,13 @@ devices.on('disconnect', (device) => {
   console.log(device, "left")
 })
 
-
 devices.on('ctrlMessage', (message) => {
     console.log("received", message)
     config.set(message.type, message.value)
 
     if (message.type == 'rx.source') {
-      receive.send({ type: 'end'})
-      receive.send({ type: 'startReceive', config: config.get('rx') })
+      roc.kill(roc.get('rx'))
+      roc.startRocRecv()
     }
 
     if (message.type == 'rx.volume' && process.platform === 'linux') {
@@ -94,9 +85,8 @@ io.on('connection', (socket) => {
 
   socket.on('restart', () => {
     console.log('restart')
-    receive.send({ type: 'end' })
-    transmit.send({ type: 'end' })
-    process.exit(0)
+    roc.kill(roc.get())
+    process.exit()
   });
 
   socket.on('disconnect', () => {
