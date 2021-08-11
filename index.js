@@ -38,14 +38,12 @@ roc.startRocSend()
 
 // discovery stuff
 var devices = new Devices(config.configObject)
+devices.listen()
+devices.find()  
 
-devices.listen((device) => {
-	console.log(device, "joined")
+devices.on('connection', (device) => {
+  console.log(device, "joined")
 })
-
-devices.find((device) => {
-  console.log(device, "was found")
-})  
 
 devices.on('disconnect', (device) => {
   console.log(device, "left")
