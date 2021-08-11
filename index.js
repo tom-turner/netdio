@@ -59,7 +59,7 @@ devices.on('disconnect', (device) => {
 
 
 devices.on('ctrlMessage', (message) => {
-    console.log(message)
+    console.log("received", message)
     config.set(message.type, message.value)
 
     if (message.type == 'rx.source') {
@@ -86,7 +86,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('forward', (message) =>{
-    console.log("forward:",message)
+    //console.log("forward:",message)
     devices.forward(message.ip, message)
   })
 
