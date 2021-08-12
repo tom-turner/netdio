@@ -32,6 +32,7 @@ app.set('view engine', 'ejs');
 
 // start roc
 let roc = new Roc(config.configObject)
+roc.kill(roc.storedChildProcesses())
 roc.startRocRecv()
 roc.startRocSend()
 
@@ -50,13 +51,11 @@ devices.on('disconnect', (device) => {
 })
 
 devices.on('ctrlMessage', (message) => {
-    console.log("received", message)
     config.set(message.type, message.value)
 
     if (message.type == 'rx.source') {
-      console.log('hello')
       roc.kill(roc.get('rx'))
-      roc.startRocRecv(config.configObject)
+      roc.startRocRecv(config.get('rx'))
     }
 
     if (message.type == 'rx.volume' && process.platform === 'linux') {
