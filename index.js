@@ -32,7 +32,7 @@ app.set('view engine', 'ejs');
 
 // start roc
 let roc = new Roc(config.configObject)
-roc.kill(roc.storedChildProcesses())
+roc.save()
 roc.startRocRecv()
 roc.startRocSend()
 
