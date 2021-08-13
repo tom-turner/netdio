@@ -57,33 +57,31 @@ devices.on('disconnect', (device) => {
 })
 
 devices.on('ctrlMessage', (message) => {
+  config.set( message.type , message.value)
+
     switch (message.type) {
       case 'source':
-        config.set( message.type , message.value)
         roc.kill(roc.get('rx'))
         roc.startRocRecv(config.get('source'))
       break
       case 'devices' :
-        //console.log('arrived at tx', message)
-
         roc.startRocSend(message.value)
 
       break
       case 'rx.volume':
-        config.set(message.type, message.value)
         process.platform === 'linux' ? exec(`amixer set Master ${message.value}%`) : ''
       break
     }
 
 })
-
+/*
 setInterval(()=>{
     devices.forward( config.get('source')['send'], {
     type: 'devices',
     value: config.get('source')
   })
 }, 1000)
-
+*/
 
 
 // Allow User configuration
