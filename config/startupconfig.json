@@ -3,5 +3,4 @@
 "rx":{"name":"Receiver","type":"rx","volume":"83"},
 "tx":{"name":"Transmitter", "type":"tx"},
 "device":{},
-"source":{},
-"destinations":{}}
+"source":{"name":"-Mute-"}}

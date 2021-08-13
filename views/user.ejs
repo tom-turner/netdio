@@ -137,6 +137,7 @@
 		for (device of devices) {
 			if (device.rx) {
 				var rx = device.rx
+				rx.source = device.source
 				rx.ip = device.device.ip
 				rxDevices.push(rx)
 			}

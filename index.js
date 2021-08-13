@@ -5,7 +5,6 @@ const http = require('http').Server(app);
 const bp = require('body-parser');
 const io = require('socket.io')(http);
 const { spawn, exec, fork } = require('child_process');
-const newId = require('./lib/getNewId')
 const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
@@ -19,7 +18,7 @@ config.set("device.ip", ip)
 
 config.get('device')['id']
   ? config.get('device')['id']
-  : config.set("device.id", newId)
+  : config.set("device.id", config.hash(ip))
 let id = config.get('device')['id']
 
 config.get('tx') ?
@@ -40,7 +39,9 @@ app.set('view engine', 'ejs');
 let roc = new Roc(config.configObject)
 roc.save()
 roc.startRocRecv()
-// if config.get('rx')[source] ping config.get('rx')[source][send] with keep alive message
+
+
+// ping config.get('rx')[source][send] with keep alive message
 
 // discovery stuff
 var devices = new Devices(config.configObject)
@@ -58,17 +59,15 @@ devices.on('disconnect', (device) => {
 devices.on('ctrlMessage', (message) => {
     switch (message.type) {
       case 'source':
-        config.set(`rx.${message.type}`, message.value)
-        devices.forward(message.value.send, {
-          type: `destinations`,
-          value: message.value
-        })
+        config.set( message.type , message.value)
         roc.kill(roc.get('rx'))
-        roc.startRocRecv(config.get('rx'))
+        roc.startRocRecv(config.get('source'))
       break
-      case 'destinations' :
-        console.log('arrived at tx', message)
-        config.set(`${message.type}.${config.hash(message.value.recv)}`, message.value)
+      case 'devices' :
+        //console.log('arrived at tx', message)
+
+        roc.startRocSend(message.value)
+
       break
       case 'rx.volume':
         config.set(message.type, message.value)
@@ -77,7 +76,15 @@ devices.on('ctrlMessage', (message) => {
     }
 
 })
-// devices.on 'keep alive' start roc send and keep alive
+
+setInterval(()=>{
+    devices.forward( config.get('source')['send'], {
+    type: 'devices',
+    value: config.get('source')
+  })
+}, 1000)
+
+
 
 // Allow User configuration
 io.on('connection', (socket) => {
