@@ -5,6 +5,7 @@ const http = require('http').Server(app);
 const bp = require('body-parser');
 const io = require('socket.io')(http);
 const { spawn, exec, fork } = require('child_process');
+const newId = require('./lib/getNewId')
 const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
@@ -15,6 +16,11 @@ const Roc = require('./lib/roc')
 let config = new Configuration('./config/config.json')
 
 config.set("device.ip", ip)
+
+config.get('device')['id']
+  ? config.get('device')['id']
+  : config.set("device.id", newId)
+let id = config.get('device')['id']
 
 config.get('tx') ?
   config.get('tx')['source'] 
@@ -34,8 +40,7 @@ app.set('view engine', 'ejs');
 let roc = new Roc(config.configObject)
 roc.save()
 roc.startRocRecv()
-roc.startRocSend()
-
+// if config.get('rx')[source] ping config.get('rx')[source][send] with keep alive message
 
 // discovery stuff
 var devices = new Devices(config.configObject)
@@ -51,17 +56,28 @@ devices.on('disconnect', (device) => {
 })
 
 devices.on('ctrlMessage', (message) => {
-    config.set(message.type, message.value)
-
-    if (message.type == 'rx.source') {
-      roc.kill(roc.get('rx'))
-      roc.startRocRecv(config.get('rx'))
+    switch (message.type) {
+      case 'source':
+        config.set(`rx.${message.type}`, message.value)
+        devices.forward(message.value.send, {
+          type: `destinations`,
+          value: message.value
+        })
+        roc.kill(roc.get('rx'))
+        roc.startRocRecv(config.get('rx'))
+      break
+      case 'destinations' :
+        console.log('arrived at tx', message)
+        config.set(`${message.type}.${config.hash(message.value.recv)}`, message.value)
+      break
+      case 'rx.volume':
+        config.set(message.type, message.value)
+        process.platform === 'linux' ? exec(`amixer set Master ${message.value}%`) : ''
+      break
     }
 
-    if (message.type == 'rx.volume' && process.platform === 'linux') {
-        exec(`amixer set Master ${message.value}%`)
-    }
 })
+// devices.on 'keep alive' start roc send and keep alive
 
 // Allow User configuration
 io.on('connection', (socket) => {

@@ -86,7 +86,7 @@
 	}
 
 	function getInputAsOption(device){
-		return $(`<option value="${device.source}" name="${device.name}"/>`).text(device.name)
+		return $(`<option value="${device.source}" name="${device.ip}"/>`).text(device.name)
 	}
 
 	function createZone(zone) {
@@ -101,7 +101,8 @@
               			$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none bg-blue-100 rounded-full" value="${zone.volume}" />`),
               			$(`<select class="rounded zoneinput" />`) .append(getInputAsOption({
               					name : "-Mute-",
-              					source : "muted"
+              					source : "muted",
+              					ip: zone.ip
               				}), 
               				($('<option disabled selected/>').text(`${source}`))
               			)
@@ -171,10 +172,12 @@ function loadHandlers(){
 	$('select').on('change', function () {
 		var message = {
 			ip : this.closest('li').id,
-			type : 'rx.source', 
+			type : 'source', 
 			value : {
-				value: $('option:selected',this).val(),
-				name: $('option:selected',this).text()
+				send: $('option:selected',this).attr('name'),
+				socket: $('option:selected',this).val(),
+				name: $('option:selected',this).text(),
+				recv: this.closest('li').id
 			}
 		}
 

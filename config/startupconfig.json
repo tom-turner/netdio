@@ -1,4 +1,7 @@
 {"alert":{"name":"Alerts","type":"alert"},
 "ctrl":{"name":"Controller","type":"ctrl"},
 "rx":{"name":"Receiver","type":"rx","volume":"83"},
-"device":{"ip":"192.168.1.139"}}
+"tx":{"name":"Transmitter", "type":"tx"},
+"device":{},
+"source":{},
+"destinations":{}}
