@@ -16,6 +16,11 @@ let config = new Configuration('./config/config.json')
 
 config.set("device.ip", ip)
 
+config.get('device')['id']
+  ? config.get('device')['id']
+  : config.set("device.id", config.hash(ip))
+let id = config.get('device')['id']
+
 config.get('tx') ?
   config.get('tx')['source'] 
   ? console.log( "running tx source", config.get('tx')['source'] ) 
@@ -34,8 +39,9 @@ app.set('view engine', 'ejs');
 let roc = new Roc(config.configObject)
 roc.save()
 roc.startRocRecv()
-roc.startRocSend()
 
+
+// ping config.get('rx')[source][send] with keep alive message
 
 // discovery stuff
 var devices = new Devices(config.configObject)
@@ -51,17 +57,31 @@ devices.on('disconnect', (device) => {
 })
 
 devices.on('ctrlMessage', (message) => {
-    config.set(message.type, message.value)
+  config.set( message.type , message.value)
 
-    if (message.type == 'rx.source') {
-      roc.kill(roc.get('rx'))
-      roc.startRocRecv(config.get('rx'))
+    switch (message.type) {
+      case 'source':
+        roc.kill(roc.get('rx'))
+        roc.startRocRecv(config.get('source'))
+      break
+      case 'devices' :
+        roc.startRocSend(message.value)
+
+      break
+      case 'rx.volume':
+        process.platform === 'linux' ? exec(`amixer set Master ${message.value}%`) : ''
+      break
     }
 
-    if (message.type == 'rx.volume' && process.platform === 'linux') {
-        exec(`amixer set Master ${message.value}%`)
-    }
 })
+
+setInterval(()=>{
+    devices.forward( config.get('source')['send'], {
+    type: 'devices',
+    value: config.get('source')
+  })
+}, 1000)
+
 
 // Allow User configuration
 io.on('connection', (socket) => {
