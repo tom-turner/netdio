@@ -74,14 +74,13 @@ devices.on('ctrlMessage', (message) => {
     }
 
 })
-/*
+
 setInterval(()=>{
     devices.forward( config.get('source')['send'], {
     type: 'devices',
     value: config.get('source')
   })
 }, 1000)
-*/
 
 
 // Allow User configuration
