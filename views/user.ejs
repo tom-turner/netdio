@@ -101,8 +101,7 @@
               			$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none bg-blue-100 rounded-full" value="${zone.volume}" />`),
               			$(`<select class="rounded zoneinput" />`) .append(getInputAsOption({
               					name : "-Mute-",
-              					source : "muted",
-              					ip: zone.ip
+              					source : "muted"
               				}), 
               				($('<option disabled selected/>').text(`${source}`))
               			)
