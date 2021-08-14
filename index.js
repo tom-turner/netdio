@@ -38,9 +38,9 @@ config.get('tx') ?
 
 // audio
 let roc = new Roc(config.configObject)
-roc.save()
 roc.rocRecv()
 setInterval(()=>{ 
+    roc.save()
     devices.forward( config.get('source')['send'], {
     type: 'devices',
     value: config.get('source')
