@@ -116,6 +116,10 @@ app.get('/', function (req, res) {
   res.render('user.ejs');
 });
 
+app.get('/config', function (req, res) {
+  res.render('config.ejs', { config: config.configObject });
+});
+
 
 //
 // Starting the App
