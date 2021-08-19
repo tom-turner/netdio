@@ -8,7 +8,7 @@ const { spawn, exec, fork } = require('child_process');
 const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
-const port = process.env.port || 5000;
+const port = process.env.port || 80;
 const fs = require('fs')
 const Roc = require('./lib/roc')
 
@@ -73,8 +73,11 @@ devices.on('ctrlMessage', (message) => {
         roc.rocSend(message.value)
 
       break
-      case 'rx.volume':
+      case 'volume':
         process.platform === 'linux' ? exec(`amixer set Master ${message.value}%`) : ''
+      break
+      case 'blink':
+        // excicute blink file
       break
     }
 
@@ -113,6 +116,9 @@ io.on('connection', (socket) => {
 // Render index.ejs
 app.get('/', function (req, res) {
   res.render('user.ejs');
+});
+app.get('/config', function (req, res) {
+  res.render('config.ejs', {config: config.configObject});
 });
 
 
