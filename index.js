@@ -12,6 +12,7 @@ const port = process.env.port || 5000;
 const fs = require('fs')
 const Roc = require('./lib/roc')
 require('./lib/filecheck')
+exec('./lib/python/ledOn.py')
 
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
@@ -78,7 +79,7 @@ devices.on('ctrlMessage', (message) => {
         process.platform === 'linux' ? exec(`amixer set Master ${message.value}%`) : ''
       break
       case 'blink':
-        // excicute blink file
+        exec('./lib/python/blink.py')
       break
     }
 
@@ -104,6 +105,7 @@ io.on('connection', (socket) => {
 
   socket.on('restart', () => {
     console.log('restart')
+    exec('./lib/python/ledOff.py')
     roc.kill(roc.get())
     process.exit()
   });
