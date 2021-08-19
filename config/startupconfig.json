@@ -1,6 +1,4 @@
-{"alert":{"name":"Alerts","type":"alert"},
-"ctrl":{"name":"Controller","type":"ctrl"},
-"rx":{"name":"Receiver","type":"rx","volume":"83"},
-"tx":{"name":"Transmitter", "type":"tx"},
+"rx":{"name":"Line Out","type":"rx","volume":"83"},
+"tx":{"name":"Line In", "type":"tx"},
 "device":{},
 "source":{"name":"-Mute-"}}
