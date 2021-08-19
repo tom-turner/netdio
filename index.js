@@ -12,7 +12,7 @@ const port = process.env.port || 5000;
 const fs = require('fs')
 const Roc = require('./lib/roc')
 require('./lib/filecheck')
-exec('./lib/python/ledOn.py')
+exec('python ./lib/python/ledOn.py')
 
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
