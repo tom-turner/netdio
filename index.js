@@ -11,6 +11,7 @@ const Devices = require('./lib/autoDiscovery')
 const port = process.env.port || 5000;
 const fs = require('fs')
 const Roc = require('./lib/roc')
+require('./lib/filecheck')
 
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
