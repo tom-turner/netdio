@@ -79,7 +79,7 @@ devices.on('ctrlMessage', (message) => {
         process.platform === 'linux' ? exec(`amixer set Master ${message.value}%`) : ''
       break
       case 'blink':
-        exec('./lib/python/blink.py')
+        exec('python ./lib/python/blink.py')
       break
     }
 
@@ -105,7 +105,7 @@ io.on('connection', (socket) => {
 
   socket.on('restart', () => {
     console.log('restart')
-    exec('./lib/python/ledOff.py')
+    exec('python ./lib/python/ledOff.py')
     roc.kill(roc.get())
     process.exit()
   });
