@@ -80,9 +80,6 @@ devices.on('ctrlMessage', (message) => {
       break
       case 'blink':
         exec('python ./lib/python/blink.py')
-        setTimeout( () => {
-            exec('python ./lib/python/ledOn.py')
-        }, 6100 )
       break
     }
 
