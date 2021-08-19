@@ -7,8 +7,7 @@ pin = 8
 t_end = time.time() + 6
 
 while time.time() < t_end:
-	GPIO.output(pin, GPIO.LOW)  # Turn off
-    time.sleep(0.25)  
     GPIO.output(pin, GPIO.HIGH) # Turn on
     time.sleep(0.25)                  # Sleep for 1 second
-                    # Sleep for 1 second
+    GPIO.output(pin, GPIO.LOW)  # Turn off
+    time.sleep(0.25)                  # Sleep for 1 second
