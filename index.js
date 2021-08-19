@@ -11,7 +11,7 @@ const Devices = require('./lib/autoDiscovery')
 const port = process.env.port || 5000;
 const fs = require('fs')
 const Roc = require('./lib/roc')
-require('./lib/filecheck')
+require('./lib/fileCheck')
 exec('python ./lib/python/ledOn.py')
 
 app.use(bp.json())
