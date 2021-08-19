@@ -82,7 +82,7 @@ devices.on('ctrlMessage', (message) => {
         exec('python ./lib/python/blink.py')
         setTimeout( () => {
             exec('python ./lib/python/ledOn.py')
-        }, 6500 )
+        }, 6100 )
       break
     }
 
