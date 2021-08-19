@@ -8,7 +8,7 @@ const { spawn, exec, fork } = require('child_process');
 const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
-const port = process.env.port || 80;
+const port = process.env.port || 5000;
 const fs = require('fs')
 const Roc = require('./lib/roc')
 
