@@ -1,4 +1,4 @@
-{"rx":{"name":"Line Out","type":"rx","volume":"83"},
+{"rx":{"name":"Line Out","type":"rx","volume":"80"},
 "tx":{"name":"Line In", "type":"tx"},
 "device":{},
 "source":{"name":"-Mute-"}}
