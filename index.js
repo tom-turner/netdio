@@ -13,7 +13,6 @@ const fs = require('fs')
 const Roc = require('./lib/roc')
 require('./lib/fileCheck')
 exec('python ./lib/python/ledOn.py')
-
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public'));
@@ -21,6 +20,7 @@ app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'));
 app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs'); 
+
 
 // config
 let config = new Configuration('./config/config.json')
@@ -31,11 +31,13 @@ config.get('device')['id']
   : config.set("device.id", config.hash(ip))
 let id = config.get('device')['id']
 
+
 config.get('tx') ?
   config.get('tx')['source'] 
   ? console.log( "running tx source", config.get('tx')['source'] ) 
   : config.set( "tx.source", config.getNewPort() )
 : console.log('no tx')
+
 
 
 // audio
