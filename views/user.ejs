@@ -15,19 +15,19 @@
 </div>
 
 
-<div class="flex items-center justify-center h-screen blue flex flex-col p-4 space-y-2">
+<div class="flex items-center justify-center h-screen blue flex flex-col p-4 space-y-2 ">
 
 
 <div class="w-full bg-white rounded shadow-lg flex  p-2  px-4 flex-col">
-	<div class="justify-between flex w-full">
-		<p>Devices:</p>
-		<img class="h-8" src="images/duckado.svg"/>
-		<img id="routing-gear" class="h-8 cursor-pointer transform duration-500" onclick="toggleSettings('routing','routing-gear')" src="images/menu.svg"/>
+	<div class="flex w-full justify-between">
+		<img class="h-10 cursor-pointer" onclick="quack()" src="images/duck.svg"/>
+		<img class="h-10" src="images/duckado.svg"/>
+		<img id="routing-gear" class="h-10 cursor-pointer transform duration-500" onclick="toggleSettings('routing','routing-gear')" src="images/menu.svg"/>
 	</div>
 </div>
-	<div id="routing" class="flex flex-row h-screen justify-between w-full space-x-2 hidden">
+	<div id="routing" class="flex flex-row h-screen justify-between w-full shadow-lg bg-white rounded space-x-2 hidden overflow-auto">
 
-		<div class="flex rounded shadow-lg flex-col p-4 bg-white w-1/2">
+		<div class="flex flex-col p-4 w-1/2">
 			<h2 class="">Inputs: </h2>
 			<ul id="inputs" class="h-full">
 
@@ -36,7 +36,7 @@
 		</div>
 
 
-		<div class="flex rounded shadow-lg flex-col p-4 bg-white w-1/2">
+		<div class="flex flex-col p-4 w-1/2">
 			<h2 class="">Outputs: </h2>
 			<ul id="destinations" class="h-full">
 
@@ -45,10 +45,10 @@
 
 	</div>
 
-	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded shadow-lg p-2 px-4">
+	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded shadow-lg p-2 px-4 overflow-scroll">
 		<div class="justify-between flex w-full">
-			<p>Output Control:</p>
-			<img id="reload" class="h-8 cursor-pointer" src="images/reload.svg"/>
+			<p class="my-auto text-2xl">Output Control:</p>
+			<img id="reload" class="h-10 cursor-pointer" src="images/reload.svg"/>
 		</div>
 
 		<div class="h-full py-2">
@@ -162,7 +162,10 @@
 		loading(false)
 		
 	})
-	
+
+function quack(){
+	new Audio('quack.mp3').play();
+}	
 
 
 function loadHandlers(){
@@ -193,7 +196,7 @@ function loadHandlers(){
 		socket.emit('forward', message)
 
 		if (message.value == 100)
-			new Audio('quack.mp3').play();
+			quack()
 
 	})
 	$('input[type=text]').on('keyup', function () {
