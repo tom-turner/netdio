@@ -15,15 +15,14 @@
 </div>
 
 
-<div class="flex items-center justify-center h-screen bg-blue-100 flex flex-col p-4 space-y-2">
+<div class="flex items-center justify-center h-screen blue flex flex-col p-4 space-y-2">
 
 
-
-
-<div class="w-full bg-white rounded shadow-lg flex  p-2 px-4 flex-col">
+<div class="w-full bg-white rounded shadow-lg flex  p-2  px-4 flex-col">
 	<div class="justify-between flex w-full">
 		<p>Devices:</p>
-		<img id="routing-gear" class="w-6 cursor-pointer transform duration-500" onclick="toggleSettings('routing','routing-gear')" src="images/menu.svg"/>
+		<img class="h-8" src="images/duckado.svg"/>
+		<img id="routing-gear" class="h-8 cursor-pointer transform duration-500" onclick="toggleSettings('routing','routing-gear')" src="images/menu.svg"/>
 	</div>
 </div>
 	<div id="routing" class="flex flex-row h-screen justify-between w-full space-x-2 hidden">
@@ -38,7 +37,7 @@
 
 
 		<div class="flex rounded shadow-lg flex-col p-4 bg-white w-1/2">
-			<h2 class="">Destinations: </h2>
+			<h2 class="">Outputs: </h2>
 			<ul id="destinations" class="h-full">
 
 			</ul>
@@ -48,8 +47,8 @@
 
 	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded shadow-lg p-2 px-4">
 		<div class="justify-between flex w-full">
-			<p>Zone Control:</p>
-			<img id="reload" class="w-6 cursor-pointer" src="images/reload.svg"/>
+			<p>Output Control:</p>
+			<img id="reload" class="h-8 cursor-pointer" src="images/reload.svg"/>
 		</div>
 
 		<div class="h-full py-2">
@@ -98,7 +97,7 @@
               			$('<div class"w-full flex flex-row justify-between"/>').append(
               				$('<span class="font-bold" />').text(zone.name)
               			),
-              			$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none bg-blue-100 rounded-full" value="${zone.volume}" />`),
+              			$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none lightblue rounded-50 h-10" value="${zone.volume}" />`),
               			$(`<select class="rounded zoneinput" />`) .append(getInputAsOption({
               					name : "-Mute-",
               					source : "muted"
@@ -111,14 +110,14 @@
 
 	function createDeviceLi(device) {
 
-		return	$('<li id="'+ device.ip + '" class="bg-white shadow-lg border rounded flex flex-row p-2 my-2 md:space-x-2 justify-between sm:pr-6 md:pr-2 pr-4"/>').append(
+		return	$('<li id="'+ device.ip + '" class="bg-white shadow-lg border rounded flex flex-row p-2 my-2 md:space-x-2 justify-between sm:pr-10 md:pr-8 lg:pr-2 pr-4"/>').append(
 					$('<div class="flex flex-row space-x-2"/>').append(
 						$('<label />').text("Name: "),
 						$(`<input type="text" class="w-full font-bold" name="${device.type}.name" value="${device.name}"/>`)
 					),
 					$('<div class="flex flex-row space-x-2"/>').append(
 						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink"/>`).text("Blink"),
-						$(`<img class="flex flex-row space-x-2 h-6 cursor-pointer" src="images/gear.svg" onclick="window.open('http://${device.ip}:5000/config')"/>`)
+						$(`<img class="flex flex-row space-x-2 h-8 cursor-pointer" src="images/gear.svg" onclick="window.open('http://${device.ip}:5000/config')"/>`)
 					)
 				)
 	}
@@ -168,6 +167,7 @@
 
 function loadHandlers(){
 
+
 	$('select').on('change', function () {
 		var message = {
 			ip : this.closest('li').id,
@@ -191,6 +191,10 @@ function loadHandlers(){
 		}
 
 		socket.emit('forward', message)
+
+		if (message.value == 100)
+			new Audio('quack.mp3').play();
+
 	})
 	$('input[type=text]').on('keyup', function () {
 
