@@ -21,6 +21,11 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs'); 
 
+try {
+  exec('git pull')
+} catch(e) {
+  console.log(e)
+}
 
 // config
 let config = new Configuration('./config/config.json')
