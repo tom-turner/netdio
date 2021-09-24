@@ -301,6 +301,19 @@ function loadHandlers(){
 		socket.emit("restart")
 		loading(true)
 	})
+
+	$('#duck').on('mousedown' , function (){
+
+		let timeout = setTimeout( function (){
+			window.location.href = '/'
+		}, 1000)
+
+		$('#duck').on('mouseup' , function (){
+			clearTimeout(timeout)
+			quack()
+		})
+		
+	})
 }
 
 </script>
