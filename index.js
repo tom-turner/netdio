@@ -1,5 +1,6 @@
 const express = require('express');
 const expressLayouts = require('express-layouts')
+const fileUpload = require('express-fileupload');
 const app = express();
 const http = require('http').Server(app);
 const bp = require('body-parser');
@@ -8,9 +9,21 @@ const { spawn, exec, fork } = require('child_process');
 const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
+const Color = require('./lib/color')
+const color = new Color()
 const port = process.env.port || 5000;
 const fs = require('fs')
 const Roc = require('./lib/roc')
+const multer  = require('multer')
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images/')
+  },
+  filename: (req, file, cb) => {
+    cb( null, 'logo')
+  }
+})
+const upload = multer({ storage: storage })
 require('./lib/fileCheck')
 exec('python ./lib/python/ledOn.py')
 app.use(bp.json())
@@ -128,12 +141,25 @@ io.on('connection', (socket) => {
 
 });
 
+app.post('/configure', upload.single('file'), (req, res, next) => {
+
+  console.log(1, req.body)
+
+  config.set("device.color", req.body.color)
+  console.log(color.darken(req.body.color))
+  config.set("device.colordark", color.darken(req.body.color))
+  config.set("device.ip", req.body.ip)
+
+
+  return res.json('Configuration Received')
+})
+
 // Render index.ejs
-app.get('/', function (req, res) {
-  res.render('user.ejs');
+app.get('/', async (req, res) => {
+  res.render('user.ejs', {config: config.configObject});
 });
-app.get('/config', function (req, res) {
-  res.render('config.ejs', {config: config.configObject});
+app.get('/settings', (req, res) => {
+  res.render('settings.ejs', {config: config.configObject});
 });
 
 

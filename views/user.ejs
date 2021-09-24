@@ -15,40 +15,16 @@
 </div>
 
 
-<div class="flex items-center justify-center h-screen blue flex flex-col p-4 space-y-2 ">
-
-
-<div class="w-full bg-white rounded shadow-lg flex  p-2  px-4 flex-col">
-	<div class="flex w-full justify-between">
-		<img class="h-10 cursor-pointer" onclick="quack()" src="images/duck.svg"/>
-		<img class="h-10" src="images/duckado.svg"/>
-		<img id="routing-gear" class="h-10 cursor-pointer transform duration-500" onclick="toggleSettings('routing','routing-gear')" src="images/menu.svg"/>
-	</div>
-</div>
-	<div id="routing" class="flex flex-row h-screen justify-between w-full shadow-lg bg-white rounded space-x-2 hidden overflow-auto">
-
-		<div class="flex flex-col p-4 w-1/2">
-			<h2 class="">Inputs: </h2>
-			<ul id="inputs" class="h-full">
-
-			</ul>
-			
-		</div>
-
-
-		<div class="flex flex-col p-4 w-1/2">
-			<h2 class="">Outputs: </h2>
-			<ul id="destinations" class="h-full">
-
-			</ul>
-		</div>
-
-	</div>
+<div class="flex items-center justify-center h-screen blue flex flex-col p-4 ">
 
 	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded shadow-lg p-2 px-4 overflow-scroll">
-		<div class="justify-between flex w-full">
-			<p class="my-auto text-2xl">Output Control:</p>
-			<img id="reload" class="h-10 cursor-pointer" src="images/reload.svg"/>
+		<div class="justify-between flex w-full px-2">
+			<img id="duck" class="h-10 cursor-pointer" src="images/duck.svg"/>
+			<img class="h-10" src="images/logo"/>
+
+			<svg id="reload" class="h-10 w-10 cursor-pointer transform duration-500 fill-current blue-fill" >
+				<use xlink:href="images/reload.svg#reload"/>
+			</svg>
 		</div>
 
 		<div class="h-full py-2">
@@ -75,15 +51,6 @@
 		}
 	}
 
-	function toggleSettings(id, button) {
-		document.getElementById(id).classList.toggle("hidden")
-		document.getElementById(button).classList.toggle("rotate-45")
-		
-		setTimeout( () => {
-			document.getElementById(button).classList.toggle("rotate-45")
-		},100)
-	}
-
 	function getInputAsOption(device){
 		return $(`<option value="${device.source}" name="${device.ip}"/>`).text(device.name)
 	}
@@ -97,7 +64,7 @@
               			$('<div class"w-full flex flex-row justify-between"/>').append(
               				$('<span class="font-bold" />').text(zone.name)
               			),
-              			$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none lightblue rounded-50 h-10" value="${zone.volume}" />`),
+              			$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none blue rounded-50 h-10" value="${zone.volume}" />`),
               			$(`<select class="rounded zoneinput" />`) .append(getInputAsOption({
               					name : "-Mute-",
               					source : "muted"
@@ -117,7 +84,7 @@
 					),
 					$('<div class="flex flex-row space-x-2"/>').append(
 						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink"/>`).text("Blink"),
-						$(`<img class="flex flex-row space-x-2 h-8 cursor-pointer" src="images/gear.svg" onclick="window.open('http://${device.ip}:5000/config')"/>`)
+						$(`<img class="flex flex-row space-x-2 h-8 cursor-pointer" src="images/gear.svg" onclick="window.open('http://${device.ip}:5000/settings')"/>`)
 					)
 				)
 	}
@@ -225,18 +192,17 @@ function loadHandlers(){
 		}, 1500)
 	})
 
-	$('#configure').on("click" , function() {
-		loading(true)
-		var config = {
-			name : document.getElementById("unitName").value,
-			ip : document.getElementById("ipAddress").value
-		}
-		socket.emit("config", config)
-	})
+	$('#duck').on('mousedown' , function (){
 
-	$('#restart').on("click" , function() {
-		socket.emit("restart")
-		loading(true)
+		let timeout = setTimeout( function (){
+			window.location.href = '/settings'
+		}, 1000)
+
+		$('#duck').on('mouseup' , function (){
+			clearTimeout(timeout)
+			quack()
+		})
+		
 	})
 
 }

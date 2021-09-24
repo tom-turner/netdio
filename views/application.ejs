@@ -21,10 +21,10 @@
       		cursor: pointer;
       		border-style: solid;
       		border-width: 2px;
-      		border-color: #4A5E5C;
+      		border-color: #404040;
       		border-radius: 25%;
-      		background: #8BB3AF;
-      		box-shadow: -1800px 0 0 1790px #8BB3AF;
+      		background: <%= config.device.colordark%>;
+      		box-shadow: -1800px 0 0 1790px <%= config.device.colordark%>;
             }
 
             body {
@@ -33,10 +33,10 @@
             }
             
             .blue {
-                  background: #ADDDD8;
+                  background: <%= config.device.color%>;
             }
-            .lightblue {
-                  background: #ADDDD8;
+            .blue-fill {
+                  color: <%= config.device.color%>;
             }
 
 	</style>
