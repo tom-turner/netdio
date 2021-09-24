@@ -20,6 +20,7 @@
 	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded shadow-lg p-2 px-4 overflow-scroll">
 		<div class="justify-between flex w-full px-2">
 			<img id="duck" class="h-10 cursor-pointer" src="images/duck.svg"/>
+			<span id="longpress" class="hidden absolute text-xs text-gray-400 left-20 top-14">Long Press For Settings</span>
 			<img class="h-10" src="images/logo"/>
 
 			<svg id="reload" class="h-10 w-10 cursor-pointer transform duration-500 fill-current blue-fill" >
@@ -203,6 +204,12 @@ function loadHandlers(){
 			quack()
 		})
 		
+	})
+	$('#duck').mouseover( function (){
+		$('#longpress').show()
+	})
+	$('#duck').mouseout( function (){
+		$('#longpress').hide()
 	})
 
 }

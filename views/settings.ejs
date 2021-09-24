@@ -178,9 +178,7 @@
 					),
 					$('<div class="flex flex-row space-x-2"/>').append(
 						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink"/>`).text("Blink"),
-						$(`<svg class="flex flex-row space-x-2 h-8 w-8 cursor-pointer" onclick="window.open('http://${device.ip}:5000/settings')"/>`).append(
-							$(`<use xlink:href="images/gear.svg#gear"/>`)
-							)
+						$(`<svg class="h-8 w-8 cursor-pointer fill-current blue-fill" onclick="window.open('http://${device.ip}:5000/settings')" src="images/gear.svg"><use xlink:href="images/gear.svg#gear"/></svg>`)
 					)
 				)
 	}
