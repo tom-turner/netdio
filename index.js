@@ -154,12 +154,20 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
   return res.json('Configuration Received')
 })
 
+app.post('/transport', (req,res) => {
+  console.log(req.body)
+  res.json(req.body.message)
+})
+
 // Render index.ejs
 app.get('/', async (req, res) => {
   res.render('user.ejs', {config: config.configObject});
 });
 app.get('/settings', (req, res) => {
   res.render('settings.ejs', {config: config.configObject});
+});
+app.get('/player', (req, res) => {
+  res.render('player.ejs', {config: config.configObject});
 });
 
 

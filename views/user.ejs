@@ -15,9 +15,9 @@
 </div>
 
 
-<div class="flex items-center justify-center h-screen blue flex flex-col p-4 ">
+<div class="flex items-center justify-center h-screen blue flex flex-col p-4 space-y-2">
 
-	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded shadow-lg p-2 px-4 overflow-scroll">
+	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-md shadow-lg p-2 px-4 overflow-scroll">
 		<div class="justify-between flex w-full px-2">
 			<img id="duck" class="h-10 cursor-pointer" src="images/duck.svg"/>
 			<span id="longpress" class="hidden absolute text-xs text-gray-400 left-20 top-14">Long Press For Settings</span>
@@ -33,7 +33,15 @@
 
 			</ol>
 		</div>
+
+		<div id="bottom" class="overflow-auto flex h-0 w-full transition-all duration-150 ">
+			<div id="swipeup" class="w-1/2 left-1/4 h-px  absolute"></div>
+			<div id="swipedown" class="w-1/2 left-1/4 h-px absolute hidden"></div>
+			<%- include('player.ejs')%>
+		</div>
 	</div>
+
+	
 
 </div>
 
@@ -60,7 +68,7 @@
 		
 		var source = zone.source ? 'Input: ' + zone.source.name : 'Input: -Mute-'
 
-		return	$(`<li id="${zone.ip}" class="bg-white shadow-lg border rounded flex flex-col p-2 m-2" />`).append(
+		return	$(`<li id="${zone.ip}" class="bg-white shadow-lg border rounded-md flex flex-col p-2 m-2" />`).append(
             		$('<div class="flex flex-col space-y-2"/>').append(
               			$('<div class"w-full flex flex-row justify-between"/>').append(
               				$('<span class="font-bold" />').text(zone.name)
@@ -210,6 +218,18 @@ function loadHandlers(){
 	})
 	$('#duck').mouseout( function (){
 		$('#longpress').hide()
+	})
+	$('#swipeup').mouseover( function (){
+		$('#bottom').addClass('h-36')
+		$('#bottom').removeClass('h-0')
+		$('#swipeup').addClass('hidden')
+		$('#swipedown').removeClass('hidden')
+	})
+	$('#zones').on('click', function (){
+		$('#bottom').removeClass('h-36')
+		$('#bottom').addClass('h-0')
+		$('#swipedown').addClass('hidden')
+		$('#swipeup').removeClass('hidden')
 	})
 
 }

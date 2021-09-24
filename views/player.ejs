@@ -1,0 +1,148 @@
+<div id='outer' class="flex items-center justify-center blue flex flex-col p-4 space-y-2 w-full max-h-screen">
+
+	<div id="container" class="flex h-screen w-full bg-white rounded-md border shadow-lg p-2 px-4 overflow-auto ">
+
+		<img id="albumArt" src="https://f4.bcbits.com/img/a4138172011_10.jpg" class="flex object-contain p-2 cursor-pointer"/>
+
+		<span id='info' class="flex flex-col mx-auto flex-grow justify-evenly space-y-4 relative w-full my-auto">
+
+			<img id="menu" class="absolute inset-y-0 right-0 w-8 cursor-pointer m-2" src='/images/player/dots.svg'></img>
+			<select id="playlist" class="absolute -inset-y-1 h-8 left-0 cursor-pointer text-gray-800">
+				<option disabled>Playlist/Radio</option>
+			</select>
+
+			<span id="songInfo" class="mx-auto flex flex-col text-center cursor-pointer">
+				<p class="text-gray-800 px-2 my-auto">Song Title</p>
+				<p class="text-gray-400 px-2 my-auto">Artist Name</p>
+			</span>
+
+			<div id="progressBar" class="w-full bg-gray-200 rounded-full mx-auto h-2 relative">
+				<div id="progress" class="blue absolute left-0 rounded-full mx-auto h-2" style="width: 25%;">
+					
+				</div>
+			</div>
+			
+			<span id="transport" class="flex flex-row space-x-2 mx-auto">	
+				<svg id="last" class="h-12 w-12 cursor-pointer fill-current blue-fill  my-auto" >
+					<use xlink:href="images/player/last.svg#last"/>
+				</svg>
+				<svg id="play" class="h-16 w-16 cursor-pointer fill-current blue-fill" >
+					<use xlink:href="images/player/play.svg#playbtn"/>
+				</svg>
+				<svg id="pause" class="h-16 w-16 cursor-pointer fill-current blue-fill hidden" >
+					<use xlink:href="images/player/pause.svg#pause"/>
+				</svg>
+				<svg id="next" class="h-12 w-12 my-auto cursor-pointer fill-current blue-fill" >
+					<use xlink:href="images/player/next.svg#next"/>
+				</svg>
+			</span>
+
+		</span>
+
+	</div>
+
+</div>
+
+<script type="text/javascript">
+	 	
+		let ratio = () => {
+			return $("#container").width() / $("#container").height()
+		}
+
+		let responsiveLayout = () => {
+			if(ratio() < 1.5) {
+				$("#container").addClass('flex-col')
+				$("#container").removeClass('flex-row')
+				$("#albumArt").addClass('overflow-auto')
+				$("#albumArt").addClass('object-center')
+				$("#albumArt").removeClass('object-left')
+				$("#info").addClass('max-w-lg')
+				$("#info").removeClass('h-screen')
+				$("#progressBar").removeClass('hidden')
+				$("#info").removeClass('flex-row')
+			} 
+
+			if(ratio() > 1.5){
+				$("#container").addClass('flex-row')
+				$("#container").removeClass('flex-col')
+				$("#albumArt").removeClass('overflow-auto')
+				$("#albumArt").addClass('object-left')
+				$("#albumArt").removeClass('object-center')
+				$("#info").removeClass('max-w-lg')
+				$("#info").addClass('h-screen')
+				$("#progressBar").removeClass('hidden')
+				$("#info").removeClass('flex-row')
+			}
+			if(ratio() > 3){
+				$("#progressBar").addClass('hidden')
+				$("#info").addClass('flex-row')
+				$("#info").removeClass('flex-col')
+				$("#info").removeClass('h-screen')
+				$("#info").addClass('text-left')
+				$("#container").removeClass('w-full')
+				$("#songInfo").removeClass('text-center')
+				$("#songInfo").addClass('text-left')
+				$("#outer").removeClass('p-4')
+				$("#outer").removeClass('blue')
+				$("#menu").addClass('hidden')
+				$("#playlist").addClass('hidden')
+			}
+			if(ratio() > 8) {
+				
+			}
+		}
+
+		window.onresize = responsiveLayout
+		$(window).trigger('resize')
+
+
+		let transport = async (e) => {
+
+			let res = await fetch('/transport', {
+					method:'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({message: e}) 
+				})
+
+			let message = await res.json()
+
+			alert(message)
+		}
+
+
+
+		$('#play').on('click', () =>{
+			transport('play')
+		})
+		$('#pause').on('click', () =>{
+			transport('pause')
+		})
+		$('#last').on('click', () =>{
+			transport('last')
+		})
+		$('#next').on('click', () =>{
+			transport('next')
+		})
+		$('#menu').on('click', () =>{
+			transport('menu')
+		})
+		$('#albumArt').on('click', () =>{
+			if (location.pathname == '/player') {
+				location.href = '/'
+			}	else {
+				location.href = '/player'
+			}
+			
+		})
+		$('#songInfo').on('click', () =>{
+			if (location.pathname == '/player') {
+				location.href = '/'
+			}	else {
+				location.href = '/player'
+			}
+		})
+
+
+</script>
