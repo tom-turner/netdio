@@ -34,7 +34,7 @@
 			</ol>
 		</div>
 
-		<div id="bottom" class="flex overflow-hidden transition-all duration-150 sticky h-0 mx-auto bg-gray-200">
+		<div id="bottom" class="flex overflow-hidden transition-all duration-150 absolute bottom-0 h-0 max-w-lg bg-gray-200">
 			
 			<div class="flex">
 			<%- include('player.ejs')%>
@@ -203,8 +203,7 @@ function loadHandlers(){
 	})
 
 	$('#duck').on('mousedown' , function (){
-		window.location.href = '/settings'
-		/*
+		
 		let timeout = setTimeout( function (){
 			window.location.href = '/settings'
 		}, 1000)
@@ -213,7 +212,6 @@ function loadHandlers(){
 			clearTimeout(timeout)
 			quack()
 		})
-		*/
 		
 	})
 
