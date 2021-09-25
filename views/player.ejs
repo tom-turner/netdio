@@ -2,7 +2,7 @@
 
 	<div id="container" class="flex h-screen w-full bg-white rounded-md border shadow-lg p-2 px-4 overflow-auto ">
 
-		<img id="albumArt" src="https://f4.bcbits.com/img/a4138172011_10.jpg" class="flex object-contain p-2 cursor-pointer"/>
+		<img id="albumArt" src="https://f4.bcbits.com/img/a4138172011_10.jpg" class="flex object-contain cursor-pointer flex-grow"/>
 
 		<span id='info' class="flex flex-col mx-auto flex-grow justify-evenly space-y-4 relative w-full my-auto">
 
@@ -23,16 +23,16 @@
 			</div>
 			
 			<span id="transport" class="flex flex-row space-x-2 mx-auto">	
-				<svg id="last" class="h-12 w-12 cursor-pointer fill-current blue-fill  my-auto" >
+				<svg id="last" class="h-10 w-10 cursor-pointer fill-current blue-fill  my-auto" >
 					<use xlink:href="images/player/last.svg#last"/>
 				</svg>
-				<svg id="play" class="h-16 w-16 cursor-pointer fill-current blue-fill" >
+				<svg id="play" class="h-12 w-12 cursor-pointer fill-current blue-fill" >
 					<use xlink:href="images/player/play.svg#playbtn"/>
 				</svg>
-				<svg id="pause" class="h-16 w-16 cursor-pointer fill-current blue-fill hidden" >
+				<svg id="pause" class="h-12 w-12 cursor-pointer fill-current blue-fill hidden" >
 					<use xlink:href="images/player/pause.svg#pause"/>
 				</svg>
-				<svg id="next" class="h-12 w-12 my-auto cursor-pointer fill-current blue-fill" >
+				<svg id="next" class="h-10 w-10 my-auto cursor-pointer fill-current blue-fill" >
 					<use xlink:href="images/player/next.svg#next"/>
 				</svg>
 			</span>
@@ -86,6 +86,9 @@
 				$("#outer").removeClass('blue')
 				$("#menu").addClass('hidden')
 				$("#playlist").addClass('hidden')
+				$("#albumArt").removeClass('object-contain')
+				$("#albumArt").addClass('object-cover')
+
 			}
 			if(ratio() > 8) {
 				
