@@ -19,11 +19,11 @@
 
 	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-md shadow-lg p-2 px-4 overflow-scroll">
 		<div class="justify-between flex w-full px-2">
-			<img id="duck" class="h-10 cursor-pointer" src="images/duck.svg"/>
+			<img id="duck" class="h-12 cursor-pointer" src="images/duck.svg"/>
 			<span id="longpress" class="hidden absolute text-xs text-gray-400 left-20 top-14">Long Press For Settings</span>
-			<img class="h-10" src="images/logo"/>
+			<img class="h-12" src="images/logo"/>
 
-			<svg id="reload" class="h-10 w-10 cursor-pointer transform duration-500 fill-current blue-fill" >
+			<svg id="reload" class="h-12 w-12 cursor-pointer transform duration-500 fill-current blue-fill" >
 				<use xlink:href="images/reload.svg#reload"/>
 			</svg>
 		</div>
@@ -34,10 +34,11 @@
 			</ol>
 		</div>
 
-		<div id="bottom" class="overflow-auto flex h-0 w-full transition-all duration-150 ">
-			<div id="swipeup" class="w-1/2 left-1/4 h-px  absolute"></div>
-			<div id="swipedown" class="w-1/2 left-1/4 h-px absolute hidden"></div>
+		<div id="bottom" class="overflow-auto flex h-0 w-full transition-all duration-150">
+			<div id="swipeup" class="w-full left-0 h-10  absolute"></div>
+			
 			<%- include('player.ejs')%>
+			
 		</div>
 	</div>
 
@@ -68,13 +69,13 @@
 		
 		var source = zone.source ? 'Input: ' + zone.source.name : 'Input: -Mute-'
 
-		return	$(`<li id="${zone.ip}" class="bg-white shadow-lg border rounded-md flex flex-col p-2 m-2" />`).append(
+		return	$(`<li id="${zone.ip}" class="bg-white shadow-md border rounded-md flex flex-col p-2 m-2" />`).append(
             		$('<div class="flex flex-col space-y-2"/>').append(
               			$('<div class"w-full flex flex-row justify-between"/>').append(
               				$('<span class="font-bold" />').text(zone.name)
               			),
               			$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none blue rounded-50 h-10" value="${zone.volume}" />`),
-              			$(`<select class="rounded zoneinput" />`) .append(getInputAsOption({
+              			$(`<select class="rounded zoneinput bg-white" />`) .append(getInputAsOption({
               					name : "-Mute-",
               					source : "muted"
               				}), 
@@ -198,37 +199,32 @@ function loadHandlers(){
 		socket.emit("restart")
 		setTimeout( () => {
 			location.reload()
-		}, 1500)
+		}, 2500)
 	})
 
 	$('#duck').on('mousedown' , function (){
-
+		window.location.href = '/settings'
+		/*
 		let timeout = setTimeout( function (){
-			window.location.href = '/settings'
+			
 		}, 1000)
 
 		$('#duck').on('mouseup' , function (){
 			clearTimeout(timeout)
 			quack()
 		})
+		*/
 		
 	})
-	$('#duck').mouseover( function (){
-		$('#longpress').show()
-	})
-	$('#duck').mouseout( function (){
-		$('#longpress').hide()
-	})
-	$('#swipeup').mouseover( function (){
-		$('#bottom').addClass('h-36')
+
+	$('#swipeup').on('click', function (){
+		$('#bottom').addClass('h-44')
 		$('#bottom').removeClass('h-0')
 		$('#swipeup').addClass('hidden')
-		$('#swipedown').removeClass('hidden')
 	})
 	$('#zones').on('click', function (){
-		$('#bottom').removeClass('h-36')
+		$('#bottom').removeClass('h-44')
 		$('#bottom').addClass('h-0')
-		$('#swipedown').addClass('hidden')
 		$('#swipeup').removeClass('hidden')
 	})
 

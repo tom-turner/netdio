@@ -27,6 +27,17 @@
       		box-shadow: -1800px 0 0 1790px <%= config.device.colordark%>;
             }
 
+            html {
+
+              overflow:   scroll;
+              overflow-x: hidden;
+            }
+
+            ::-webkit-scrollbar {
+                  width: 1px;
+                  background: transparent; /* make scrollbar transparent */
+            }
+
             body {
                   font-family: 'Josefin Sans', sans-serif;
                   font-size: 20px;
