@@ -17,18 +17,18 @@
 
 <div class="flex items-center justify-center h-screen blue flex flex-col p-4 space-y-2 relative">
 
-	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-md shadow-lg p-2 px-4 overflow-auto">
-		<div class="justify-between flex w-full px-2">
-			<img id="duck" class="h-12 cursor-pointer" src="images/duck.svg"/>
+	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-md shadow-lg pt-2 px-4 overflow-hidden">
+		<div class="justify-between flex w-full py-2">
+			<img id="duck" class="h-10 cursor-pointer" src="images/duck.svg"/>
 			<span id="longpress" class="hidden absolute text-xs text-gray-400 left-20 top-14">Long Press For Settings</span>
-			<img class="h-12" src="images/logo"/>
+			<img class="h-10 my-auto" src="images/logo"/>
 
-			<svg id="reload" class="h-12 w-12 cursor-pointer transform duration-500 fill-current blue-fill" >
+			<svg id="reload" class="h-10 w-10 my-auto cursor-pointer transform duration-500 fill-current blue-fill" >
 				<use xlink:href="images/reload.svg#reload"/>
 			</svg>
 		</div>
 
-		<div class="h-full py-2">
+		<div class="h-full overflow-auto">
 			<ol id="zones" class="h-full flex flex-col">
 
 			</ol>
@@ -68,18 +68,19 @@
 		
 		var source = zone.source ? 'Input: ' + zone.source.name : 'Input: -Mute-'
 
-		return	$(`<li id="${zone.ip}" class="bg-white shadow-md border rounded-md flex flex-col p-2 m-2" />`).append(
-            		$('<div class="flex flex-col space-y-2"/>').append(
-              			$('<div class"w-full flex flex-row justify-between"/>').append(
-              				$('<span class="font-bold" />').text(zone.name)
-              			),
-              			$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none blue rounded-50 h-10" value="${zone.volume}" />`),
-              			$(`<select class="rounded zoneinput bg-white" />`) .append(getInputAsOption({
+		return	$(`<li id="${zone.ip}" class="bg-white shadow-sm border rounded-md flex flex-col p-2 my-1" />`).append(
+            		$('<div class="flex flex-col space-y-1 w-full"/>').append(
+              			$('<div class"flex flex-row justify-between relative"/>').append(
+              				$('<span class="font-bold" />').text(zone.name),
+              				$(`<select class="rounded zoneinput bg-white absolute right-10 mt-1" />`) .append(getInputAsOption({
               					name : "-Mute-",
               					source : "muted"
               				}), 
               				($('<option disabled selected/>').text(`${source}`))
               			)
+              			),
+              			$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none blue rounded-50 h-10" value="${zone.volume}" />`)
+              			
             		)
         		)
 	}
