@@ -34,9 +34,8 @@
 			</ol>
 		</div>
 
-		<div id="bottom" class="flex overflow-hidden transition-all duration-150 absolute bottom-0 h-0 max-w-lg bg-gray-200">
-			
-			<div class="flex">
+		<div id="bottom" class="flex overflow-hidden transition-all duration-150 absolute bottom-6 h-0 w-full rounded-md left-0">
+			<div class="flex mx-auto">
 			<%- include('player.ejs')%>
 			</div>
 		</div>
@@ -216,12 +215,12 @@ function loadHandlers(){
 	})
 
 	$('#swipeup').on('click', function (){
-		$('#bottom').addClass('h-44')
+		$('#bottom').addClass('h-36')
 		$('#bottom').removeClass('h-0')
 		$('#swipeup').addClass('hidden')
 	})
 	$('#zones').on('click', function (){
-		$('#bottom').removeClass('h-44')
+		$('#bottom').removeClass('h-36')
 		$('#bottom').addClass('h-0')
 		$('#swipeup').removeClass('hidden')
 	})
