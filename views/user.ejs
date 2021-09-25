@@ -15,9 +15,9 @@
 </div>
 
 
-<div class="flex items-center justify-center h-screen blue flex flex-col p-4 space-y-2">
+<div class="flex items-center justify-center h-screen blue flex flex-col p-4 space-y-2 relative">
 
-	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-md shadow-lg p-2 px-4 overflow-scroll">
+	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-md shadow-lg p-2 px-4 overflow-auto">
 		<div class="justify-between flex w-full px-2">
 			<img id="duck" class="h-12 cursor-pointer" src="images/duck.svg"/>
 			<span id="longpress" class="hidden absolute text-xs text-gray-400 left-20 top-14">Long Press For Settings</span>
@@ -34,16 +34,15 @@
 			</ol>
 		</div>
 
-		<div id="bottom" class="overflow-hidden flex object-contain flex-grow transition-all duration-150 absolute object-bottom align-middle bottom-8 h-0">
+		<div id="bottom" class="flex overflow-hidden transition-all duration-150 sticky h-0 mx-auto bg-gray-200">
 			
-			<div class=" flex">
+			<div class="flex">
 			<%- include('player.ejs')%>
 			</div>
 		</div>
-		<div id="swipeup" class="w-full left-0 h-12 bg-black bottom-0 absolute"></div>
+		<div id="swipeup" class="w-full left-0 h-12 bottom-0 absolute"></div>
 	</div>
 
-	
 
 </div>
 
@@ -207,7 +206,7 @@ function loadHandlers(){
 		window.location.href = '/settings'
 		/*
 		let timeout = setTimeout( function (){
-			
+			window.location.href = '/settings'
 		}, 1000)
 
 		$('#duck').on('mouseup' , function (){
@@ -219,12 +218,12 @@ function loadHandlers(){
 	})
 
 	$('#swipeup').on('click', function (){
-		$('#bottom').addClass('h-36')
+		$('#bottom').addClass('h-44')
 		$('#bottom').removeClass('h-0')
 		$('#swipeup').addClass('hidden')
 	})
 	$('#zones').on('click', function (){
-		$('#bottom').removeClass('h-36')
+		$('#bottom').removeClass('h-44')
 		$('#bottom').addClass('h-0')
 		$('#swipeup').removeClass('hidden')
 	})
