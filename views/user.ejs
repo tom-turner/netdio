@@ -34,12 +34,13 @@
 			</ol>
 		</div>
 
-		<div id="bottom" class="overflow-auto flex h-0 transition-all duration-150">
-			<div id="swipeup" class="w-full left-0 h-10  absolute"></div>
+		<div id="bottom" class="overflow-hidden flex object-contain flex-grow transition-all duration-150 absolute object-bottom align-middle bottom-8 h-0">
 			
+			<div class=" flex">
 			<%- include('player.ejs')%>
-			
+			</div>
 		</div>
+		<div id="swipeup" class="w-full left-0 h-12 bg-black bottom-0 absolute"></div>
 	</div>
 
 	
@@ -218,12 +219,12 @@ function loadHandlers(){
 	})
 
 	$('#swipeup').on('click', function (){
-		$('#bottom').addClass('h-44')
+		$('#bottom').addClass('h-36')
 		$('#bottom').removeClass('h-0')
 		$('#swipeup').addClass('hidden')
 	})
 	$('#zones').on('click', function (){
-		$('#bottom').removeClass('h-44')
+		$('#bottom').removeClass('h-36')
 		$('#bottom').addClass('h-0')
 		$('#swipeup').removeClass('hidden')
 	})
