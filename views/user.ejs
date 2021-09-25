@@ -202,17 +202,15 @@ function loadHandlers(){
 		}, 2500)
 	})
 
-	$('#duck').on('mousedown' , function (){
-		
-		let timeout = setTimeout( function (){
-			window.location.href = '/settings'
+	let clickcount = 0
+	$('#duck').on('click' , function (){
+		clickcount = clickcount + 1
+		setTimeout( function (){
+			clickcount = 0
 		}, 1000)
-
-		$('#duck').on('mouseup' , function (){
-			clearTimeout(timeout)
-			quack()
-		})
-		
+		if (clickcount >= 2) {
+			window.location.href = '/settings'
+		} else { quack() }
 	})
 
 	$('#swipeup').on('click', function (){
