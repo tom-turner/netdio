@@ -2,7 +2,7 @@
 
 	<div id="container" class="flex h-screen w-full bg-white rounded-md border shadow-lg p-2 px-4 overflow-auto">
 
-		<img id="artwork" src="https://f4.bcbits.com/img/a4138172011_10.jpg" class="flex object-contain cursor-pointer flex-grow p-2"/>
+		<img id="artwork" src="" class="flex object-contain cursor-pointer flex-grow p-2"/>
 
 		<span id='info' class="flex flex-col mx-auto flex-grow justify-evenly space-y-4 relative w-full my-auto">
 
@@ -15,9 +15,9 @@
 				<option>Other Service</option>
 			</select>
 
-			<span id="songInfo" class="mx-auto flex flex-col text-center cursor-pointer">
-				<p class="text-gray-800 px-2 my-auto">Song Title</p>
-				<p class="text-gray-400 px-2 my-auto">Artist Name</p>
+			<span id="trackData" class="mx-auto flex flex-col text-center cursor-pointer">
+				<p id="songtitle" class="text-gray-800 px-2 my-auto">-no info-</p>
+				<p id="artist" class="text-gray-400 px-2 my-auto">-no info-</p>
 			</span>
 
 			<div id="progressBar" class="w-full bg-gray-200 rounded-full mx-auto h-2 relative">
@@ -49,9 +49,7 @@
 
 <script type="text/javascript">
 	 	
-
 	 	var socket = io()
-
 	 
 		let ratio = () => {
 			return $("#container").width() / $("#container").height()
@@ -88,8 +86,8 @@
 				$("#info").removeClass('h-screen')
 				$("#info").addClass('text-left')
 				$("#container").removeClass('w-full')
-				$("#songInfo").removeClass('text-center')
-				$("#songInfo").addClass('text-left')
+				$("#trackData").removeClass('text-center')
+				$("#trackData").addClass('text-left')
 				$("#outer").removeClass('p-4')
 				$("#outer").removeClass('blue')
 				$("#service").addClass('hidden')
@@ -105,6 +103,11 @@
 		window.onresize = responsiveLayout
 		$(window).trigger('resize')
 
+		let setTrackData = (data) => {
+			$("#songtitle").text(data.song)
+			$("#artist").text(data.artist)
+			$("#artwork").attr('src', data.artwork)
+		}
 
 		let send = async (url, e) => {
 
@@ -143,12 +146,16 @@
 			}
 			
 		})
-		$('#songInfo').on('click', () =>{
+		$('#trackData').on('click', () =>{
 			if (location.pathname == '/player') {
 				location.href = '/'
 			}	else {
 				location.href = '/player'
 			}
+		})
+
+		socket.on("trackData", (track) => {
+			setTrackData(track)
 		})
 
 

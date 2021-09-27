@@ -11,6 +11,7 @@ const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
 const Color = require('./lib/color')
 const Player = require('./lib/player')
+const player = new Player
 const port = process.env.port || 5000;
 const fs = require('fs')
 const Roc = require('./lib/roc')
@@ -107,13 +108,13 @@ devices.on('ctrlMessage', (message) => {
         }, 6000 )
       break
     }
-
 })
 
 // Allow User configuration
 io.on('connection', (socket) => {
-  console.log('user connected');
+  console.log('user connected', socket.id);
   socket.emit('devices', devices.getDevices())  
+  socket.emit('trackData', player.getCurrentTrack())
 
   devices.on('connection', (device) => {
     socket.emit('devices', devices.getDevices())
@@ -142,7 +143,9 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
-
+  player.on('trackData', () => {
+    socket.emit('trackData', player.getCurrentTrack())
+  });
 });
 
 app.post('/configure', upload.single('file'), (req, res, next) => {
@@ -158,14 +161,13 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
 })
 
 app.post('/playerctrl', (req,res) => {
-  let player = new Player
   let message = req.body.message
   message.transport ? player[message.transport]() : ''
   message.service ? player.changeTo(message.service) : ''
   return res.json(req.body.message)
 })
 
-// Render index.ejs
+// Routes
 app.get('/', async (req, res) => {
   res.render('user.ejs', {config: config.configObject});
 });
