@@ -97,7 +97,7 @@
 			
 			<label class="w-full">Action:</label>
 
-			<button id="restart" class="button border px-2 rounded-full text-grey-400 bg-white ">Restart</button>
+			<button id="reboot" class="button border px-2 rounded-full text-grey-400 bg-white ">Reboot</button>
 
 			<button id="blink" class="button border px-2 rounded-full text-white blue">Blink</button>
 
@@ -297,8 +297,8 @@ function loadHandlers(){
 
 	})
 
-	$('#restart').on("click" , function() {
-		socket.emit("restart")
+	$('#reboot').on("click" , function() {
+		socket.emit("reboot")
 		loading(true)
 	})
 

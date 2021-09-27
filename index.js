@@ -128,11 +128,16 @@ io.on('connection', (socket) => {
     devices.forward(message.ip, message)
   })
 
-  socket.on('restart', () => {
-    console.log('restart')
+  socket.on('reload', () => {
+    console.log('reload')
     exec('python ./lib/python/ledOff.py')
     roc.kill(roc.get())
     process.exit()
+  });
+
+  socket.on('reboot', () => {
+    console.log('rebooting')
+    exec('sudo reboot')
   });
 
   socket.on('disconnect', () => {

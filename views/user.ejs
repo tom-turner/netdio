@@ -196,7 +196,7 @@ function loadHandlers(){
 
 	$('#reload').on('click' , function(){
 		loading(true)
-		socket.emit("restart")
+		socket.emit("reload")
 		//setTimeout( () => {
 		//	location.reload()
 		//}, 2500)
