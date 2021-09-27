@@ -10,7 +10,7 @@ const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
 const Color = require('./lib/color')
-const color = new Color()
+const Player = require('./lib/player')
 const port = process.env.port || 5000;
 const fs = require('fs')
 const Roc = require('./lib/roc')
@@ -124,7 +124,6 @@ io.on('connection', (socket) => {
   })
 
   socket.on('forward', (message) =>{
-    console.log("forward:",message)
     devices.forward(message.ip, message)
   })
 
@@ -147,7 +146,7 @@ io.on('connection', (socket) => {
 });
 
 app.post('/configure', upload.single('file'), (req, res, next) => {
-
+  const color = new Color()
   console.log(1, req.body)
 
   config.set("device.color", req.body.color)
@@ -155,13 +154,15 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
   config.set("device.colordark", color.darken(req.body.color))
   config.set("device.ip", req.body.ip)
 
-
   return res.json('Configuration Received')
 })
 
-app.post('/transport', (req,res) => {
-  console.log(req.body)
-  res.json(req.body.message)
+app.post('/playerctrl', (req,res) => {
+  let player = new Player
+  let message = req.body.message
+  message.transport ? player[message.transport]() : ''
+  message.service ? player.changeTo(message.service) : ''
+  return res.json(req.body.message)
 })
 
 // Render index.ejs

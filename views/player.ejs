@@ -2,13 +2,17 @@
 
 	<div id="container" class="flex h-screen w-full bg-white rounded-md border shadow-lg p-2 px-4 overflow-auto">
 
-		<img id="albumArt" src="https://f4.bcbits.com/img/a4138172011_10.jpg" class="flex object-contain cursor-pointer flex-grow p-2"/>
+		<img id="artwork" src="https://f4.bcbits.com/img/a4138172011_10.jpg" class="flex object-contain cursor-pointer flex-grow p-2"/>
 
 		<span id='info' class="flex flex-col mx-auto flex-grow justify-evenly space-y-4 relative w-full my-auto">
 
 			
-			<select id="playlist" class="absolute inset-y-0 h-8 right-0 cursor-pointer text-gray-800 bg-white">
-				<option disabled>Playlist/Radio</option>
+			<select id="service" class="absolute inset-y-0 h-8 right-0 cursor-pointer text-gray-800 bg-white text-gray-400">
+				<option selected disabled></option>
+				<option>Duckado Cloud</option>
+				<option>Spotify</option>
+				<option>Radio</option>
+				<option>Other Service</option>
 			</select>
 
 			<span id="songInfo" class="mx-auto flex flex-col text-center cursor-pointer">
@@ -45,6 +49,10 @@
 
 <script type="text/javascript">
 	 	
+
+	 	var socket = io()
+
+	 
 		let ratio = () => {
 			return $("#container").width() / $("#container").height()
 		}
@@ -53,9 +61,9 @@
 			if(ratio() < 1.5) {
 				$("#container").addClass('flex-col')
 				$("#container").removeClass('flex-row')
-				$("#albumArt").addClass('overflow-auto')
-				$("#albumArt").addClass('object-center')
-				$("#albumArt").removeClass('object-left')
+				$("#artwork").addClass('overflow-auto')
+				$("#artwork").addClass('object-center')
+				$("#artwork").removeClass('object-left')
 				$("#info").addClass('max-w-lg')
 				$("#info").removeClass('h-screen')
 				$("#progressBar").removeClass('hidden')
@@ -65,9 +73,9 @@
 			if(ratio() > 1.5){
 				$("#container").addClass('flex-row')
 				$("#container").removeClass('flex-col')
-				$("#albumArt").removeClass('overflow-auto')
-				$("#albumArt").addClass('object-left')
-				$("#albumArt").removeClass('object-center')
+				$("#artwork").removeClass('overflow-auto')
+				$("#artwork").addClass('object-left')
+				$("#artwork").removeClass('object-center')
 				$("#info").removeClass('max-w-lg')
 				$("#info").addClass('h-screen')
 				$("#progressBar").removeClass('hidden')
@@ -84,10 +92,9 @@
 				$("#songInfo").addClass('text-left')
 				$("#outer").removeClass('p-4')
 				$("#outer").removeClass('blue')
-				$("#menu").addClass('hidden')
-				$("#playlist").addClass('hidden')
-				$("#albumArt").removeClass('object-contain')
-				$("#albumArt").addClass('object-cover')
+				$("#service").addClass('hidden')
+				$("#artwork").removeClass('object-contain')
+				$("#artwork").addClass('object-cover')
 
 			}
 			if(ratio() > 8) {
@@ -99,9 +106,9 @@
 		$(window).trigger('resize')
 
 
-		let transport = async (e) => {
+		let send = async (url, e) => {
 
-			let res = await fetch('/transport', {
+			let res = await fetch( url , {
 					method:'POST',
 					headers: {
 						'Content-Type': 'application/json'
@@ -109,29 +116,26 @@
 					body: JSON.stringify({message: e}) 
 				})
 
-			let message = await res.json()
-
-			alert(message)
+			let message = await res.json()			
 		}
 
-
-
 		$('#play').on('click', () =>{
-			transport('play')
+			send('/playerctrl', {transport :'play'})
 		})
 		$('#pause').on('click', () =>{
-			transport('pause')
+			send('/playerctrl', {transport :'pause'})
 		})
 		$('#last').on('click', () =>{
-			transport('last')
+			send('/playerctrl', {transport :'last'})
 		})
 		$('#next').on('click', () =>{
-			transport('next')
+			send('/playerctrl',{ transport :'next'})
 		})
-		$('#menu').on('click', () =>{
-			transport('menu')
+		$('#service').on('change', () =>{
+			send('/playerctrl',{ service : $('#service').val()})
 		})
-		$('#albumArt').on('click', () =>{
+
+		$('#artwork').on('click', () =>{
 			if (location.pathname == '/player') {
 				location.href = '/'
 			}	else {
