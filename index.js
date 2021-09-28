@@ -66,7 +66,7 @@ let roc = new Roc(config.configObject)
 roc.rocRecv()
 setInterval(()=>{ 
     devices.forward( config.get('source')['send'], {
-    type: 'devices',
+    type: 'keepalive',
     value: config.get('source')
   })
 }, 1000)
@@ -86,18 +86,20 @@ devices.on('disconnect', (device) => {
 })
 
 devices.on('ctrlMessage', (message) => {
-  config.set( message.type , message.value)
+  
 
     switch (message.type) {
       case 'source':
+        config.set( message.type , message.value)
         roc.kill(roc.get('rx'))
         console.log(config.get('source'))
         roc.rocRecv(config.get('source'))
       break
-      case 'devices' :
+      case 'keepalive' :
         roc.rocSend(message.value)
       break
       case 'rx.volume':
+        config.set( message.type , message.value)
         process.platform === 'linux' ? exec(`amixer set Master ${message.value}%`) : ''
       break
       case 'blink':
