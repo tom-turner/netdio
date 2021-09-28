@@ -96,7 +96,6 @@ devices.on('ctrlMessage', (message) => {
       break
       case 'devices' :
         roc.rocSend(message.value)
-
       break
       case 'rx.volume':
         process.platform === 'linux' ? exec(`amixer set Master ${message.value}%`) : ''
