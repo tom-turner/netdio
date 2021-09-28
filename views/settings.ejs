@@ -101,7 +101,7 @@
 
 			<button id="reboot" class="button border px-2 rounded-full text-grey-400 bg-white ">Reboot</button>
 
-			<button id="blink" class="button border px-2 rounded-full text-white blue">Blink</button>
+			<button id="blinkSelf" class="button border px-2 rounded-full text-white blue">Blink</button>
 
 			</div>
 
@@ -145,6 +145,14 @@
 		},100)
 	}
 
+	function blink(ip){
+		var message = {
+			ip : ip,
+			type : 'blink'
+		}
+		socket.emit('forward', message)
+	}
+
 
 
 	function getInputAsOption(device){
@@ -179,7 +187,7 @@
 						$(`<input type="text" class="w-full font-bold" name="${device.type}.name" value="${device.name}"/>`)
 					),
 					$('<div class="flex flex-row space-x-2"/>').append(
-						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink"/>`).text("Blink"),
+						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink" onclick="blink('${device.ip}')"/>`).text("Blink"),
 						$(`<svg class="h-8 w-8 cursor-pointer fill-current blue-fill" onclick="location.href='http://${device.ip}:5000/settings'" src="images/gear.svg"><use xlink:href="images/gear.svg#gear"/></svg>`)
 					)
 				)
@@ -267,14 +275,8 @@ function loadHandlers(){
 	})
 	*/
 
-	$('#blink').on("click" , function(){
-		
-		var message = {
-			ip : '<%= config.device.ip %>',
-			type : 'blink'
-		}
-
-		socket.emit('forward', message)
+	$('#blinkSelf').on("click" , function(){
+		blink('<%= config.device.ip %>')
 	})
 
 	$('#configure').on("click" , function() {
