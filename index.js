@@ -153,9 +153,9 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
   console.log(1, req.body)
 
   config.set("device.color", req.body.color)
-  console.log(color.darken(req.body.color))
   config.set("device.colordark", color.darken(req.body.color))
   config.set("device.ip", req.body.ip)
+  config.set("device.name", req.body.name)
 
   return res.json('Configuration Received')
 })

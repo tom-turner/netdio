@@ -30,7 +30,7 @@
 	<div id="devices" class="flex flex-row h-screen justify-between w-full shadow-lg bg-white rounded space-x-2 overflow-auto hidden">
 
 		<div class="flex flex-col p-4 w-1/2">
-			<h2 class="">Inputs: </h2>
+			<h2 class="">Sources: </h2>
 			<ul id="inputs" class="h-full">
 
 			</ul>
@@ -39,7 +39,7 @@
 
 
 		<div class="flex flex-col p-4 w-1/2">
-			<h2 class="">Outputs: </h2>
+			<h2 class="">Zones: </h2>
 			<ul id="destinations" class="h-full">
 
 			</ul>
@@ -50,8 +50,10 @@
 	<div id="settings" class="flex flex-col h-screen w-full bg-white rounded shadow-lg p-2 px-4 overflow-scroll">
 
 		<span class="flex flex-col space-y-4">
-
-			<label>Settings:</label>
+			<span class="flex flex-row space-x-2 justify-between">
+				<label>Device Name:</label>
+				<input type="text" id="name" name="name" class="font-bold w-64 text-right" value="<%= config.device.name%>">
+			</span>
 
 			<span class="flex flex-row space-x-2 justify-between">
 				<label class="" >Logo:</label>
@@ -173,12 +175,12 @@
 
 		return	$('<li id="'+ device.ip + '" class="bg-white shadow-lg border rounded flex flex-row p-2 my-2 md:space-x-2 justify-between sm:pr-10 md:pr-8 lg:pr-2 pr-4"/>').append(
 					$('<div class="flex flex-row space-x-2"/>').append(
-						$('<label />').text("Name: "),
+						$('<label />').text("Label: "),
 						$(`<input type="text" class="w-full font-bold" name="${device.type}.name" value="${device.name}"/>`)
 					),
 					$('<div class="flex flex-row space-x-2"/>').append(
 						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink"/>`).text("Blink"),
-						$(`<svg class="h-8 w-8 cursor-pointer fill-current blue-fill" onclick="window.open('http://${device.ip}:5000/settings')" src="images/gear.svg"><use xlink:href="images/gear.svg#gear"/></svg>`)
+						$(`<svg class="h-8 w-8 cursor-pointer fill-current blue-fill" onclick="location.href='http://${device.ip}:5000/settings'" src="images/gear.svg"><use xlink:href="images/gear.svg#gear"/></svg>`)
 					)
 				)
 	}
@@ -280,6 +282,7 @@ function loadHandlers(){
 
 		let data = new FormData()
 		data.append('file', document.getElementById('logo').files[0] )
+		data.append('name', $('#name').val())
 		data.append('ip', $('#ipAddress').val())
 		data.append('dhcp', $('#toggle').val())
 		data.append('subnet', $('#subnet').val())
