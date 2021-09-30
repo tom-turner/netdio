@@ -52,7 +52,7 @@ pactl list sinks
 Find hifiberry card Name: and rememeber it
 
 
-nano /etc/pulse/default.pa\
+nano /etc/pulse/default.pa
 add: 
 load-module module-null-sink sink_name=LoopSink
 load-module module-null-source souce_name=LoopSource
