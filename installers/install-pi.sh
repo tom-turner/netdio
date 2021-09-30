@@ -15,8 +15,8 @@ sudo apt-get install pulseaudio
 pulseaudio --start
 # may need to open the file and do the next bit manually if pulse fails to open after
 sudo tee -a /etc/pulse/daemon.conf > /dev/null <<EOT
-default-sample-rate = 48000
-alternate-sample-rate = 48000
+default-sample-rate = 44100
+alternate-sample-rate = 44100
 default-sample-channels = 2
 default-channel-map = front-left,front-right
 EOT

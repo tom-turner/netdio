@@ -6,6 +6,6 @@ sudo apt-get install build-essential
 sudo apt-get instatll libpulse-dev
 git clone https://github.com/librespot-org/librespot.git
 cd librespot
-cargo build --no-default-features --features "alsa-backend" --release
-cd ~/librespot/target/debug
+cargo build --no-default-features --features "pulseaudio-backend" --release
+cd ~/librespot/target/release
 ./librespot -n "Duck" -b 320 --enable-volume-normalisation
