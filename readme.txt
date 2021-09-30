@@ -2,7 +2,7 @@ FEATURE REQUESTS :\
 - EQ/Delay on audio output, pulse audio plugins or something\
 - music player, Spotify and loopback\
 
-Usefull RPI links:
+Usefull RPI links and install bits:
 
 #Check what runs at boot
 systemd-analyze blame
@@ -51,8 +51,7 @@ Add virtual pulse sink in/out
 pactl list sinks
 Find hifiberry card Name: and rememeber it
 
-
-important! edit /etc/pulse/daemon.conf
+important! otherwise sample rates could mismatch, edit /etc/pulse/daemon.conf
 uncomment the ; and change alertnet-sample-rate to 48000
 
 not needed - nano /etc/pulse/default.pa
@@ -61,8 +60,6 @@ load-module module-null-sink sink_name=loopback
 load-module module-null-source souce_name=loopback
 load-module module-loopback sink=loopback
 set-default-sink loopback
-
-update-sink-proplist alsa_output.platform-soc_sound.stereo-fallback device.name=HifiBerry
 
 Get sink name 
 pactl list sinks short
@@ -75,10 +72,3 @@ Alsa config
 
 Raspoitify on pulseaudio
 https://mathieu-requillart.medium.com/my-ultimate-guide-to-the-raspberry-pi-audio-server-i-wanted-spotify-ce549656af06
-
-* = pulse defaults
-Loop out * > loop in
-Berry out > hw out
-Roc recv > berry out
-Loop in > roc send
-Berry in > roc send

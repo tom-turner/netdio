@@ -11,3 +11,18 @@ scons -Q --build-3rdparty=libuv,openfec,cpputest
 sudo scons -Q --build-3rdparty=libuv,openfec,cpputest install
 scons -Q --enable-pulseaudio-modules --build-3rdparty=libuv,openfec,pulseaudio,cpputest
 sudo scons -Q --enable-pulseaudio-modules --build-3rdparty=libuv,openfec,pulseaudio,cpputest install
+sudo apt-get install pulseaudio
+pulseaudio --start
+sudo tee -a /etc/pulse/daemon.conf > /dev/null <<EOT
+default-sample-rate = 48000
+alternate-sample-rate = 48000
+default-sample-channels = 2
+default-channel-map = front-left,front-right
+EOT
+sudo tee -a /etc/pulse/daemon.conf > /dev/null <<EOT
+load-module module-null-sink sink_name=loopback
+load-module module-null-source souce_name=loopback
+load-module module-loopback sink=loopback
+set-default-sink loopback
+EOT
+sudo reboot
