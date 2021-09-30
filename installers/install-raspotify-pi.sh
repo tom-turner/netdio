@@ -20,3 +20,4 @@ ExecStart=/usr/bin/librespot --name \${DEVICE_NAME} \$BACKEND_ARGS --bitrate \${
 WantedBy=default.target
 EOT
 systemctl --user enable raspotify.service
+sudo reboot
