@@ -4,7 +4,6 @@ sudo tee -a ~/.config/systemd/user/raspotify.service > /dev/null <<EOT
 Description=Raspotify
 Wants=pulseaudio.service
 
-
 [Service]
 Restart=always
 RestartSec=10
