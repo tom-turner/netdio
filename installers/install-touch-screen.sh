@@ -29,4 +29,10 @@ EOT
 sudo tee -a /etc/sudoers.d/reboot > /dev/null <<EOT 
 duck ALL=NOPASSWD:/sbin/reboot
 EOT
+sudo rm -r ~/netdio/config/startupconfig.json 
+sudo tee -a ~/netdio/config/startupconfig.json > /dev/null <<EOT 
+{"tx":{"name":"Spotify", "type":"tx"},
+"device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"Duckado"},
+"source":{"name":"-Mute-"}}
+EOT
 sudo reboot
