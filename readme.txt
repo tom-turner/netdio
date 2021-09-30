@@ -52,12 +52,15 @@ pactl list sinks
 Find hifiberry card Name: and rememeber it
 
 
-nano /etc/pulse/default.pa
+important! edit /etc/pulse/daemon.conf
+uncomment the ; and change alertnet-sample-rate to 48000
+
+not needed - nano /etc/pulse/default.pa
 add: 
-load-module module-null-sink sink_name=LoopSink
-load-module module-null-source souce_name=LoopSource
-update-sink-proplist LoopSink device.description=LoopSink
-load-module module-loopSource sink=LoopSink
+load-module module-null-sink sink_name=loopback
+load-module module-null-source souce_name=loopback
+load-module module-loopback sink=loopback
+set-default-sink loopback
 
 update-sink-proplist alsa_output.platform-soc_sound.stereo-fallback device.name=HifiBerry
 

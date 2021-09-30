@@ -12,6 +12,7 @@ const Devices = require('./lib/autoDiscovery')
 const Color = require('./lib/color')
 const Player = require('./lib/player')
 const player = new Player
+const platform = require('./platform')
 const port = process.env.port || 5000;
 const fs = require('fs')
 const Roc = require('./lib/roc')
@@ -97,7 +98,7 @@ devices.on('ctrlMessage', (message) => {
         roc.rocSend(message.value)
       break
       case 'rx.volume':
-        process.platform === 'linux' ? exec(`amixer set Master ${message.value}%`) : ''
+        process.platform === 'linux' ? exec(`pactl -- set-sink-volume ${platform.outputDevice()} ${message.value}%`) : ''
       break
       case 'blink':
         exec('python ./lib/python/blink.py')
