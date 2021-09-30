@@ -24,3 +24,4 @@ EOT
 sudo tee -a /etc/sudoers.d/reboot > /dev/null <<EOT 
 duck ALL=NOPASSWD:/sbin/reboot
 EOT
+sudo reboot
