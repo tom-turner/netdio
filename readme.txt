@@ -1,6 +1,8 @@
 FEATURE REQUESTS :\
 - EQ/Delay on audio output, pulse audio plugins or something\
 - music player, Spotify and loopback\
+- Can we get ROC latency down more? or replace ROC
+-Can we get better touch screen pi performance
 
 Usefull RPI links and install bits:
 
@@ -54,7 +56,7 @@ Find hifiberry card Name: and rememeber it
 important! otherwise sample rates could mismatch, edit /etc/pulse/daemon.conf
 uncomment the ; and change alertnet-sample-rate to 48000
 
-not needed - nano /etc/pulse/default.pa
+nano /etc/pulse/default.pa
 add: 
 load-module module-null-sink sink_name=loopback
 load-module module-null-source souce_name=loopback

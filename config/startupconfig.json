@@ -1,4 +1,4 @@
 {"rx":{"name":"Line Out","type":"rx","volume":"80"},
-"tx":{"name":"Music Player", "type":"tx"},
+"tx":{"name":"Aux Input", "type":"tx"},
 "device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"Duckado"},
 "source":{"name":"-Mute-"}}

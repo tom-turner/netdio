@@ -13,16 +13,19 @@ scons -Q --enable-pulseaudio-modules --build-3rdparty=libuv,openfec,pulseaudio,c
 sudo scons -Q --enable-pulseaudio-modules --build-3rdparty=libuv,openfec,pulseaudio,cpputest install
 sudo apt-get install pulseaudio
 pulseaudio --start
+# may need to open the file and do the next bit manually if pulse fails to open after
 sudo tee -a /etc/pulse/daemon.conf > /dev/null <<EOT
 default-sample-rate = 48000
 alternate-sample-rate = 48000
 default-sample-channels = 2
 default-channel-map = front-left,front-right
 EOT
-sudo tee -a /etc/pulse/daemon.conf > /dev/null <<EOT
+sudo tee -a /etc/pulse/default.pa > /dev/null <<EOT
 load-module module-null-sink sink_name=loopback
 load-module module-null-source souce_name=loopback
 load-module module-loopback sink=loopback
 set-default-sink loopback
 EOT
+cd ~/netdio
+git pull
 sudo reboot
