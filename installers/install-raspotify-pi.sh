@@ -1,4 +1,5 @@
 curl -sL https://dtcooper.github.io/raspotify/install.sh | sh
+mkdir -p ~/.config/systemd/user
 sudo tee -a ~/.config/systemd/user/raspotify.service > /dev/null <<EOT
 [Unit]
 Description=Raspotify
