@@ -18,6 +18,9 @@ chromium --start-fullscreen --kiosk --incognito --noerrdialogs --disable-transla
 
 --check-for-update-interval=31536000
 EOT
+sudo tee -a ~/.bash_profile > /dev/null <<EOT
+[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && startx -- -nocursor
+EOT
 sudo tee -a /boot/config.txt > /dev/null <<EOT
 lcd_rotate=2 
 EOT
