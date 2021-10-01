@@ -1,9 +1,11 @@
 cd ~/
 curl https://sh.rustup.rs -sSf | sh
-sudo echo export PATH="\$HOME/.cargo/bin:\$PATH" >> ~/.bash_profile
+sudo tee -a ~/.bash_profile > /dev/null <<EOT
+export PATH="\$HOME/.cargo/bin:\$PATH"
+EOT
 rustup component add rustfmt
 sudo apt-get install build-essential
-sudo apt-get instatll libpulse-dev
+sudo apt-get install libpulse-dev
 git clone https://github.com/librespot-org/librespot.git
 cd librespot
 cargo build --no-default-features --features "pulseaudio-backend" --release
