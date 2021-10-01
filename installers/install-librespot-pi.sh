@@ -1,6 +1,6 @@
 cd ~/
-curl https://sh.rustup.rs -sSf | sh
-rustup component add rustfmt
+sudo curl https://sh.rustup.rs -sSf | sh
+sudo rustup component add rustfmt
 sudo apt-get install build-essential
 sudo apt-get install libpulse-dev
 git clone https://github.com/librespot-org/librespot.git ~/
