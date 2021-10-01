@@ -7,5 +7,4 @@ sudo apt-get instatll libpulse-dev
 git clone https://github.com/librespot-org/librespot.git
 cd librespot
 cargo build --no-default-features --features "pulseaudio-backend" --release
-cd ~/librespot/target/release
-./librespot -n "Duck" -b 320 --enable-volume-normalisation
+~/librespot/target/release/librespot -n "Duck" -b 320 --initial-volume 95 --enable-volume-normalisation --normalisation-pregain "-3"
