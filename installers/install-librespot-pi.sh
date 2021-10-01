@@ -1,6 +1,6 @@
 cd ~/
 curl https://sh.rustup.rs -sSf | sh
-echo export PATH="\$HOME/.cargo/bin:\$PATH" >> ~/.bash_profile
+sudo echo export PATH="\$HOME/.cargo/bin:\$PATH" >> ~/.bash_profile
 rustup component add rustfmt
 sudo apt-get install build-essential
 sudo apt-get instatll libpulse-dev
