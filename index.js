@@ -60,6 +60,12 @@ config.get('tx') ?
   : config.set( "tx.source", config.getNewPort() )
 : console.log('no tx')
 
+config.get('player') ?
+  config.get('player')['source'] 
+  ? console.log( "running player source", config.get('player')['source'] ) 
+  : config.set( "player.source", config.getNewPort() )
+: console.log('no player')
+
 
 
 // audio
@@ -175,11 +181,14 @@ app.post('/connectservice', (req,res) => {
   if(req.body.return){
     player.kill(req.body.message)
   } else {
-    config.set('tx.name', req.body.message.charAt(0).toUpperCase() + req.body.message.slice(1))
-    config.set('tx.name', 'tx')
+    config.set('player', {})
+    config.set('player.name', req.body.message.charAt(0).toUpperCase() + req.body.message.slice(1))
+    config.set('player.type', 'tx')
+    config.set( 'player.source', config.getNewPort() )
     player.connect(req.body.message)
   }
-  return res.json({url : '/', successful : true })
+  res.json({url : '/', successful : true })
+  process.exit()
 })
 
 // Routes

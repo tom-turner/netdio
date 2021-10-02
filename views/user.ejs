@@ -125,6 +125,11 @@
 				tx.ip = device.device.ip
 				txDevices.push(tx)
 			}
+			if (device.player) {
+				var player = device.player
+				player.ip = device.device.ip
+				txDevices.push(player)
+			}
 		}
 		
 		for (rx of rxDevices) {
