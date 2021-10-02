@@ -167,6 +167,21 @@ app.post('/playerctrl', (req,res) => {
   return res.json(req.body.message)
 })
 
+app.post('/selectservice', (req,res) => {
+  let started = player.start(req.body.service)
+  return res.json({ url : `/${started.service}`, successful : started.successful }) 
+})
+
+app.post('/connectservice', (req,res) => {
+  if(req.body.return){
+    player.kill(req.body.message)
+  } else {
+    config.set('tx.name', req.body.message.charAt(0).toUpperCase() + req.body.message.slice(1))
+    player.connect(req.body.message)
+  }
+  return res.json({url : '/', successful : true })
+})
+
 // Routes
 app.get('/', async (req, res) => {
   res.render('user.ejs', {config: config.configObject});

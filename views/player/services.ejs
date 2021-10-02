@@ -5,13 +5,35 @@
 	</div>
 
 	<script type="text/javascript">
-		
-		$('#spotifyConnect').on("click" , function() {
-			location.href='/spotify'
+
+		$('#spotifyConnect').on("click" , async function() {
+
+			let res = await fetch( 'selectservice' , {
+				method:'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({service: 'spotify'}) 
+			})
+
+			let message = await res.json()	
+
+			message.successful ? location.href = message.url : alert('something went wrong')
 		})
 
-		$('#cloud').on("click" , function() {
-			location.href='/cloud'
+		$('#cloud').on("click" , async function() {
+
+			let res = await fetch( 'selectservice' , {
+				method:'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({service: 'cloud'}) 
+			})
+
+			let message = await res.json()
+
+			message.successful ? location.href = message.url : alert('something went wrong')
 		})
 
 	</script>
