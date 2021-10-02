@@ -60,11 +60,12 @@ config.get('tx') ?
   : config.set( "tx.source", config.getNewPort() )
 : console.log('no tx')
 
-config.get('player') ?
+if(config.get('player')){
+  player.start(config.get('player.service'))
   config.get('player')['source'] 
   ? console.log( "running player source", config.get('player')['source'] ) 
   : config.set( "player.source", config.getNewPort() )
-: console.log('no player')
+}
 
 
 
@@ -189,6 +190,7 @@ app.post('/connectservice', (req,res) => {
     config.set('player', {})
     config.set('player.name', req.body.message.charAt(0).toUpperCase() + req.body.message.slice(1))
     config.set('player.type', 'tx')
+    config.set('player.service', req.body.message)
     config.set( 'player.source', config.getNewPort() )
     player.connect(req.body.message)
   }
