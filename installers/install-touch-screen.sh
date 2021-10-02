@@ -34,4 +34,5 @@ sudo tee -a ~/netdio/config/startupconfig.json > /dev/null <<EOT
 {"device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"Duckado"},
 "source":{"name":"-Mute-"}}
 EOT
+sudo rm -r ~/netdio/config/config.json 
 sudo reboot

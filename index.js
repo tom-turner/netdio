@@ -177,6 +177,7 @@ app.post('/connectservice', (req,res) => {
     player.kill(req.body.message)
   } else {
     config.set('tx.name', req.body.message.charAt(0).toUpperCase() + req.body.message.slice(1))
+    config.set('tx.name', 'tx')
     player.connect(req.body.message)
   }
   return res.json({url : '/', successful : true })
