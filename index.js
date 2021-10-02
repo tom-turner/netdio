@@ -145,6 +145,11 @@ io.on('connection', (socket) => {
     exec('sudo reboot')
   });
 
+  socket.on('factoryreset', () => {
+    fs.unlinkSync('config/config.json')
+    exec('sudo reboot')
+  })
+
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
@@ -163,7 +168,7 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
   config.set("device.name", req.body.name)
 
   return res.json('Configuration Received')
-})
+}) 
 
 app.post('/playerctrl', (req,res) => {
   let message = req.body.message

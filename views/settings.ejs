@@ -99,11 +99,15 @@
 			
 			<label class="w-full">Action:</label>
 
+			<button id="blinkSelf" class="button border px-2 rounded-full text-white blue">Blink</button>
+
 			<button id="cancel" class="button border px-2 rounded-full text-grey-400 bg-white">Cancel</button>
 
 			<button id="reboot" class="button border px-2 rounded-full text-grey-400 bg-white ">Reboot</button>
 
-			<button id="blinkSelf" class="button border px-2 rounded-full text-white blue">Blink</button>
+			<button id="factoryreset" class="button border px-2 rounded-full text-grey-400 bg-white w-64 ">Factory Reset</button>
+
+			
 
 			</div>
 
@@ -306,6 +310,10 @@ function loadHandlers(){
 
 	$('#reboot').on("click" , function() {
 		socket.emit("reboot")
+		loading(true)
+	})
+	$('#factoryreset').on("click" , function() {
+		socket.emit("factoryreset")
 		loading(true)
 	})
 	$('#cancel').on("click" , function() {
