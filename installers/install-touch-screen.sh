@@ -1,5 +1,5 @@
-sudo apt update
-sudo apt upgrade
+sudo apt update -y
+sudo apt upgrade -y
 sudo apt-get install --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox -y
 sudo apt-get install --no-install-recommends chromium-browser -y
 sudo apt-get install --no-install-recommends chromium chromium-l10n -y

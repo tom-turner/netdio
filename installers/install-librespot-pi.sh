@@ -1,4 +1,4 @@
-sudo curl https://sh.rustup.rs -sSf | sh
+sudo curl https://sh.rustup.rs -sSf | sudo sh
 source ~/.bash_profile
 rustup install stable
 rustup default stable
