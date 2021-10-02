@@ -99,6 +99,8 @@
 			
 			<label class="w-full">Action:</label>
 
+			<button id="cancel" class="button border px-2 rounded-full text-grey-400 bg-white">Cancel</button>
+
 			<button id="reboot" class="button border px-2 rounded-full text-grey-400 bg-white ">Reboot</button>
 
 			<button id="blinkSelf" class="button border px-2 rounded-full text-white blue">Blink</button>
@@ -306,6 +308,10 @@ function loadHandlers(){
 		socket.emit("reboot")
 		loading(true)
 	})
+	$('#cancel').on("click" , function() {
+		location.href="/"
+	})
+
 
 	$('#duck').on('mousedown' , function (){
 

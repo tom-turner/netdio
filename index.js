@@ -175,7 +175,13 @@ app.get('/settings', (req, res) => {
   res.render('settings.ejs', {config: config.configObject});
 });
 app.get('/player', (req, res) => {
-  res.render('player.ejs', {config: config.configObject});
+  res.render('player/player.ejs', {config: config.configObject});
+});
+app.get('/spotify', (req, res) => {
+  res.render('player/services/spotify.ejs', {config: config.configObject});
+});
+app.get('/cloud', (req, res) => {
+  res.render('player/services/duckadocloud.ejs', {config: config.configObject});
 });
 
 

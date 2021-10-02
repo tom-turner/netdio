@@ -1,0 +1,17 @@
+	<div id="services" class="flex flex-col text-center w-full mx-auto bg-white rounded-md p-2 border shadow-md overflow-auto m-4">
+		<p class="">Connect Service</p>
+		<img id="spotifyConnect" src="images/spotifylogo.png" class="mx-auto flex object-contain h-24 cursor-pointer">
+		<img id="cloud" src="images/duckadocloud.png" class="mx-auto flex object-contain h-24 cursor-pointer">
+	</div>
+
+	<script type="text/javascript">
+		
+		$('#spotifyConnect').on("click" , function() {
+			location.href='/spotify'
+		})
+
+		$('#cloud').on("click" , function() {
+			location.href='/cloud'
+		})
+
+	</script>

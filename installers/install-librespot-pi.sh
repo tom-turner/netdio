@@ -1,7 +1,4 @@
 sudo curl https://sh.rustup.rs -sSf | sh
-sudo tee -a ~/.bash_profile > /dev/null <<EOT
-export PATH="~/.cargo/bin:"
-EOT
 source ~/.bash_profile
 rustup install stable
 rustup default stable

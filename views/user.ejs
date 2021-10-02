@@ -34,10 +34,15 @@
 			</ol>
 		</div>
 
-		<div id="bottom" class="flex overflow-hidden transition-all duration-150 absolute bottom-6 h-0 w-full rounded-md left-0">
+		<div id="player" class="flex overflow-hidden transition-all duration-150 absolute bottom-6 h-0 w-full rounded-md left-0">
 			<div class="flex mx-auto max-w-md max-h-44">
-			<%- include('player.ejs')%>
+			<%- include('player/player.ejs')%>
 			</div>
+		</div>
+		<div id="services" class="flex overflow-auto transition-all duration-150 absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0 mx-auto rounded-md justify-center max-h-80">
+
+			<%- include('player/services.ejs')%>
+
 		</div>
 		<div id="swipeup" class="w-full left-0 h-12 bottom-0 absolute"></div>
 	</div>
@@ -213,14 +218,30 @@ function loadHandlers(){
 		}
 	})
 
+	let trackdata = false
+	socket.on("trackData", (track) => {
+		track.song ? trackdata = true : trackdata = false
+	})
+
 	$('#swipeup').on('click', function (){
-		$('#bottom').addClass('h-36')
-		$('#bottom').removeClass('h-0')
+		if (trackdata) {
+			$('#player').addClass('h-36')
+			$('#player').removeClass('h-0')
+		} else {
+			$('#services').addClass('h-full')
+			$('#services').removeClass('h-0')
+		}
 		$('#swipeup').addClass('hidden')
 	})
 	$('#zones').on('click', function (){
-		$('#bottom').removeClass('h-36')
-		$('#bottom').addClass('h-0')
+		if (trackdata) {
+			$('#player').removeClass('h-36')
+			$('#player').addClass('h-0')
+		} else {
+			$('#services').removeClass('h-full')
+			$('#services').addClass('h-0')
+		}
+
 		$('#swipeup').removeClass('hidden')
 	})
 

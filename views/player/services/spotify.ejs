@@ -1,0 +1,45 @@
+<div id='outer' class="flex items-center justify-center blue flex flex-col p-4 space-y-2 w-full max-h-screen h-screen">
+
+<div class="flex flex-row border rounded-md  w-full h-full bg-white font-sans overflow-hidden p-4">
+        <div class="flex flex-col justify-evenly ">
+          <img class="max-h-full rounded-md" src="images/player/spotifyconnect.gif">
+        </div>
+
+        <div class="flex flex-col justify-evenly p-4">
+          <h3 class="font-bold">To Connect Spotify</h3>
+          <div class="row">
+            <span class="blue p-1 px-2 rounded-full">Step One</span>
+            <div class="col-md-10 col-sm-12"><p class="subtitle">Fire up the <b>Spotify</b> app on your phone, laptop or tablet.</p></div>
+          </div>
+          <div class="row">
+            <span class="blue p-1 px-2 rounded-full">Step Two</span>
+            <div class="col-md-10 col-sm-12"><p class="subtitle">Play a song and select <b>Devices Available</b>.</p></div>
+          </div>
+          <div class="row">
+            <span class="blue p-1 px-2 rounded-full">Step Three</span>
+            <div class="col-md-10 col-sm-12"><p class="subtitle">Select <b>Duck</b> and start listening.</p></div>
+          </div>
+          <span class="flex flex-row space-x-4">
+            <button class="bg-white border-black border-2 px-4 rounded-full" onclick="cancel()">Back</button>
+            <button class="bg-black text-white px-4 rounded-full" onclick="connect()">Connect</button>
+          </span>
+
+        </div>
+</div>
+</div>
+
+<script type="text/javascript">
+
+function cancel(){
+
+  location.href = "/"
+  
+}
+  
+function connect(){
+
+  location.href = "/"
+
+}
+
+</script>
