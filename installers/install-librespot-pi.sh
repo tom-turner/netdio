@@ -1,4 +1,5 @@
 sudo curl https://sh.rustup.rs -sSf | sudo sh
+sudo source $HOME/.cargo/env
 source ~/.bash_profile
 rustup install stable
 rustup default stable
