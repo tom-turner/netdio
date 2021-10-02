@@ -136,7 +136,6 @@ io.on('connection', (socket) => {
 
   socket.on('reboot', () => {
     console.log('rebooting')
-    process.exit()
     exec('sudo reboot')
   });
 
