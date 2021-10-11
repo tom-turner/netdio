@@ -133,6 +133,7 @@
 		}
 		
 		for (rx of rxDevices) {
+			console.log(rx)
 			var zone = createZone(rx)
 			var li = createDeviceLi(rx)
 			$('#zones').append(zone)
