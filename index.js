@@ -104,7 +104,7 @@ devices.on('ctrlMessage', (message) => {
         roc.rocSend(message.value)
       break
       case 'rx.volume':
-        process.platform === 'linux' ? exec(`pactl -- set-sink-volume ${platform.outputDevice()} ${message.value}%`) : ''
+        process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
       break
       case 'blink':
         exec('python ./lib/python/blink.py')

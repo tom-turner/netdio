@@ -6,6 +6,10 @@ sudo tee -a ~/netdio/config/startupconfig.json > /dev/null <<EOT
 "device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"EtherDAC"},
 "source":{"name":"-Mute-"}}
 EOT
+sudo tee -a ~/.asoundrc > /dev/null <<EOT 
+defaults.pcm.card 1
+defaults.ctl.card 1
+EOT
 sh configure-hifiberry.sh
 pm2 start ~/netdio/index.js
 pm2 startup 
