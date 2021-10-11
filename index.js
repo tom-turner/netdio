@@ -198,7 +198,7 @@ app.post('/connectservice', (req,res) => {
   res.json({url : '/', successful : true })
   setTimeout(() => {
     process.exit()
-  }, 1000 )
+  }, 250 )
 
 })
 
