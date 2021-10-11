@@ -192,7 +192,7 @@ app.post('/connectservice', (req,res) => {
     config.set('player.service', req.body.message)
     config.set('player.source', config.getNewPort())
     config.set('player.driver', 'alsa')
-    config.set('player.hardware', 'hw:loopback,1')  
+    config.set('player.hardware', 'hw:Loopback,1')  
     player.connect(req.body.message)
   }
   res.json({url : '/', successful : true })
