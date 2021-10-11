@@ -196,7 +196,10 @@ app.post('/connectservice', (req,res) => {
     player.connect(req.body.message)
   }
   res.json({url : '/', successful : true })
-  process.exit()
+  setTimeout(() => {
+    process.exit()
+  }, 1000 )
+
 })
 
 // Routes
