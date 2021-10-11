@@ -194,7 +194,7 @@
 					),
 					$('<div class="flex flex-row space-x-2"/>').append(
 						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink" onclick="blink('${device.ip}')"/>`).text("Blink"),
-						$(`<svg class="h-8 w-8 cursor-pointer fill-current blue-fill" onclick="location.href='http://${device.ip}:5000/settings'" src="images/gear.svg"><use xlink:href="images/gear.svg#gear"/></svg>`)
+						$(`<svg class="h-8 w-8 cursor-pointer fill-current blue-fill" onclick="window.location.href='http://${device.ip}:5000/settings'" src="images/gear.svg"><use xlink:href="images/gear.svg#gear"/></svg>`)
 					)
 				)
 	}
@@ -317,7 +317,7 @@ function loadHandlers(){
 		loading(true)
 	})
 	$('#cancel').on("click" , function() {
-		location.href="/"
+		window.location.href="/"
 	})
 
 

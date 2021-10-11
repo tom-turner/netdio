@@ -1,4 +1,4 @@
-	<div id="services" class="flex flex-col text-center w-full mx-auto bg-white rounded-md p-2 border shadow-md overflow-auto m-4">
+	<div id="availableServices" class="flex flex-col text-center w-full mx-auto bg-white rounded-md p-2 border shadow-md overflow-auto m-4">
 		<p class="">Connect Service</p>
 		<img id="spotifyConnect" src="images/spotifylogo.png" class="mx-auto flex object-contain h-24 cursor-pointer">
 		<img id="cloud" src="images/duckadocloud.png" class="mx-auto flex object-contain h-24 cursor-pointer">
@@ -8,7 +8,7 @@
 
 		$('#spotifyConnect').on("click" , async function() {
 
-			let res = await fetch( 'selectservice' , {
+			let res = await fetch( 'startservice' , {
 				method:'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -23,7 +23,7 @@
 
 		$('#cloud').on("click" , async function() {
 
-			let res = await fetch( 'selectservice' , {
+			let res = await fetch( 'startservice' , {
 				method:'POST',
 				headers: {
 					'Content-Type': 'application/json'

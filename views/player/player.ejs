@@ -10,7 +10,8 @@
 			
 			<select id="service" class="absolute inset-y-0 h-8 right-0 cursor-pointer text-gray-800 bg-white text-gray-400">
 				<option selected disabled></option>
-				<option>Spotify</option>
+				<option value="spotify">Spotify</option>
+				<option value="destroy">Remove Player</option>
 			</select>
 
 			<span id="trackData" class="mx-auto flex flex-col text-center cursor-pointer">
@@ -47,20 +48,7 @@
 
 <script type="text/javascript">
 	 	
-	 	var socket = io()
-
-	 	let send = async (url, e) => {
-
-			let res = await fetch( url , {
-					method:'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({message: e}) 
-				})
-
-			let message = await res.json()			
-		}
+	 	var socket = io()	
 	 
 		let ratio = () => {
 			return $("#container").width() / $("#container").height()
@@ -131,19 +119,19 @@
 		$(window).trigger('resize')
 
 		$('#play').on('click', () =>{
-			send('/playerctrl', {transport :'play'})
+			socket.emit('playerctrl', {transport :'play'})
 		})
 		$('#pause').on('click', () =>{
-			send('/playerctrl', {transport :'pause'})
+			socket.emit('playerctrl', {transport :'pause'})
 		})
 		$('#last').on('click', () =>{
-			send('/playerctrl', {transport :'last'})
+			socket.emit('playerctrl', {transport :'last'})
 		})
 		$('#next').on('click', () =>{
-			send('/playerctrl',{ transport :'next'})
+			socket.emit('playerctrl',{ transport :'next'})
 		})
 		$('#service').on('change', () =>{
-			send('/playerctrl',{ service : $('#service').val()})
+			socket.emit('playerctrl',{ service : $('#service').val()})
 		})
 
 		$('#artwork').on('click', () =>{

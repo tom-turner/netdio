@@ -16,7 +16,8 @@ source $HOME/.cargo/env
 sudo apt-get install build-essential
 sudo apt-get install libasound2-dev -y
 git clone https://github.com/librespot-org/librespot.git ~/librespot
-cargo ~/librespot/build --no-default-features --features "alsa-backend" --release
+cd ~/librespot
+cargo build --no-default-features --features "alsa-backend" --release
 
 # Install ROC-Streaming
 sudo apt-get install g++ pkg-config scons ragel gengetopt libunwind8-dev libpulse-dev libsox-dev -y

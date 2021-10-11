@@ -153,6 +153,12 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
+
+  socket.on('playerctrl', (message) => {
+    message.transport ? player[message.transport]() : ''
+    message.service ? player.start(message.service) : ''
+  })
+
   player.on('trackData', () => {
     socket.emit('trackData', player.getCurrentTrack())
   });
@@ -170,21 +176,14 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
   return res.json('Configuration Received')
 }) 
 
-app.post('/playerctrl', (req,res) => {
-  let message = req.body.message
-  message.transport ? player[message.transport]() : ''
-  message.service ? player.changeTo(message.service) : ''
-  return res.json(req.body.message)
-})
-
-app.post('/selectservice', (req,res) => {
+app.post('/startservice', (req,res) => {
   let started = player.start(req.body.service)
   return res.json({ url : `/${started.service}`, successful : started.successful }) 
 })
 
 app.post('/connectservice', (req,res) => {
   if(req.body.return){
-    player.kill(req.body.message)
+    player.start('destroy')
   } else {
     config.set('player', {})
     config.set('player.name', req.body.message.charAt(0).toUpperCase() + req.body.message.slice(1))
