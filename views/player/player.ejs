@@ -48,8 +48,18 @@
 
 <script type="text/javascript">
 	 	
-	 	var socket = io()	
+	 	var socket = io()
+	 	let player = {}	
 	 
+	 	let forward = (ctrl) => {
+	 		var message = {
+	 			ip : player.ip,
+	 			type : 'playerctrl', 
+	 			value : ctrl,
+	 		}
+	 		socket.emit('forward', message)
+	 	}
+
 		let ratio = () => {
 			return $("#container").width() / $("#container").height()
 		}
@@ -106,6 +116,15 @@
 				
 			}
 		}
+		socket.on("devices", (devices) => {
+			for (device of devices) {
+				if (device.player) {
+					player = device.player
+					player.ip = device.device.ip
+				}
+			}
+		})
+
 
 		socket.on("trackData", (track) => {
 			if(!track.song && location.pathname == '/player') {
@@ -119,19 +138,19 @@
 		$(window).trigger('resize')
 
 		$('#play').on('click', () =>{
-			socket.emit('playerctrl', {transport :'play'})
+			forward({transport :'play'})
 		})
 		$('#pause').on('click', () =>{
-			socket.emit('playerctrl', {transport :'pause'})
+			forward({transport :'pause'})
 		})
 		$('#last').on('click', () =>{
-			socket.emit('playerctrl', {transport :'last'})
+			forward({transport :'last'})
 		})
 		$('#next').on('click', () =>{
-			socket.emit('playerctrl',{ transport :'next'})
+			forward({ transport :'next'})
 		})
 		$('#service').on('change', () =>{
-			socket.emit('playerctrl',{ service : $('#service').val()})
+			forward({ service : $('#service').val()})
 		})
 
 		$('#artwork').on('click', () =>{

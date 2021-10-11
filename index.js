@@ -93,17 +93,19 @@ devices.on('disconnect', (device) => {
 })
 
 devices.on('ctrlMessage', (message) => {
-    config.set( message.type , message.value)
     switch (message.type) {
       case 'source':
+        config.set( message.type , message.value)
         roc.kill(roc.get('rx'))
         console.log(config.get('source'))
         roc.rocRecv(config.get('source'))
       break
       case 'devices' :
+        config.set( message.type , message.value)
         roc.rocSend(message.value)
       break
       case 'rx.volume':
+        config.set( message.type , message.value)
         process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
       break
       case 'blink':
@@ -111,6 +113,14 @@ devices.on('ctrlMessage', (message) => {
         setTimeout( () => {
             exec('python ./lib/python/ledOn.py')
         }, 6000 )
+      break
+      case 'playerctrl' :
+        message = message.value
+        message.transport ? player[message.transport]() : ''
+        if (message.service) {
+          player.killAll()
+          message.service == 'destroy' ? config.set('player') : player.start(message.service)
+        }
       break
     }
 })
@@ -154,11 +164,6 @@ io.on('connection', (socket) => {
     console.log('user disconnected');
   });
 
-  socket.on('playerctrl', (message) => {
-    message.transport ? player[message.transport]() : ''
-    message.service ? player.start(message.service) : ''
-  })
-
   player.on('trackData', () => {
     socket.emit('trackData', player.getCurrentTrack())
   });
@@ -177,13 +182,14 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
 }) 
 
 app.post('/startservice', (req,res) => {
+  player.killAll()
   let started = player.start(req.body.service)
   return res.json({ url : `/${started.service}`, successful : started.successful }) 
 })
 
 app.post('/connectservice', (req,res) => {
   if(req.body.return){
-    player.start('destroy')
+    player.killAll()
   } else {
     config.set('player', {})
     config.set('player.name', req.body.message.charAt(0).toUpperCase() + req.body.message.slice(1))
