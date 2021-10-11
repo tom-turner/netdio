@@ -36,4 +36,8 @@ sudo tee -a ~/netdio/config/startupconfig.json > /dev/null <<EOT
 "source":{"name":"-Mute-"}}
 EOT
 sudo rm -r ~/netdio/config/config.json
+pm2 start ~/netdio/index.js
+pm2 startup 
+# run the output of startup
+pm2 save
 sudo reboot

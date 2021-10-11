@@ -39,10 +39,10 @@ EOT
 # Install Duckado and pm2
 git clone https://github.com/tom-turner/netdio.git ~/netdio
 npm install pm2 -g
-pm2 start ~/netdio/index.js
-pm2 startup 
+#pm2 start ~/netdio/index.js
+#pm2 startup 
 # run the output of startup
-pm2 save
+#pm2 save
 
 #! then install device specific stuff
 
