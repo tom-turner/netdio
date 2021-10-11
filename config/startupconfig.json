@@ -1,4 +1,4 @@
-{"rx":{"name":"Line Out","type":"rx","volume":"80"},
-"tx":{"name":"Aux Input", "type":"tx"},
+{"rx":{"name":"Mac Mini","type":"rx","volume":"80","driver":"","hardware":""},
+"tx":{"name":"Mac Mini", "type":"tx", "driver":"","hardware":""},
 "device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"Duckado"},
 "source":{"name":"-Mute-"}}

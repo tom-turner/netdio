@@ -74,3 +74,33 @@ Alsa config
 
 Raspoitify on pulseaudio
 https://mathieu-requillart.medium.com/my-ultimate-guide-to-the-raspberry-pi-audio-server-i-wanted-spotify-ce549656af06
+
+
+# Install ALSA EQ
+sudo apt install libasound2-plugin-equal 
+sudo tee -a /etc/asound.conf > /dev/null <<EOT
+ctl.equal {
+    type equal;
+}
+
+pcm.plugequal {
+    type equal;
+    # Modify the line below if you do not
+    # want to use sound card 0.
+    #slave.pcm "plughw:0,0";
+    # by default we want to play from more sources at time:
+    slave.pcm "plug:dmix";
+}
+
+# pcm.equal {
+# If you do not want the equalizer to be your
+# default soundcard comment the following
+# line and uncomment the above line. (You can
+# choose it as the output device by addressing
+# it with specific apps,eg mpg123 -a equal 06.Back_In_Black.mp3)
+pcm.!default {
+    type plug;
+    slave.pcm plugequal;
+}
+EOT
+# alsamixer -D equal

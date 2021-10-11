@@ -53,19 +53,15 @@ config.get('device')['id']
   : config.set("device.id", config.hash(ip))
 let id = config.get('device')['id']
 
+config.get('tx') 
+  ? config.get('tx')['source'] 
+    ? console.log( "running tx source", config.get('tx')['source'] ) 
+    : config.set( "tx.source", config.getNewPort() )
+  : console.log('no tx')
 
-config.get('tx') ?
-  config.get('tx')['source'] 
-  ? console.log( "running tx source", config.get('tx')['source'] ) 
-  : config.set( "tx.source", config.getNewPort() )
-: console.log('no tx')
-
-config.get('player') ?
-  config.get('player')['source'] 
-  ? console.log( "running player source", config.get('player')['source'] ) 
-  : config.set( "player.source", config.getNewPort() )
-: console.log('no player')
-
+config.get('player') 
+  ? player.start(config.get('player')['service']) 
+  : console.log('no player')
 
 
 // audio
@@ -190,7 +186,9 @@ app.post('/connectservice', (req,res) => {
     config.set('player.name', req.body.message.charAt(0).toUpperCase() + req.body.message.slice(1))
     config.set('player.type', 'tx')
     config.set('player.service', req.body.message)
-    config.set( 'player.source', config.getNewPort() )
+    config.set('player.source', config.getNewPort())
+    config.set('player.driver', 'alsa')
+    config.set('player.hardware', 'hw:loopback,1')  
     player.connect(req.body.message)
   }
   res.json({url : '/', successful : true })

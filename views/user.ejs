@@ -66,7 +66,7 @@
 	}
 
 	function getInputAsOption(device){
-		return $(`<option value="${device.source}" name="${device.ip}"/>`).text(device.name)
+		return $(`<option value="${device.source}" data-tx='${JSON.stringify(device)}' name="${device.ip}"/>`).text(device.name)
 	}
 
 	function createZone(zone) {
@@ -77,7 +77,7 @@
             		$('<div class="flex flex-col space-y-1 w-full"/>').append(
               			$('<div class"flex flex-row justify-between relative"/>').append(
               				$('<span class="font-bold" />').text(zone.name),
-              				$(`<select class="rounded zoneinput bg-white absolute right-10 mt-1" />`) .append(getInputAsOption({
+              				$(`<select data-rx='${JSON.stringify(zone)}' class="rounded zoneinput bg-white absolute right-10 mt-1" />`) .append(getInputAsOption({
               					name : "-Mute-",
               					source : "muted"
               				}), 
@@ -85,7 +85,6 @@
               			)
               			),
               			$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none blue rounded-50 h-10" value="${zone.volume}" />`)
-              			
             		)
         		)
 	}
@@ -132,8 +131,8 @@
 			}
 		}
 		
+
 		for (rx of rxDevices) {
-			console.log(rx)
 			var zone = createZone(rx)
 			var li = createDeviceLi(rx)
 			$('#zones').append(zone)
@@ -167,10 +166,10 @@ function loadHandlers(){
 				send: $('option:selected',this).attr('name'),
 				socket: $('option:selected',this).val(),
 				name: $('option:selected',this).text(),
-				recv: this.closest('li').id
-			}
+				recv: this.closest('li').id,
+				txdata: $('option:selected',this).data(),
+			},
 		}
-
 		socket.emit('forward', message)
 	})
 
