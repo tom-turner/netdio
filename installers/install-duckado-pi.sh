@@ -42,6 +42,7 @@ npm install pm2 -g
 pm2 start ~/netdio/index.js
 pm2 startup 
 # run the output of startup
+pm2 save
 
 #! then install device specific stuff
 
