@@ -66,7 +66,11 @@ config.get('player')
 
 // audio
 let roc = new Roc(config.configObject)
-roc.rocRecv()
+
+config.get('rx')
+  ? roc.rocRecv()
+  : console.log('no rx')
+  
 setInterval(()=>{ 
     devices.forward( config.get('source')['send'], {
     type: 'devices',

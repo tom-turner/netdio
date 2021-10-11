@@ -36,14 +36,20 @@ sudo tee -a /etc/modules-load.d/modules.conf > /dev/null <<EOT
 snd-aloop
 EOT
 
+# Install Duckado and pm2
+git clone https://github.com/tom-turner/netdio.git ~/netdio
+npm install pm2 -g
+pm2 start ~/netdio/index.js
+pm2 startup 
+# run the output of startup
+
+#! then install device specific stuff
+
+# NOTES
 # starting Librespot and ROC
 # no hifiberry: 'hw:loopback,0'/'hw:loopback,1' 
 # hifiberry: 'hw:1,0'/'hw:1,1'
 # ~/librespot/target/release/librespot -n "Duck" -b 320 --initial-volume 95 --enable-volume-normalisation --normalisation-pregain "-3" --device "hw:0,0"
 # roc-send -vv -s rtp+rs8m:192.168.0.11:10001 -r rs8m:192.168.0.11:10002 -d alsa -i "hw:0,1"
-
-# Install Duckado and pm2
-#git clone https://github.com/tom-turner/netdio.git ~/netdio
-#npm install pm2 -g
 
 
