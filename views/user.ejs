@@ -234,15 +234,14 @@ function loadHandlers(){
 	})
 
 	$('#swipeup').on('click', function (){
-		let popup = ''
-		trackdata ? popup = '#player' : popup = '#services'
-		$(popup).addClass('h-full')
-		$(popup).removeClass('h-0')
+		$(trackdata ? '#player' : '#services').addClass('h-full')
+		$(trackdata ? '#player' : '#services').removeClass('h-0')
 		$('#swipeup').addClass('hidden')
 	})
 	$('#zones').on('click', function (){
-		$(popup).removeClass('h-full')
-		$(popup).addClass('h-0')
+		
+		$(trackdata ? '#player' : '#services').removeClass('h-full')
+		$(trackdata ? '#player' : '#services').addClass('h-0')
 		$('#swipeup').removeClass('hidden')
 	})
 
