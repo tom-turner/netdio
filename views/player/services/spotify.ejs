@@ -60,4 +60,8 @@
       message.successful ? location.href=`${message.url}` : alert('something went wrong')
     })
 
+    socket.on("trackData", (track) => {
+      $('#connect').click()
+    })
+
 </script>
