@@ -164,7 +164,9 @@ io.on('connection', (socket) => {
 
   socket.on('factoryreset', () => {
     fs.unlinkSync('config/config.json')
-    exec('sudo reboot')
+    setTimeout( () => {
+      exec('sudo reboot')
+    },250)
   })
 
   socket.on('disconnect', () => {
