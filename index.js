@@ -36,14 +36,6 @@ app.use(expressLayouts);
 app.set('layout', 'application');
 app.set('view engine', 'ejs'); 
 
-/*
-try {
-  exec('git pull')
-} catch(e) {
-  console.log(e)
-}
-*/
-
 // config
 let config = new Configuration('./config/config.json')
 config.set("device.ip", ip)
@@ -58,12 +50,6 @@ config.get('tx')
     ? console.log( "running tx source", config.get('tx')['source'] ) 
     : config.set( "tx.source", config.getNewPort() )
   : console.log('no tx')
-
-
-if(config.get('player')){
-  player.kill(config.get('player')['pid']) 
-  config.set('player')
-}
 
 // audio
 let roc = new Roc(config.configObject)
@@ -118,12 +104,7 @@ devices.on('ctrlMessage', (message) => {
       case 'playerctrl' :
         message = message.value
         message.transport ? player[message.transport]() : ''
-        
-        if (message.service) {
-          player.kill(config.get('player')['pid'])
-          player.start(message.service)
-          message.service == 'destroy' ? config.set('player') : ''
-        }
+
       break
     }
 })
@@ -179,8 +160,6 @@ io.on('connection', (socket) => {
 
 app.post('/configure', upload.single('file'), (req, res, next) => {
   const color = new Color()
-  console.log(1, req.body)
-
   config.set("device.color", req.body.color)
   config.set("device.colordark", color.darken(req.body.color))
   config.set("device.ip", req.body.ip)
@@ -190,10 +169,6 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
 }) 
 
 app.post('/startservice', (req,res) => {
-  if(config.get('player')){
-    player.kill(config.get('player')['pid'])
-    config.set('player')
-  }
   let started = player.start(req.body.service)
   config.set('player', {})
   config.set('player.pid', started.pid)
@@ -208,7 +183,6 @@ app.post('/startservice', (req,res) => {
 
 app.post('/connectservice', (req,res) => {
   if(req.body.return){
-    player.kill(config.get('player')['pid'])
     config.set('player')
   }
   devices.find() 
