@@ -34,7 +34,7 @@
 			</ol>
 		</div>
 
-		<div id="player" class="flex overflow-hidden transition-all duration-250 absolute bottom-6 h-0 w-full rounded-md left-0">
+		<div id="player" class="flex overflow-hidden transition-all duration-250 absolute bottom-6 h-0 w-full rounded-md left-0 max-h-36">
 			<div class="flex mx-auto max-w-md max-h-44">
 			<%- include('player/player.ejs')%>
 			</div>
@@ -128,7 +128,7 @@
 				var player = device.player
 				player.ip = device.device.ip
 				txDevices.push(player)
-				$('#services').hide()
+				//$('#services').hide()
 			}
 		}
 		
@@ -225,36 +225,24 @@ function loadHandlers(){
 	})
 
 	let trackdata = false
+	let popup = '#services'
 	socket.on("trackData", (track) => {
-		track.title ? trackdata = true : trackdata = false
-		if (trackdata === true) {
-			 $('#player').addClass('h-36')
-			 setTimeout(()=>{
-			 	$('#player').removeClass('h-36')
-			 },3000)
-		}
-
+		trackdata = true
+		popup = '#player'
+		$('#player').addClass('h-36')
+		setTimeout(()=>{
+			$('#player').removeClass('h-36')
+		},3000)
 	})
 
 	$('#swipeup').on('click', function (){
-		if (trackdata) {
-			$('#player').addClass('h-36')
-			$('#player').removeClass('h-0')
-		} else {
-			$('#services').addClass('h-full')
-			$('#services').removeClass('h-0')
-		}
+		$(popup).addClass('h-full')
+		$(popup).removeClass('h-0')
 		$('#swipeup').addClass('hidden')
 	})
 	$('#zones').on('click', function (){
-		if (trackdata) {
-			$('#player').removeClass('h-36')
-			$('#player').addClass('h-0')
-		} else {
-			$('#services').removeClass('h-full')
-			$('#services').addClass('h-0')
-		}
-
+		$(popup).removeClass('h-full')
+		$(popup).addClass('h-0')
 		$('#swipeup').removeClass('hidden')
 	})
 

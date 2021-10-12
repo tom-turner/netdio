@@ -135,7 +135,6 @@ io.on('connection', (socket) => {
   
   player.getCurrentTrack((data)=>{
     socket.emit('trackData', data )
-    socket.emit('devices', devices.getDevices())
   })
 
   devices.on('connection', (device) => {
@@ -209,9 +208,10 @@ app.post('/connectservice', (req,res) => {
 
 app.post('/update', (req,res) =>{
   exec('git pull', (err, stdout, stderr) => {
-    console.log(err, stdout, stderr)
+    if (stdout) {
+      exec('sudo reboot')
+    }
   })
-  process.exit()
 })
 
 
