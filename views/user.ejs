@@ -225,10 +225,8 @@ function loadHandlers(){
 	})
 
 	let trackdata = false
-	let popup = '#services'
 	socket.on("trackData", (track) => {
 		trackdata = true
-		popup = '#player'
 		$('#player').addClass('h-36')
 		setTimeout(()=>{
 			$('#player').removeClass('h-36')
@@ -236,6 +234,8 @@ function loadHandlers(){
 	})
 
 	$('#swipeup').on('click', function (){
+		let popup = ''
+		trackdata ? popup = '#player' : popup = '#services'
 		$(popup).addClass('h-full')
 		$(popup).removeClass('h-0')
 		$('#swipeup').addClass('hidden')
