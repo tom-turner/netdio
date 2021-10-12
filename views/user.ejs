@@ -128,7 +128,6 @@
 				var player = device.player
 				player.ip = device.device.ip
 				txDevices.push(player)
-				//$('#services').hide()
 			}
 		}
 		
@@ -226,6 +225,7 @@ function loadHandlers(){
 
 	let trackdata = false
 	socket.on("trackData", (track) => {
+		$('#services').hide()
 		trackdata = true
 		$('#player').addClass('h-36')
 		setTimeout(()=>{
