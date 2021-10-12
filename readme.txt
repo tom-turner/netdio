@@ -1,4 +1,5 @@
 FEATURE REQUESTS :\
+- need to figure out why when a message is sent around the network it sends tonnes of copies of the message
 - EQ/Delay on audio output, pulse audio plugins or something\
 - music player, Spotify and loopback\
 - Can we get ROC latency down more? or replace ROC

@@ -151,9 +151,10 @@ io.on('connection', (socket) => {
 
   socket.on('reload', () => {
     console.log('reload')
-    exec('python ./lib/python/ledOff.py')
-    roc.kill(roc.get())
-    process.exit()
+    devices.find()
+    //exec('python ./lib/python/ledOff.py')
+    //roc.kill(roc.get())
+    //process.exit()
   });
 
   socket.on('reboot', () => {
