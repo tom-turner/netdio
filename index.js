@@ -204,8 +204,15 @@ app.post('/connectservice', (req,res) => {
   setTimeout(() => {
     process.exit()
   }, 250 )
-
 })
+
+app.post('/update', (req,res) =>{
+  exec('git pull', (err, stdout, stderr) => {
+    console.log(err, stdout, stderr)
+  })
+  process.exit()
+})
+
 
 // Routes
 app.get('/', async (req, res) => {

@@ -103,10 +103,11 @@
 
 			<button id="cancel" class="button border px-2 rounded-full text-grey-400 bg-white">Cancel</button>
 
+			<button id="update" class="button border px-2 rounded-full text-grey-400 bg-white w-64 ">Update</button>
+
 			<button id="reboot" class="button border px-2 rounded-full text-grey-400 bg-white ">Reboot</button>
 
 			<button id="factoryreset" class="button border px-2 rounded-full text-grey-400 bg-white w-64 ">Factory Reset</button>
-
 			
 
 			</div>
@@ -318,6 +319,12 @@ function loadHandlers(){
 	})
 	$('#cancel').on("click" , function() {
 		window.location.href="/"
+	})
+	$('#update').on("click" , function() {
+		let xhr = new XMLHttpRequest()
+		xhr.open('POST', '/update')
+		xhr.send()
+		loading(true)
 	})
 
 
