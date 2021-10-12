@@ -59,10 +59,12 @@ config.get('tx')
     : config.set( "tx.source", config.getNewPort() )
   : console.log('no tx')
 
-config.get('player') 
-  ? player.start(config.get('player')['service']) 
-  : console.log('no player')
 
+if(config.get('player')){
+  player.kill(config.get('player')['pid']) 
+  let started = player.start(config.get('player')['service'])
+  config.set('player.pid', started.pid)
+}
 
 // audio
 let roc = new Roc(config.configObject)
@@ -118,8 +120,9 @@ devices.on('ctrlMessage', (message) => {
         message = message.value
         message.transport ? player[message.transport]() : ''
         if (message.service) {
-          player.killAll()
-          message.service == 'destroy' ? config.set('player') : player.start(message.service)
+          player.kill(config.get('player')['pid'])
+          player.start(message.service)
+          message.service == 'destroy' ? config.set('player') : ''
         }
       break
     }
@@ -182,23 +185,23 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
 }) 
 
 app.post('/startservice', (req,res) => {
-  player.killAll()
   let started = player.start(req.body.service)
+  config.set('player', {})
+  config.set('player.pid', started.pid)
   return res.json({ url : `/${started.service}`, successful : started.successful }) 
 })
 
 app.post('/connectservice', (req,res) => {
   if(req.body.return){
-    player.killAll()
-  } else {
-    config.set('player', {})
+    player.kill(config.get('player')['pid'])
+    config.set('player')
+  } else { 
     config.set('player.name', req.body.message.charAt(0).toUpperCase() + req.body.message.slice(1))
     config.set('player.type', 'tx')
     config.set('player.service', req.body.message)
     config.set('player.source', config.getNewPort())
     config.set('player.driver', 'alsa')
     config.set('player.hardware', 'hw:Loopback,1')  
-    player.connect(req.body.message)
   }
   res.json({url : '/', successful : true })
   setTimeout(() => {
