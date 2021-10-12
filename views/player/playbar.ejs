@@ -7,25 +7,13 @@
 
 		<span id='info' class="flex flex-col mx-auto flex-grow justify-evenly space-y-4 relative w-full my-auto">
 
-			
-			<select id="service" class="absolute inset-y-0 h-8 right-0 cursor-pointer text-gray-800 bg-white text-gray-400">
-				<option selected disabled></option>
-				<option value="spotify">Spotify</option>
-				<option value="destroy">None</option>
-			</select>
 
 			<span id="trackData" class="mx-auto flex flex-col text-center cursor-pointer overflow-hidden">
 				<p id="songtitle" class="text-gray-800 px-2 my-auto overflow-hidden"></p>
 				<p id="artist" class="text-gray-400 px-2 my-auto"></p>
 			</span>
-
-			<div id="progressBar" class="w-full bg-gray-200 rounded-full mx-auto h-2 relative">
-				<div id="progress" class="blue absolute left-0 rounded-full mx-auto h-2" style="width: 25%;">
-					
-				</div>
-			</div>
 			
-			<span id="transport" class="flex flex-row space-x-2 mx-auto my-auto items-center">	
+			<span id="transport" class="hidden flex flex-row space-x-2 mx-auto my-auto items-center">	
 				<svg id="last" class="h-9 w-9 cursor-pointer fill-current blue-fill  my-auto mx-auto" >
 					<use xlink:href="images/player/last.svg#last"/>
 				</svg>
@@ -49,8 +37,7 @@
 <script type="text/javascript">
 	 	
 	 	var socket = io()
-
-
+	 	let player = {}	
 	 
 	 	let forward = (ctrl) => {
 	 		var message = {
@@ -76,28 +63,37 @@
 		}
 
 		let responsiveLayout = () => {
-			if(ratio() < 1.5) {
-				$("#container").addClass('flex-col')
-				$("#container").removeClass('flex-row')
-				$("#artwork").addClass('overflow-auto')
-				$("#artwork").addClass('object-center')
-				$("#artwork").removeClass('object-left')
-				$("#info").addClass('max-w-lg')
-				$("#info").removeClass('h-screen')
-				$("#info").removeClass('flex-row')
-			} 
 
-			if(ratio() > 1.5){
-				$("#container").addClass('flex-row')
-				$("#container").removeClass('flex-col')
-				$("#artwork").removeClass('overflow-auto')
-				$("#artwork").addClass('object-left')
-				$("#artwork").removeClass('object-center')
-				$("#info").removeClass('max-w-lg')
-				$("#info").addClass('h-screen')
-				$("#info").removeClass('flex-row')
+			if(ratio() > 3){
+				$("#progressBar").addClass('hidden')
+				$("#info").addClass('flex-row')
+				$("#info").removeClass('flex-col')
+				$("#info").removeClass('h-screen')
+				$("#info").addClass('text-left')
+				$("#container").removeClass('w-full')
+				$("#trackData").removeClass('text-center')
+				$("#trackData").addClass('text-left')
+				$("#outer").removeClass('p-4')
+				$("#outer").removeClass('blue')
+				$("#service").addClass('hidden')
+				$("#artwork").removeClass('object-contain')
+				$("#artwork").addClass('object-cover')
 			}
 		}
+		socket.on("devices", (devices) => {
+			for (device of devices) {
+				if (device.player) {
+					player = device.player
+					player.ip = device.device.ip
+				}
+			}
+		})
+
+
+		socket.on("trackData", (track) => {
+			console.log(track)
+			setTrackData(track) 
+		})
 
 		window.onresize = responsiveLayout
 		$(window).trigger('resize')
@@ -132,11 +128,6 @@
 			}	else {
 				location.href = '/player'
 			}
-		})
-
-		socket.on("trackData", (track) => {
-			console.log(track)
-			setTrackData(track) 
 		})
 
 

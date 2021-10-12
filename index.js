@@ -61,9 +61,8 @@ config.get('tx')
 
 
 if(config.get('player')){
-  //player.kill(config.get('player')['pid']) 
-  //let started = player.start(config.get('player')['service'])
-  //config.set('player.pid', started.pid)
+  player.kill(config.get('player')['pid']) 
+  config.set('player')
 }
 
 // audio
@@ -119,6 +118,7 @@ devices.on('ctrlMessage', (message) => {
       case 'playerctrl' :
         message = message.value
         message.transport ? player[message.transport]() : ''
+        
         if (message.service) {
           player.kill(config.get('player')['pid'])
           player.start(message.service)
@@ -132,9 +132,11 @@ devices.on('ctrlMessage', (message) => {
 io.on('connection', (socket) => {
   console.log('user connected', socket.id);
   socket.emit('devices', devices.getDevices())
-  
+
   player.getCurrentTrack((data)=>{
-    socket.emit('trackData', data )
+    if(data) {
+      socket.emit('trackData', data )
+    }
   })
 
   devices.on('connection', (device) => {
@@ -190,6 +192,7 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
 app.post('/startservice', (req,res) => {
   if(config.get('player')){
     player.kill(config.get('player')['pid'])
+    config.set('player')
   }
   let started = player.start(req.body.service)
   config.set('player', {})

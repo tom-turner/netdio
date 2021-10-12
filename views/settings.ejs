@@ -101,6 +101,8 @@
 
 			<button id="blinkSelf" class="button border px-2 rounded-full text-white blue">Blink</button>
 
+			<button class="button border px-2 rounded-full text-grey-400 bg-white" id="manageSpotify" >Manage Spotify</button>
+
 			<button id="cancel" class="button border px-2 rounded-full text-grey-400 bg-white">Cancel</button>
 
 			<button id="update" class="button border px-2 rounded-full text-grey-400 bg-white w-64 ">Update</button>
@@ -221,6 +223,12 @@
 				tx.ip = device.device.ip
 				txDevices.push(tx)
 			}
+
+			if (device.player) {
+				var player = device.player
+				player.ip = device.device.ip
+				txDevices.push(player)
+			}
 		}
 		
 		for (rx of rxDevices) {
@@ -340,6 +348,21 @@ function loadHandlers(){
 		})
 		
 	})
+
+	$('#manageSpotify').on("click" , async function() {
+
+			let res = await fetch( 'startservice' , {
+				method:'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({service: 'spotify'}) 
+			})
+
+			let message = await res.json()	
+
+			message.successful ? location.href = message.url : alert('something went wrong')
+		})
 }
 
 </script>
