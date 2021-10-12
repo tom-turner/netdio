@@ -132,9 +132,10 @@ devices.on('ctrlMessage', (message) => {
 io.on('connection', (socket) => {
   console.log('user connected', socket.id);
   socket.emit('devices', devices.getDevices())
+  
   player.getCurrentTrack((data)=>{
-    console.log(data)
     socket.emit('trackData', data )
+    socket.emit('devices', devices.getDevices())
   })
 
   devices.on('connection', (device) => {
@@ -204,9 +205,6 @@ app.post('/connectservice', (req,res) => {
     config.set('player.hardware', 'hw:Loopback,1')  
   }
   res.json({url : '/', successful : true })
-  setTimeout(() => {
-    process.exit()
-  }, 250 )
 })
 
 app.post('/update', (req,res) =>{
