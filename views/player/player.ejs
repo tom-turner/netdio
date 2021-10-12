@@ -14,8 +14,8 @@
 				<option value="destroy">Remove Player</option>
 			</select>
 
-			<span id="trackData" class="mx-auto flex flex-col text-center cursor-pointer">
-				<p id="songtitle" class="text-gray-800 px-2 my-auto"></p>
+			<span id="trackData" class="mx-auto flex flex-col text-center cursor-pointer overflow-hidden">
+				<p id="songtitle" class="text-gray-800 px-2 my-auto overflow-hidden"></p>
 				<p id="artist" class="text-gray-400 px-2 my-auto"></p>
 			</span>
 
@@ -65,14 +65,13 @@
 		}
 
 		let setTrackData = (data) => {
-			$("#songtitle").text(data.song)
+			$("#songtitle").text(data.title)
 			$("#artist").text(data.artist)
-			$("#artwork").attr('src', data.artwork)
-			if (!data.song) {
+			$("#artwork").attr('src', data.image)
+			if (!data.title) {
 				$("#services").removeClass('hidden')
 				$("#container").addClass('hidden')
 			}
-			
 		}
 
 		let responsiveLayout = () => {
@@ -127,9 +126,9 @@
 
 
 		socket.on("trackData", (track) => {
-			if(!track.song && location.pathname == '/player') {
+			if(!track.title && location.pathname == '/player') {
 				location.href="/"
-			} else { 
+			} else {
 				setTrackData(track) 
 			}
 		})

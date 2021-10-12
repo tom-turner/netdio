@@ -17,7 +17,7 @@
 
 <div class="flex items-center justify-center h-screen blue flex flex-col p-4 space-y-2 relative">
 
-	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-md shadow-lg pt-2 px-4 overflow-hidden">
+	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-md shadow-md pt-2 px-4 overflow-hidden border">
 		<div class="justify-between flex w-full">
 			<img id="duck" class="h-14 cursor-pointer" src="images/duck.svg"/>
 			<span id="longpress" class="hidden absolute text-xs text-gray-400 left-20 top-14">Long Press For Settings</span>
@@ -34,12 +34,12 @@
 			</ol>
 		</div>
 
-		<div id="player" class="flex overflow-hidden transition-all duration-150 absolute bottom-6 h-0 w-full rounded-md left-0">
+		<div id="player" class="flex overflow-hidden transition-all duration-250 absolute bottom-6 h-0 w-full rounded-md left-0">
 			<div class="flex mx-auto max-w-md max-h-44">
 			<%- include('player/player.ejs')%>
 			</div>
 		</div>
-		<div id="services" class="flex overflow-auto transition-all duration-150 absolute bottom-0 left-1/2 transform -translate-x-1/2 h-0 mx-auto rounded-md justify-center max-h-80">
+		<div id="services" class="flex overflow-auto transition-all duration-250 absolute bottom-4 left-1/2 transform -translate-x-1/2 h-0 mx-auto justify-center max-h-72">
 
 			<%- include('player/services.ejs')%>
 
@@ -73,7 +73,7 @@
 		
 		var source = zone.source ? 'Input: ' + zone.source.name : 'Input: -Mute-'
 
-		return	$(`<li id="${zone.ip}" class="bg-white shadow-sm border rounded-md flex flex-col p-2 my-1" />`).append(
+		return	$(`<li id="${zone.ip}" class="bg-white shadow-sm border-2 rounded-lg flex flex-col p-2 my-1" />`).append(
             		$('<div class="flex flex-col space-y-1 w-full"/>').append(
               			$('<div class"flex flex-row justify-between relative"/>').append(
               				$('<span class="font-bold" />').text(zone.name),
@@ -226,7 +226,14 @@ function loadHandlers(){
 
 	let trackdata = false
 	socket.on("trackData", (track) => {
-		track.song ? trackdata = true : trackdata = false
+		track.title ? trackdata = true : trackdata = false
+		if (trackdata === true) {
+			 $('#player').addClass('h-36')
+			 setTimeout(()=>{
+			 	$('#player').removeClass('h-36')
+			 },3000)
+		}
+
 	})
 
 	$('#swipeup').on('click', function (){

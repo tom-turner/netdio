@@ -9,3 +9,8 @@ git clone https://github.com/roc-streaming/roc-toolkit.git ~/Downloads/roc-toolk
 cd ~/Downloads/roc-toolkit
 scons -Q --build-3rdparty=openfec
 sudo scons -Q --build-3rdparty=openfec install
+curl https://sh.rustup.rs -sSf | sh -s -- -y
+source $HOME/.cargo/env
+git clone https://github.com/librespot-org/librespot.git ~/librespot
+cd ~/librespot
+cargo build --release

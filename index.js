@@ -128,8 +128,11 @@ devices.on('ctrlMessage', (message) => {
 // Allow User configuration
 io.on('connection', (socket) => {
   console.log('user connected', socket.id);
-  socket.emit('devices', devices.getDevices())  
-  socket.emit('trackData', player.getCurrentTrack())
+  socket.emit('devices', devices.getDevices())
+  player.getCurrentTrack((data)=>{
+    console.log(data)
+    socket.emit('trackData', data )
+  })
 
   devices.on('connection', (device) => {
     socket.emit('devices', devices.getDevices())
@@ -164,9 +167,6 @@ io.on('connection', (socket) => {
     console.log('user disconnected');
   });
 
-  player.on('trackData', () => {
-    socket.emit('trackData', player.getCurrentTrack())
-  });
 });
 
 app.post('/configure', upload.single('file'), (req, res, next) => {
