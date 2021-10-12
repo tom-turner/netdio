@@ -61,9 +61,9 @@ config.get('tx')
 
 
 if(config.get('player')){
-  player.kill(config.get('player')['pid']) 
-  let started = player.start(config.get('player')['service'])
-  config.set('player.pid', started.pid)
+  //player.kill(config.get('player')['pid']) 
+  //let started = player.start(config.get('player')['service'])
+  //config.set('player.pid', started.pid)
 }
 
 // audio
@@ -185,9 +185,18 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
 }) 
 
 app.post('/startservice', (req,res) => {
+  if(config.get('player')){
+    player.kill(config.get('player')['pid'])
+  }
   let started = player.start(req.body.service)
   config.set('player', {})
   config.set('player.pid', started.pid)
+  config.set('player.name', req.body.service.charAt(0).toUpperCase() + req.body.service.slice(1))
+  config.set('player.type', 'tx')
+  config.set('player.service', req.body.service)
+  config.set('player.source', config.getNewPort())
+  config.set('player.driver', 'alsa')
+  config.set('player.hardware', 'hw:Loopback,1')
   return res.json({ url : `/${started.service}`, successful : started.successful }) 
 })
 
@@ -195,14 +204,8 @@ app.post('/connectservice', (req,res) => {
   if(req.body.return){
     player.kill(config.get('player')['pid'])
     config.set('player')
-  } else { 
-    config.set('player.name', req.body.message.charAt(0).toUpperCase() + req.body.message.slice(1))
-    config.set('player.type', 'tx')
-    config.set('player.service', req.body.message)
-    config.set('player.source', config.getNewPort())
-    config.set('player.driver', 'alsa')
-    config.set('player.hardware', 'hw:Loopback,1')  
   }
+  devices.find() 
   res.json({url : '/', successful : true })
 })
 
