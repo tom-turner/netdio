@@ -11,7 +11,6 @@ const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
 const Color = require('./lib/color')
 const Player = require('./lib/player')
-const player = new Player
 const platform = require('./lib/platform')
 const port = process.env.port || 5000;
 const fs = require('fs')
@@ -53,6 +52,7 @@ config.get('tx')
 
 // audio
 let roc = new Roc(config.configObject)
+const player = new Player(config.configObject)
 
 config.get('rx')
   ? roc.rocRecv()
