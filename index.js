@@ -104,7 +104,7 @@ devices.on('ctrlMessage', (message) => {
       case 'playerctrl' :
         message = message.value
         message.transport ? player[message.transport]() : ''
-
+        message.service == 'destroy' ? player.kill(player.get('player')) : ''
       break
     }
 })
@@ -182,6 +182,7 @@ app.post('/startservice', (req,res) => {
 
 app.post('/connectservice', (req,res) => {
   if(req.body.return){
+    player.kill(player.get('player'))
     config.set('player')
   }
   devices.find() 
