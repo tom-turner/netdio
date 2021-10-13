@@ -350,19 +350,9 @@ function loadHandlers(){
 	})
 
 	$('#manageSpotify').on("click" , async function() {
+		location.href= "/spotify"
+	})	
 
-			let res = await fetch( 'startservice' , {
-				method:'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({service: 'spotify'}) 
-			})
-
-			let message = await res.json()	
-
-			message.successful ? location.href = message.url : alert('something went wrong')
-		})
 }
 
 </script>

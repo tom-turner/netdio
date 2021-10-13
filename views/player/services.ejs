@@ -8,32 +8,12 @@
 
 		$('#spotifyConnect').on("click" , async function() {
 
-			let res = await fetch( 'startservice' , {
-				method:'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({service: 'spotify'}) 
-			})
-
-			let message = await res.json()	
-
-			message.successful ? location.href = message.url : alert('something went wrong')
+			location.href = '/spotify'
+			
 		})
 
 		$('#cloud').on("click" , async function() {
 
-			let res = await fetch( 'startservice' , {
-				method:'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({service: 'cloud'}) 
-			})
-
-			let message = await res.json()
-
-			message.successful ? location.href = message.url : alert('something went wrong')
 		})
 
 	</script>

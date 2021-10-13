@@ -21,7 +21,7 @@
           </div>
           <span class="flex flex-row space-x-4">
             <button id="return" class="bg-white border-black border-2 px-4 rounded-full">Exit</button>
-            <button id="connect" class="bg-black text-white px-4 rounded-full">Connect</button>
+            <button id="connect" disabled class="bg-black text-white px-4 rounded-full">Connect</button>
           </span>
 
         </div>
@@ -29,6 +29,24 @@
 </div>
 
 <script type="text/javascript">
+
+  window.onload = async (event) => {
+    
+      let res = await fetch( 'startservice' , {
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({service: 'spotify'}) 
+      })
+
+      let message = await res.json()  
+
+      if(message.successful) {
+        $('#connect').attr('disabled' , false)
+      }
+
+  }
 
     $('#connect').on("click" , async function() {
 
@@ -61,7 +79,7 @@
     })
 
     socket.on("trackData", (track) => {
-      $('#connect').click()
+      $('#connect').trigger('click')
     })
 
 </script>
