@@ -171,7 +171,6 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
 app.post('/startservice', (req,res) => {
   let started = player.start(req.body.service)
   config.set('player', {})
-  config.set('player.pid', started.pid)
   config.set('player.name', req.body.service.charAt(0).toUpperCase() + req.body.service.slice(1))
   config.set('player.type', 'tx')
   config.set('player.service', req.body.service)
