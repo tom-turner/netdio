@@ -11,7 +11,6 @@ const Configuration = require('./lib/configuration')
 const Devices = require('./lib/autoDiscovery')
 const Color = require('./lib/color')
 const Player = require('./lib/player')
-const player = new Player
 const platform = require('./lib/platform')
 const port = process.env.port || 5000;
 const fs = require('fs')
@@ -53,6 +52,7 @@ config.get('tx')
 
 // audio
 let roc = new Roc(config.configObject)
+const player = new Player(config.configObject)
 
 config.get('rx')
   ? roc.rocRecv()
@@ -104,7 +104,7 @@ devices.on('ctrlMessage', (message) => {
       case 'playerctrl' :
         message = message.value
         message.transport ? player[message.transport]() : ''
-
+        message.service == 'destroy' ? player.kill(player.get('player')) : ''
       break
     }
 })
@@ -170,9 +170,9 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
 }) 
 
 app.post('/startservice', (req,res) => {
+  console.log(req.body)
   let started = player.start(req.body.service)
   config.set('player', {})
-  config.set('player.pid', started.pid)
   config.set('player.name', req.body.service.charAt(0).toUpperCase() + req.body.service.slice(1))
   config.set('player.type', 'tx')
   config.set('player.service', req.body.service)
@@ -184,6 +184,7 @@ app.post('/startservice', (req,res) => {
 
 app.post('/connectservice', (req,res) => {
   if(req.body.return){
+    player.kill(player.get('player'))
     config.set('player')
   }
   devices.find() 

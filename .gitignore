@@ -2,3 +2,5 @@ logs/*
 .DS_Store
 config/config.json
 config/runningprocesses.json
+config/rocprocesses.json
+config/playerprocesses.json

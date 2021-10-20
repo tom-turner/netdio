@@ -11,7 +11,7 @@
 			<select id="service" class="absolute inset-y-0 h-8 right-0 cursor-pointer text-gray-800 bg-white text-gray-400">
 				<option selected disabled></option>
 				<option value="spotify">Spotify</option>
-				<option value="destroy">None</option>
+				<option value="destroy">Exit</option>
 			</select>
 
 			<span id="trackData" class="mx-auto flex flex-col text-center cursor-pointer overflow-hidden">
@@ -126,7 +126,9 @@
 			forward({ transport :'next'})
 		})
 		$('#service').on('change', () =>{
-			forward({ service : $('#service').val()})
+			let service = $('#service').val()
+			service == 'destroy' ? location.href = '/' : ''
+			forward({ service : service})
 		})
 
 		$('#artwork').on('click', () =>{
