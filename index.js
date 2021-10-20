@@ -178,7 +178,7 @@ app.post('/startservice', (req,res) => {
   config.set('player.service', req.body.service)
   config.set('player.source', config.getNewPort())
   config.set('player.driver', 'alsa')
-  config.set('player.hardware', 'hw:Loopback,1')
+  config.set('player.hardware', 'dsnoop:Loopback,1')
   return res.json({ url : `/${started.service}`, successful : started.successful }) 
 })
 

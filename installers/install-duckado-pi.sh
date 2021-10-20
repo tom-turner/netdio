@@ -35,6 +35,21 @@ sudo sed -i '/\b\dtparam=audio=on\b/d' /boot/config.txt
 sudo tee -a /etc/modules-load.d/modules.conf > /dev/null <<EOT
 snd-aloop
 EOT
+sudo tee -a ~/.asoundrc > /dev/null <<EOT
+pcm.snoopback {
+    type dsnoop
+    slave {
+        pcm "hw:Loopback,1" 
+        channels 2 
+        period_size 1024
+        buffer_size 4096
+        rate 48000
+        periods 0 
+        period_time 0
+    }
+}
+EOT
+
 
 # Install Duckado and pm2
 git clone https://github.com/tom-turner/netdio.git ~/netdio
