@@ -8,7 +8,7 @@ const io = require('socket.io')(http);
 const { spawn, exec, fork } = require('child_process');
 const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
-const Devices = require('./lib/autoDiscovery')
+const Devices = require('./lib/devices')
 const Color = require('./lib/color')
 const Player = require('./lib/player')
 const platform = require('./lib/platform')
@@ -68,18 +68,9 @@ setInterval(()=>{
 
 // auto discover devices on the network
 var devices = new Devices(config.configObject)
-devices.listen()
-devices.find()  
 
-devices.on('connection', (device) => {
-  console.log(device, "joined")
-})
 
-devices.on('disconnect', (device) => {
-  console.log(device, "left")
-})
-
-devices.on('ctrlMessage', (message) => {
+devices.receive('ctrlMessage', (message) => {
     switch (message.type) {
       case 'source':
         config.set( message.type , message.value)
@@ -114,28 +105,21 @@ io.on('connection', (socket) => {
   console.log('user connected', socket.id);
   socket.emit('devices', devices.getDevices())
 
+  console.log(devices.getDevices())
+
   player.getCurrentTrack((data)=>{
     if(data) {
       socket.emit('trackData', data )
     }
   })
 
-  devices.on('connection', (device) => {
-    socket.emit('devices', devices.getDevices())
-  })
-
-  devices.on('disconnect', (device) => {
-    socket.emit('devices', devices.getDevices())
-  })
-
   socket.on('forward', (message) =>{
-    console.log(message)
     devices.forward(message.ip, message)
   })
 
   socket.on('reload', () => {
     console.log('reload')
-    devices.find()
+    //devices.find()
     //exec('python ./lib/python/ledOff.py')
     //roc.kill(roc.get())
     //process.exit()
