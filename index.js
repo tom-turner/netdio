@@ -129,6 +129,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('forward', (message) =>{
+    console.log(message)
     devices.forward(message.ip, message)
   })
 

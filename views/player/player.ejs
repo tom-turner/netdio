@@ -49,8 +49,16 @@
 <script type="text/javascript">
 	 	
 	 	var socket = io()
+	 	let player = {}	
 
-
+	 	socket.on("devices", (devices) => {
+			for (device of devices) {
+				if (device.player) {
+					player = device.player
+					player.ip = device.device.ip
+				}
+			}
+		})
 	 
 	 	let forward = (ctrl) => {
 	 		var message = {
@@ -98,6 +106,9 @@
 				$("#info").removeClass('flex-row')
 			}
 		}
+
+
+
 
 		window.onresize = responsiveLayout
 		$(window).trigger('resize')
