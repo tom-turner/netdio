@@ -8,7 +8,7 @@ const io = require('socket.io')(http);
 const { spawn, exec, fork } = require('child_process');
 const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
-const Devices = require('./lib/autoDiscovery')
+const Devices = require('./lib/devices')
 const Color = require('./lib/color')
 const Player = require('./lib/player')
 const platform = require('./lib/platform')
@@ -55,36 +55,27 @@ let roc = new Roc(config.configObject)
 const player = new Player(config.configObject)
 
 config.get('rx')
-  ? roc.rocRecv()
+  ? roc.rocRecv(config.get('source'))
   : console.log('no rx')
-  
+
 setInterval(()=>{ 
-    devices.forward( config.get('source')['send'], {
+  let message = {
     type: 'devices',
     value: config.get('source')
+  }
+  devices.forward( config.get('source')['send'], message, (err) => {
+    if(err) { throw(err) }
   })
 }, 1000)
 
-
 // auto discover devices on the network
 var devices = new Devices(config.configObject)
-devices.listen()
-devices.find()  
 
-devices.on('connection', (device) => {
-  console.log(device, "joined")
-})
-
-devices.on('disconnect', (device) => {
-  console.log(device, "left")
-})
-
-devices.on('ctrlMessage', (message) => {
+devices.receive('ctrl message', (message) => {
     switch (message.type) {
       case 'source':
         config.set( message.type , message.value)
         roc.kill(roc.get('rx'))
-        console.log(config.get('source'))
         roc.rocRecv(config.get('source'))
       break
       case 'devices' :
@@ -109,55 +100,25 @@ devices.on('ctrlMessage', (message) => {
     }
 })
 
-// Allow User configuration
-io.on('connection', (socket) => {
-  console.log('user connected', socket.id);
-  socket.emit('devices', devices.getDevices())
 
+// user control 
+app.post('/devices', (req,res) => {
+  /*
   player.getCurrentTrack((data)=>{
-    if(data) {
-      socket.emit('trackData', data )
-    }
+      if(data) {
+        currentTrack = {'trackData', data }
+      }
+    })
+  */
+  return res.json(devices.getList())
+})
+
+app.post('/forward', (req,res) => {
+  let message = req.body
+  devices.forward(message.ip, message, (err) => {
+        return res.json({successful: true})
   })
-
-  devices.on('connection', (device) => {
-    socket.emit('devices', devices.getDevices())
-  })
-
-  devices.on('disconnect', (device) => {
-    socket.emit('devices', devices.getDevices())
-  })
-
-  socket.on('forward', (message) =>{
-    console.log(message)
-    devices.forward(message.ip, message)
-  })
-
-  socket.on('reload', () => {
-    console.log('reload')
-    devices.find()
-    //exec('python ./lib/python/ledOff.py')
-    //roc.kill(roc.get())
-    //process.exit()
-  });
-
-  socket.on('reboot', () => {
-    console.log('rebooting')
-    exec('sudo reboot')
-  });
-
-  socket.on('factoryreset', () => {
-    fs.unlinkSync('config/config.json')
-    setTimeout( () => {
-      exec('sudo reboot')
-    },250)
-  })
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-
-});
+})
 
 app.post('/configure', upload.single('file'), (req, res, next) => {
   const color = new Color()
@@ -189,6 +150,22 @@ app.post('/connectservice', (req,res) => {
   }
   devices.find() 
   res.json({url : '/', successful : true })
+})
+
+app.post('/reload', (req,res) => {
+  console.log('reload')
+})
+
+app.post('/reboot', () => {
+  console.log('rebooting')
+  exec('sudo reboot')
+});
+
+app.post('/factoryreset', () => {
+  fs.unlinkSync('config/config.json')
+  setTimeout( () => {
+    exec('sudo reboot')
+  },250)
 })
 
 app.post('/update', (req,res) =>{

@@ -54,8 +54,6 @@
 	loadHandlers()
 	loading(true)
 
-	var socket = io();
-
 	function loading(isLoading) {
 		if (isLoading) {
 			document.querySelector(".spinner").classList.remove("hidden");
@@ -103,8 +101,7 @@
 				)
 	}
 
-	// listens for devices
-	socket.on("devices", (devices) => {
+	function updateDevices(devices) {
 		$('#zones').html('')
 		$('#destinations').html('')
 		$('#inputs').html('')
@@ -148,12 +145,44 @@
 		loadHandlers()
 		loading(false)
 		
-	})
+	}
+	setInterval(()=>{
+		getDevices('/devices', updateDevices)
+	},1000)
+	
+let localDeviceListJSON = []
 
-function quack(){
+let getDevices = (url, callback) => {
+	let xml = new XMLHttpRequest()
+	xml.onload = function () {
+		if(localDeviceListJSON != xml.responseText){
+			localDeviceListJSON = xml.responseText
+			callback(JSON.parse(localDeviceListJSON))
+		}
+	}
+	xml.open('POST', url)
+	xml.send()
+}
+
+
+let postMessage = async (url, message) => {
+	let res = await fetch( url , {
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(message) 
+      })
+
+      let response = await res.json()  
+
+      if(response.successful) {
+      }
+}
+
+let quack = () => {
 	new Audio('quack.mp3').play();
-}	
-
+}
 
 function loadHandlers(){
 
@@ -170,7 +199,7 @@ function loadHandlers(){
 				txdata: $('option:selected',this).data(),
 			},
 		}
-		socket.emit('forward', message)
+		postMessage('forward', message)
 	})
 
 	$('input[type=range]').on('input', function () {
@@ -180,7 +209,7 @@ function loadHandlers(){
 			value : this.value
 		}
 
-		socket.emit('forward', message)
+		postMessage('forward', message)
 
 	})
 	$('input[type=text]').on('keyup', function () {
@@ -191,7 +220,7 @@ function loadHandlers(){
 			value : this.value
 		}
 
-		socket.emit('forward', message)
+		postMessage('forward', message)
 	})
 	$('button').on('click', function () {
 
@@ -201,12 +230,12 @@ function loadHandlers(){
 			value : this.value
 		}
 
-		socket.emit('forward', message)
+		postMessage('forward', message)
 	})
 
 	$('#reload').on('click' , function(){
 		loading(true)
-		socket.emit("reload")
+		postMessage('reload')
 		setTimeout( () => {
 			location.reload()
 		}, 1000)
@@ -223,6 +252,7 @@ function loadHandlers(){
 		}
 	})
 
+/*
 	let trackdata = false
 	socket.on("trackData", (track) => {
 		$('#services').hide()
@@ -232,7 +262,7 @@ function loadHandlers(){
 			$('#player').removeClass('h-36')
 		},3000)
 	})
-
+*/
 	$('#swipeup').on('click', function (){
 		$(trackdata ? '#player' : '#services').addClass('h-full')
 		$(trackdata ? '#player' : '#services').removeClass('h-0')
