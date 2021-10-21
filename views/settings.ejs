@@ -159,7 +159,7 @@
 			ip : ip,
 			type : 'blink'
 		}
-		socket.emit('forward', message)
+		postMessage('/forward', message)
 	}
 
 
@@ -202,8 +202,8 @@
 				)
 	}
 
-	// listens for devices
-	socket.on("devices", (devices) => {
+
+	function updateDevices(devices) {
 		$('#zones').html('')
 		$('#destinations').html('')
 		$('#inputs').html('')
@@ -247,7 +247,10 @@
 		loadHandlers()
 		loading(false)
 		
-	})
+	}
+	setInterval(()=>{
+		getDevices('/devices', updateDevices)
+	},1000)
 
 	// listens for new config
 	socket.on("newConfig", (config) => {
@@ -264,6 +267,36 @@
 		$('#ipDisplay').toggleClass("hidden")
 	})
 
+
+let localDeviceListJSON = []
+
+let getDevices = (url, callback) => {
+	let xml = new XMLHttpRequest()
+	xml.onload = function () {
+		if(localDeviceListJSON != xml.responseText){
+			localDeviceListJSON = xml.responseText
+			callback(JSON.parse(localDeviceListJSON))
+		}
+	}
+	xml.open('POST', url)
+	xml.send()
+}
+
+let postMessage = async (url, message) => {
+	let res = await fetch( url , {
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(message) 
+      })
+
+      let response = await res.json()  
+
+      if(response.successful) {
+      }
+}
+
 function loadHandlers(){
 
 	$('input[type=text]').on('keyup', function () {
@@ -274,7 +307,7 @@ function loadHandlers(){
 			value : this.value
 		}
 
-		socket.emit('forward', message)
+		postMessage('/forward', message)
 	})
 
 	/* breaks stuff... duh.
@@ -286,7 +319,7 @@ function loadHandlers(){
 			value : this.value
 		}
 
-		socket.emit('forward', message)
+		postMessage('/forward', message)
 	})
 	*/
 
@@ -318,11 +351,11 @@ function loadHandlers(){
 	})
 
 	$('#reboot').on("click" , function() {
-		socket.emit("reboot")
+		postMessage('/reboot')
 		loading(true)
 	})
 	$('#factoryreset').on("click" , function() {
-		socket.emit("factoryreset")
+		postMessage('/factoryreset')
 		loading(true)
 	})
 	$('#cancel').on("click" , function() {

@@ -54,8 +54,6 @@
 	loadHandlers()
 	loading(true)
 
-	var socket = io();
-
 	function loading(isLoading) {
 		if (isLoading) {
 			document.querySelector(".spinner").classList.remove("hidden");
@@ -237,7 +235,7 @@ function loadHandlers(){
 
 	$('#reload').on('click' , function(){
 		loading(true)
-		socket.emit("reload")
+		postMessage('reload')
 		setTimeout( () => {
 			location.reload()
 		}, 1000)
@@ -254,6 +252,7 @@ function loadHandlers(){
 		}
 	})
 
+/*
 	let trackdata = false
 	socket.on("trackData", (track) => {
 		$('#services').hide()
@@ -263,7 +262,7 @@ function loadHandlers(){
 			$('#player').removeClass('h-36')
 		},3000)
 	})
-
+*/
 	$('#swipeup').on('click', function (){
 		$(trackdata ? '#player' : '#services').addClass('h-full')
 		$(trackdata ? '#player' : '#services').removeClass('h-0')

@@ -55,17 +55,18 @@ let roc = new Roc(config.configObject)
 const player = new Player(config.configObject)
 
 config.get('rx')
-  ? roc.rocRecv()
+  ? roc.rocRecv(config.get('source'))
   : console.log('no rx')
 
-/*  
 setInterval(()=>{ 
-  devices.forward( config.get('source')['send'], {
+  let message = {
     type: 'devices',
     value: config.get('source')
+  }
+  devices.forward( config.get('source')['send'], message, (err) => {
+    if(err) { throw(err) }
   })
 }, 1000)
-*/
 
 // auto discover devices on the network
 var devices = new Devices(config.configObject)
@@ -75,7 +76,6 @@ devices.receive('ctrl message', (message) => {
       case 'source':
         config.set( message.type , message.value)
         roc.kill(roc.get('rx'))
-        console.log(config.get('source'))
         roc.rocRecv(config.get('source'))
       break
       case 'devices' :
@@ -98,47 +98,18 @@ devices.receive('ctrl message', (message) => {
         message.service == 'destroy' ? player.kill(player.get('player')) : ''
       break
     }
-    devices.update(config.configObject)
 })
 
-// Allow User configuration
-io.on('connection', (socket) => {
-  //console.log('user connected', socket.id);
-  //socket.emit('devices', devices.getList())
 
-  player.getCurrentTrack((data)=>{
-    if(data) {
-      socket.emit('trackData', data )
-    }
-  })
-
-  socket.on('forward', (message) =>{
-    devices.forward(message.ip, message)
-  })
-
-  socket.on('reload', () => {
-    console.log('reload')
-    //devices.find()
-    //exec('python ./lib/python/ledOff.py')
-    //roc.kill(roc.get())
-    //process.exit()
-  });
-
-  socket.on('reboot', () => {
-    console.log('rebooting')
-    exec('sudo reboot')
-  });
-
-  socket.on('factoryreset', () => {
-    fs.unlinkSync('config/config.json')
-    setTimeout( () => {
-      exec('sudo reboot')
-    },250)
-  })
-
-});
-
+// user control 
 app.post('/devices', (req,res) => {
+  /*
+  player.getCurrentTrack((data)=>{
+      if(data) {
+        currentTrack = {'trackData', data }
+      }
+    })
+  */
   return res.json(devices.getList())
 })
 
@@ -179,6 +150,22 @@ app.post('/connectservice', (req,res) => {
   }
   devices.find() 
   res.json({url : '/', successful : true })
+})
+
+app.post('/reload', (req,res) => {
+  console.log('reload')
+})
+
+app.post('/reboot', () => {
+  console.log('rebooting')
+  exec('sudo reboot')
+});
+
+app.post('/factoryreset', () => {
+  fs.unlinkSync('config/config.json')
+  setTimeout( () => {
+    exec('sudo reboot')
+  },250)
 })
 
 app.post('/update', (req,res) =>{
