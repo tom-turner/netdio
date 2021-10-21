@@ -14,16 +14,13 @@
 
 </div>
 
-
 <div class="flex items-center justify-center h-screen blue flex flex-col p-4 space-y-2 relative">
 
 	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-md shadow-md pt-2 px-4 overflow-hidden border">
 		<div class="justify-between flex w-full">
-			<img id="duck" class="h-14 cursor-pointer" src="images/duck.svg"/>
-			<span id="longpress" class="hidden absolute text-xs text-gray-400 left-20 top-14">Long Press For Settings</span>
-			<img class="h-10 my-auto" src="images/logo"/>
-
-			<svg id="reload" class="h-10 w-10 my-auto cursor-pointer transform duration-500 fill-current blue-fill" >
+			<img class="h-14 my-auto py-2" src="images/logo"/>
+			<img id="duck" class="h-12 my-auto cursor-pointer" src="images/duck.svg"/>
+			<svg id="reload" class="hidden h-10 w-10 my-auto cursor-pointer transform duration-500 fill-current blue-fill" >
 				<use xlink:href="images/reload.svg#reload"/>
 			</svg>
 		</div>
@@ -38,11 +35,6 @@
 			<div class="flex mx-auto max-w-md max-h-44">
 			<%- include('player/playbar.ejs')%>
 			</div>
-		</div>
-		<div id="services" class="flex overflow-auto transition-all duration-250 absolute bottom-4 left-1/2 transform -translate-x-1/2 h-0 mx-auto justify-center max-h-72">
-
-			<%- include('player/services.ejs')%>
-
 		</div>
 		<div id="swipeup" class="w-full left-0 h-12 bottom-0 absolute"></div>
 	</div>
@@ -148,22 +140,6 @@
 	}
 	
 let localDeviceListJSON = []
-
-/*
-let getDevices = (url, callback) => {
-	let xml = new XMLHttpRequest()
-	xml.onload = function () {
-		if(localDeviceListJSON != xml.responseText){
-			localDeviceListJSON = xml.responseText
-			console.log(xml.responseText)
-			callback(JSON.parse(localDeviceListJSON))
-		}
-	}
-	xml.open('POST', url)
-	xml.send()
-}
-getDevices('/devices', updateDevices)
-*/
 
 socket.on('devices', (message) => {
 	if(localDeviceListJSON != message){

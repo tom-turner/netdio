@@ -18,8 +18,8 @@
 
 	<div class="w-full bg-white rounded shadow-lg flex p-2 flex-col ">
 		<div class="flex w-full justify-between px-2">
-			<img id="duck" class="h-14 cursor-pointer" onclick="quack()" src="images/duck.svg"/>
-			<img class="h-10 my-auto" src="images/logo"/>
+			<img id="duck" class="hidden h-14 cursor-pointer" onclick="quack()" src="images/duck.svg"/>
+			<img class="h-14 my-auto py-2" src="images/logo"/>
 
 			<svg id="menu" class="h-10 w-10 cursor-pointer transform duration-500 fill-current blue-fill my-auto" onclick="toggleSettings('devices','menu')" >
 				<use xlink:href="images/menu.svg#menu"/>
@@ -101,9 +101,9 @@
 
 			<button id="blinkSelf" class="button border px-2 rounded-full text-white blue">Blink</button>
 
-			<button class="button border px-2 rounded-full text-grey-400 bg-white" id="manageSpotify" >Manage Spotify</button>
+			<button id="cancel" class="button border px-2 rounded-full text-grey-400 bg-white">Home Page</button>
 
-			<button id="cancel" class="button border px-2 rounded-full text-grey-400 bg-white">Cancel</button>
+			<button class="button border px-2 rounded-full text-grey-400 bg-white" id="manageSpotify" >Manage Spotify</button>
 
 			<button id="update" class="button border px-2 rounded-full text-grey-400 bg-white w-64 ">Update</button>
 
@@ -248,9 +248,6 @@
 		loading(false)
 		
 	}
-	setInterval(()=>{
-		getDevices('/devices', updateDevices)
-	},1000)
 
 	// listens for new config
 	socket.on("newConfig", (config) => {
@@ -270,17 +267,12 @@
 
 let localDeviceListJSON = []
 
-let getDevices = (url, callback) => {
-	let xml = new XMLHttpRequest()
-	xml.onload = function () {
-		if(localDeviceListJSON != xml.responseText){
-			localDeviceListJSON = xml.responseText
-			callback(JSON.parse(localDeviceListJSON))
-		}
+socket.on('devices', (message) => {
+	if(localDeviceListJSON != message){
+		localDeviceListJSON = message
+		updateDevices(localDeviceListJSON)
 	}
-	xml.open('POST', url)
-	xml.send()
-}
+})
 
 let postMessage = async (url, message) => {
 	let res = await fetch( url , {

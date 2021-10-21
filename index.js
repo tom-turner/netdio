@@ -103,16 +103,10 @@ devices.receive('ctrl message', (message) => {
     devices.updateService()
 })
 
-  /* Player stuff
-  player.getCurrentTrack((data)=>{
-      if(data) {
-        currentTrack = {'trackData', data }
-      }
-    })
-  */
 
 // user control 
 io.on('connection', (socket) => {
+  console.log('called', socket.id)
   devices.onChange( (list) => {
     socket.emit('devices', list.sort( (a,b) => {
       return a.rx.name.charCodeAt(0) - b.rx.name.charCodeAt(0)
@@ -153,10 +147,11 @@ app.post('/startservice', (req,res) => {
 
 app.post('/connectservice', (req,res) => {
   if(req.body.return){
+    roc.kill(roc.get('tx'))
     player.kill(player.get('player'))
     config.set('player')
   }
-  devices.find() 
+  devices.updateService()
   res.json({url : '/', successful : true })
 })
 
