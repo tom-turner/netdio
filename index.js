@@ -69,7 +69,6 @@ setInterval(()=>{
 
 // auto discover devices on the network
 var devices = new Devices(config.configObject)
-devices.publish(config.configObject)
 
 devices.receive('ctrl message', (message) => {
     switch (message.type) {
@@ -99,6 +98,7 @@ devices.receive('ctrl message', (message) => {
         message.service == 'destroy' ? player.kill(player.get('player')) : ''
       break
     }
+    devices.update(config.configObject)
 })
 
 // Allow User configuration
