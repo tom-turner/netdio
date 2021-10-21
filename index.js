@@ -80,6 +80,9 @@ devices.receive('ctrl message', (message) => {
       break
       case 'devices' :
         config.set( message.type , message.value)
+        message.value.send = devices.getDeviceIp(message.value.send)
+        message.value.recv = devices.getDeviceIp(message.value.recv)
+        console.log(message)
         roc.rocSend(message.value)
       break
       case 'rx.volume':
@@ -98,25 +101,24 @@ devices.receive('ctrl message', (message) => {
         message.service == 'destroy' ? player.kill(player.get('player')) : ''
       break
     }
-    devices.update((list)=>{
+    devices.updateService((list)=>{
       //save device list to file
     })
 })
 
-
-// user control 
-app.post('/devices', (req,res) => {
-  devices.update((list)=>{
-    return res.json(list)
-  })
-  /*
+  /* Player stuff
   player.getCurrentTrack((data)=>{
       if(data) {
         currentTrack = {'trackData', data }
       }
     })
   */
-  console.log('devices called')
+
+// user control 
+app.post('/devices', (req,res) => {
+  //devices.onChange( (list) => {
+    return res.json(devices.getList())
+  //})
 })
 
 app.post('/forward', (req,res) => {

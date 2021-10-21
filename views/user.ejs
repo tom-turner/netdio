@@ -113,17 +113,17 @@
 			if (device.rx) {
 				var rx = device.rx
 				rx.source = device.source
-				rx.ip = device.device.ip
+				rx.ip = device.device.id
 				rxDevices.push(rx)
 			}
 			if (device.tx) {
 				var tx = device.tx
-				tx.ip = device.device.ip
+				tx.ip = device.device.id
 				txDevices.push(tx)
 			}
 			if (device.player) {
 				var player = device.player
-				player.ip = device.device.ip
+				player.ip = device.device.id
 				txDevices.push(player)
 			}
 		}
@@ -155,6 +155,7 @@ let getDevices = (url, callback) => {
 	xml.onload = function () {
 		if(localDeviceListJSON != xml.responseText){
 			localDeviceListJSON = xml.responseText
+			console.log(xml.responseText)
 			callback(JSON.parse(localDeviceListJSON))
 		}
 	}
@@ -162,9 +163,7 @@ let getDevices = (url, callback) => {
 	xml.send()
 }
 
-//setInterval(()=>{
-		getDevices('/devices', updateDevices)
-	//},1000)
+getDevices('/devices', updateDevices)
 
 let postMessage = async (url, message) => {
 	let res = await fetch( url , {
@@ -186,8 +185,7 @@ let quack = () => {
 }
 
 function loadHandlers(){
-
-
+	
 	$('select').on('change', function () {
 		var message = {
 			ip : this.closest('li').id,
