@@ -146,9 +146,7 @@
 		loading(false)
 		
 	}
-	setInterval(()=>{
-		getDevices('/devices', updateDevices)
-	},1000)
+	
 	
 let localDeviceListJSON = []
 
@@ -164,6 +162,9 @@ let getDevices = (url, callback) => {
 	xml.send()
 }
 
+//setInterval(()=>{
+		getDevices('/devices', updateDevices)
+	//},1000)
 
 let postMessage = async (url, message) => {
 	let res = await fetch( url , {

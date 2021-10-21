@@ -69,7 +69,7 @@ setInterval(()=>{
 }, 1000)
 
 // auto discover devices on the network
-var devices = new Devices(config.configObject)
+var devices = new Devices(config)
 
 devices.receive('ctrl message', (message) => {
     switch (message.type) {
@@ -103,6 +103,9 @@ devices.receive('ctrl message', (message) => {
 
 // user control 
 app.post('/devices', (req,res) => {
+  devices.update((list)=>{
+    return res.json(list)
+  })
   /*
   player.getCurrentTrack((data)=>{
       if(data) {
@@ -110,7 +113,7 @@ app.post('/devices', (req,res) => {
       }
     })
   */
-  return res.json(devices.getList())
+  console.log('devices called')
 })
 
 app.post('/forward', (req,res) => {
