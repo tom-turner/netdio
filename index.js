@@ -98,6 +98,9 @@ devices.receive('ctrl message', (message) => {
         message.service == 'destroy' ? player.kill(player.get('player')) : ''
       break
     }
+    devices.update((list)=>{
+      //save device list to file
+    })
 })
 
 
