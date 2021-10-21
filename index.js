@@ -114,7 +114,9 @@ devices.receive('ctrl message', (message) => {
 // user control 
 io.on('connection', (socket) => {
   devices.onChange( (list) => {
-    socket.emit('devices', list)
+    socket.emit('devices', list.sort( (a,b) => {
+      return a.rx.name.charCodeAt(0) - b.rx.name.charCodeAt(0)
+    }) )
   })
 })
 
