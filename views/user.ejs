@@ -147,9 +147,9 @@
 		
 	}
 	
-	
 let localDeviceListJSON = []
 
+/*
 let getDevices = (url, callback) => {
 	let xml = new XMLHttpRequest()
 	xml.onload = function () {
@@ -162,8 +162,15 @@ let getDevices = (url, callback) => {
 	xml.open('POST', url)
 	xml.send()
 }
-
 getDevices('/devices', updateDevices)
+*/
+
+socket.on('devices', (message) => {
+	if(localDeviceListJSON != message){
+		localDeviceListJSON = message
+		updateDevices(localDeviceListJSON)
+	}
+})
 
 let postMessage = async (url, message) => {
 	let res = await fetch( url , {
