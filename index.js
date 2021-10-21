@@ -57,20 +57,21 @@ const player = new Player(config.configObject)
 config.get('rx')
   ? roc.rocRecv()
   : console.log('no rx')
-  
+
+/*  
 setInterval(()=>{ 
-    devices.forward( config.get('source')['send'], {
+  devices.forward( config.get('source')['send'], {
     type: 'devices',
     value: config.get('source')
   })
 }, 1000)
-
+*/
 
 // auto discover devices on the network
 var devices = new Devices(config.configObject)
+devices.publish(config.configObject)
 
-
-devices.receive('ctrlMessage', (message) => {
+devices.receive('ctrl message', (message) => {
     switch (message.type) {
       case 'source':
         config.set( message.type , message.value)
@@ -102,10 +103,8 @@ devices.receive('ctrlMessage', (message) => {
 
 // Allow User configuration
 io.on('connection', (socket) => {
-  console.log('user connected', socket.id);
-  socket.emit('devices', devices.getDevices())
-
-  console.log(devices.getDevices())
+  //console.log('user connected', socket.id);
+  //socket.emit('devices', devices.getList())
 
   player.getCurrentTrack((data)=>{
     if(data) {
@@ -137,11 +136,18 @@ io.on('connection', (socket) => {
     },250)
   })
 
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
-
 });
+
+app.post('/devices', (req,res) => {
+  return res.json(devices.getList())
+})
+
+app.post('/forward', (req,res) => {
+  let message = req.body
+  devices.forward(message.ip, message, (err) => {
+        return res.json({successful: true})
+  })
+})
 
 app.post('/configure', upload.single('file'), (req, res, next) => {
   const color = new Color()
