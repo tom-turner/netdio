@@ -110,7 +110,6 @@ io.on('connection', (socket) => {
 */
 
 app.post('/devices', (req,res)=>{
-  console.log('devices please')
   return res.json(devices.getDeviceList())
 })
 

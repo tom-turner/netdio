@@ -127,7 +127,7 @@
 			$('#zones').append(zone)
 			$('#destinations').append(li)
 		}
-		
+
 		for (tx of txDevices) {
 			var li = createDeviceLi(tx)
 			$('#inputs').append(li)
@@ -166,7 +166,7 @@
 		console.log(message)
 		let messageJSON = message
 		let localJSON = localDeviceListJSON
-		
+
 		if(messageJSON == localJSON){
 			console.log(true)
 			readyStateToggle()
@@ -187,9 +187,7 @@
 	}
 
 	setInterval(()=>{
-		if(readyState){
 			getDevices('/devices', handleDevices)
-		}
 	},1000)
 
 	let postMessage = async (url, message) => {
@@ -213,7 +211,7 @@
 	}
 
 	function loadHandlers(){
-		
+
 		$('select').on('change', function () {
 			var message = {
 				ip : this.closest('li').id,
