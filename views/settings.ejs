@@ -165,14 +165,14 @@
 
 
 	function getInputAsOption(device){
-		return $(`<option value="${device.source}" name="${device.ip}"/>`).text(device.name)
+		return $(`<option value="${device.source}" name="${device.id}"/>`).text(device.name)
 	}
 
 	function createZone(zone) {
 		
 		var source = zone.source ? 'Input: ' + zone.source.name : 'Input: -Mute-'
 
-		return	$(`<li id="${zone.ip}" class="bg-white shadow-lg border rounded flex flex-col p-2 m-2" />`).append(
+		return	$(`<li id="${zone.id}" class="bg-white shadow-lg border rounded flex flex-col p-2 m-2" />`).append(
             		$('<div class="flex flex-col space-y-2"/>').append(
               			$('<div class"w-full flex flex-row justify-between"/>').append(
               				$('<span class="font-bold" />').text(zone.name)
@@ -190,13 +190,13 @@
 
 	function createDeviceLi(device) {
 
-		return	$('<li id="'+ device.ip + '" class="bg-white shadow-lg border rounded flex flex-row p-2 my-2 md:space-x-2 justify-between sm:pr-10 md:pr-8 lg:pr-2 pr-4"/>').append(
+		return	$('<li id="'+ device.id + '" class="bg-white shadow-lg border rounded flex flex-row p-2 my-2 md:space-x-2 justify-between sm:pr-10 md:pr-8 lg:pr-2 pr-4"/>').append(
 					$('<div class="flex flex-row space-x-2"/>').append(
 						$('<label />').text("Label: "),
 						$(`<input type="text" class="w-full font-bold" name="${device.type}.name" value="${device.name}"/>`)
 					),
 					$('<div class="flex flex-row space-x-2"/>').append(
-						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink" onclick="blink('${device.ip}')"/>`).text("Blink"),
+						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink" onclick="blink('${device.id}')"/>`).text("Blink"),
 						$(`<svg class="h-8 w-8 cursor-pointer fill-current blue-fill" onclick="window.location.href='http://${device.ip}:5000/settings'" src="images/gear.svg"><use xlink:href="images/gear.svg#gear"/></svg>`)
 					)
 				)
@@ -215,18 +215,21 @@
 			if (device.rx) {
 				var rx = device.rx
 				rx.source = device.source
-				rx.ip = device.device.id
+				rx.ip = device.device.ip
+				rx.id = device.device.id
 				rxDevices.push(rx)
 			}
 			if (device.tx) {
 				var tx = device.tx
-				tx.ip = device.device.id
+				tx.ip = device.device.ip
+				tx.id = device.device.id
 				txDevices.push(tx)
 			}
 
 			if (device.player) {
 				var player = device.player
-				player.ip = device.device.id
+				player.ip = device.device.ip
+				player.id = device.device.id
 				txDevices.push(player)
 			}
 		}
