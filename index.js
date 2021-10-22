@@ -71,7 +71,7 @@ setInterval(()=>{
         }
   })
 
-}, 2500)
+}, 500)
 
 
 // auto discover devices on the network
