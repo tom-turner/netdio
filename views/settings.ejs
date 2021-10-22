@@ -264,62 +264,46 @@
 		$('#ipDisplay').toggleClass("hidden")
 	})
 
-function debounce(fn, timeout) {
-  let interval = null
 
-  return function (...args) {
-    if (interval)
-      clearInterval(interval)
+	let readyState = true
+	let localDeviceListJSON = []
 
-    interval = setTimeout(function () {
-      fn.apply(null, args)
-    }, timeout)
-  }
-}
-
-let readyState = true
-let localDeviceListJSON = []
-
-let readyStateToggle = () => {
-	readyState = false
-	debounce(()=>{
+	let readyStateFalse = () => {
+		readyState = false
+	}
+	let readyStateTrue = () => {
 		readyState = true
-	},5000)
-}
-
-handleDevices('/devices', (message) => {
-	let messageJSON = JSON.stringify(message)
-	let localJSON = localDeviceListJSON
-	
-	if(messageJSON == localJSON){
-		readyStateToggle()
 	}
-	if(readyState){
-		localDeviceListJSON = JSON.stringify(message)
-		updateDevices(JSON.parse(localDeviceListJSON))
-	}
-})
-	
+	let handleDevices = (message) => {
+		let messageJSON = message
+		let localJSON = localDeviceListJSON
 
-let getDevices = (url, callback) => {
-	let xml = new XMLHttpRequest()
-	xml.onload = function () {
-		if(localDeviceListJSON != xml.responseText){
-			localDeviceListJSON = xml.responseText
-			console.log(xml.responseText)
-			callback(JSON.parse(localDeviceListJSON))
+		if(messageJSON == localJSON){
+			readyStateFalse()
+		}
+		if(messageJSON !== localJSON){
+			readyStateTrue()
+		}
+		if(readyState){
+			localDeviceListJSON = message
+			updateDevices(JSON.parse(localDeviceListJSON))
 		}
 	}
-	xml.open('POST', url)
-	xml.send()
-}
+	
+	let getDevices = (url, callback) => {
+		let xml = new XMLHttpRequest()
+		xml.onload = function () {
+			callback(xml.responseText)
+		}
+		xml.open('POST', url)
+		xml.send()
+	}
 
-setInterval(()=>{
-	getDevices('/devices', handleDevices)
-},2500)
+	setInterval(()=>{
+			getDevices('/devices', handleDevices)
+	},1000)
 
 let postMessage = async (url, message) => {
-	readyStateToggle()
 	let res = await fetch( url , {
         method:'POST',
         headers: {

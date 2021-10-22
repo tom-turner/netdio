@@ -139,37 +139,25 @@
 		
 	}
 
-	function debounce(fn, timeout) {
-		let interval = null
-
-		return function (...args) {
-			if (interval)
-				clearInterval(interval)
-
-			interval = setTimeout(function () {
-				fn.apply(null, args)
-			}, timeout)
-		}
-	}
 
 	let readyState = true
 	let localDeviceListJSON = []
 
-	let readyStateToggle = () => {
+	let readyStateFalse = () => {
 		readyState = false
-		debounce(()=>{
-			readyState = true
-		},1000)
 	}
-
+	let readyStateTrue = () => {
+		readyState = true
+	}
 	let handleDevices = (message) => {
-		console.log(message)
 		let messageJSON = message
 		let localJSON = localDeviceListJSON
 
 		if(messageJSON == localJSON){
-			console.log(true)
-			readyStateToggle()
+			readyStateFalse()
+		}
+		if(messageJSON !== localJSON){
+			readyStateTrue()
 		}
 		if(readyState){
 			localDeviceListJSON = message
@@ -191,7 +179,6 @@
 	},1000)
 
 	let postMessage = async (url, message) => {
-		readyStateToggle()
 		let res = await fetch( url , {
 			method:'POST',
 			headers: {
@@ -202,7 +189,7 @@
 
 		let response = await res.json()  
 
-		if(response.successful) {
+		if(response) {
 		}
 	}
 
@@ -211,7 +198,6 @@
 	}
 
 	function loadHandlers(){
-
 		$('select').on('change', function () {
 			var message = {
 				ip : this.closest('li').id,
@@ -233,10 +219,9 @@
 				type : 'rx.volume', 
 				value : this.value
 			}
-
 			postMessage('forward', message)
-
 		})
+		
 		$('input[type=text]').on('keyup', function () {
 
 			var message = {

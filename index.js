@@ -114,6 +114,7 @@ app.post('/devices', (req,res)=>{
 })
 
 app.post('/forward', (req,res) => {
+  console.log(req.body)
   let message = req.body
   devices.forward('ctrl message', message.ip, message, (err) => {
         return res.json({successful: true})
