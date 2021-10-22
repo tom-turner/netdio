@@ -68,7 +68,7 @@ setInterval(()=>{
   devices.forward('ctrl message', message.ip, message, (err) => {
         return console.log(err)
   })
-  
+
 }, 2500)
 
 
@@ -118,7 +118,6 @@ app.post('/devices', (req,res)=>{
 })
 
 app.post('/forward', (req,res) => {
-  console.log(req.body)
   let message = req.body
   devices.forward('ctrl message', message.ip, message, (err) => {
         return res.json({successful: true})
@@ -136,7 +135,6 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
 }) 
 
 app.post('/startservice', (req,res) => {
-  console.log(req.body)
   let started = player.start(req.body.service)
   config.set('player', {})
   config.set('player.name', req.body.service.charAt(0).toUpperCase() + req.body.service.slice(1))
