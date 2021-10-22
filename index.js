@@ -66,7 +66,7 @@ setInterval(()=>{
   devices.forward('ctrl message', config.get('source')['send'], message, (err) => {
     if(err) { throw(err) }
   })
-}, 1000)
+}, 2500)
 
 // auto discover devices on the network
 var devices = new Devices(config)
@@ -81,7 +81,6 @@ devices.receive('ctrl message', (message) => {
     roc.rocRecv(config.get('source'))
     break
     case 'devices' :
-    console.log('roc')
     message.value.send = devices.getDeviceIp(message.value.send)
     message.value.recv = devices.getDeviceIp(message.value.recv)
     roc.rocSend(message.value)
