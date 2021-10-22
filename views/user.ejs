@@ -138,17 +138,33 @@
 		loading(false)
 		
 	}
-	
-let localDeviceListJSON = []
+
+let localDeviceListJSON = {}
+let readyState = true
+
+let readyStateToggle = () => {
+	readyState = false
+	setTimeout(()=>{
+		readyState = true
+	},5000)
+}
 
 socket.on('devices', (message) => {
-	if(localDeviceListJSON != message){
-		localDeviceListJSON = message
-		updateDevices(localDeviceListJSON)
+	let messageJSON = JSON.stringify(message)
+	let localJSON = localDeviceListJSON
+	
+	if(messageJSON == localJSON){
+		readyStateToggle()
+	}
+	if(readyState){
+		localDeviceListJSON = JSON.stringify(message)
+		updateDevices(JSON.parse(localDeviceListJSON))
 	}
 })
 
+
 let postMessage = async (url, message) => {
+	readyStateToggle()
 	let res = await fetch( url , {
         method:'POST',
         headers: {
