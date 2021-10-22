@@ -72,6 +72,7 @@ setInterval(()=>{
 var devices = new Devices(config)
 devices.receive('discovery', (device) => {
   devices.addDevice(device)
+  devices.announce(device)
 })
 devices.receive('ctrl message', (message) => {
     switch (message.type) {
