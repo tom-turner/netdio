@@ -147,7 +147,6 @@ app.post('/startservice', (req,res) => {
 
 app.post('/connectservice', (req,res) => {
   if(req.body.return){
-    roc.kill(roc.get('tx'))
     player.kill(player.get('player'))
     config.set('player')
   }
