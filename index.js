@@ -66,7 +66,7 @@ setInterval(()=>{
   devices.forward('ctrl message', config.get('source')['send'], message, (err) => {
     if(err) { throw(err) }
   })
-}, 1000)
+}, 2500)
 
 // auto discover devices on the network
 var devices = new Devices(config)
@@ -97,11 +97,14 @@ devices.receive('ctrl message', (message) => {
   }
 })
 
-
 // user control 
 io.on('connection', (socket) => {
+  devices.startKeepAlive()
   devices.onChange((list) => {
     socket.emit('devices', list)
+  })
+  socket.on('disconnect', () => {
+    devices.stopKeepAlive()
   })
 })
 
