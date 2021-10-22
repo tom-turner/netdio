@@ -63,14 +63,16 @@ setInterval(()=>{
     type: 'devices',
     value: config.get('source')
   }
-  devices.forward( config.get('source')['send'], message, (err) => {
+  devices.forward('ctrl message', config.get('source')['send'], message, (err) => {
     if(err) { throw(err) }
   })
 }, 1000)
 
 // auto discover devices on the network
 var devices = new Devices(config)
-
+devices.receive('discovery', (device) => {
+  devices.addDevice(device)
+})
 devices.receive('ctrl message', (message) => {
     switch (message.type) {
       case 'source':
@@ -79,6 +81,7 @@ devices.receive('ctrl message', (message) => {
         roc.rocRecv(config.get('source'))
       break
       case 'devices' :
+      console.log('roc')
         config.set( message.type , message.value)
         message.value.send = devices.getDeviceIp(message.value.send)
         message.value.recv = devices.getDeviceIp(message.value.recv)
@@ -106,8 +109,7 @@ devices.receive('ctrl message', (message) => {
 
 // user control 
 io.on('connection', (socket) => {
-  console.log('called', socket.id)
-  devices.onChange( (list) => {
+  devices.onChange((list) => {
     socket.emit('devices', list.sort( (a,b) => {
       return a.rx.name.charCodeAt(0) - b.rx.name.charCodeAt(0)
     }) )
@@ -117,7 +119,7 @@ io.on('connection', (socket) => {
 
 app.post('/forward', (req,res) => {
   let message = req.body
-  devices.forward(message.ip, message, (err) => {
+  devices.forward('ctrl message', message.ip, message, (err) => {
         return res.json({successful: true})
   })
 })
