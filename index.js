@@ -58,7 +58,6 @@ config.get('rx')
   ? roc.rocRecv(config.get('source'))
   : console.log('no rx')
 
-
 setInterval(()=>{ 
   let message = {
     type: 'devices',
@@ -70,7 +69,6 @@ setInterval(()=>{
           return console.log(res.error)
         }
   })
-
 }, 500)
 
 
@@ -102,18 +100,6 @@ devices.receive('ctrl message', (message) => {
     break
   }
 })
-
-/*/ user control 
-io.on('connection', (socket) => {
-  devices.startKeepAlive()
-  devices.onChange((list) => {
-    socket.emit('devices', list)
-  })
-  socket.on('disconnect', () => {
-    devices.stopKeepAlive()
-  })
-})
-*/
 
 app.post('/devices', (req,res)=>{
   return res.json(devices.getDeviceList())
