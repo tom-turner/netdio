@@ -277,8 +277,8 @@ function debounce(fn, timeout) {
   }
 }
 
-let localDeviceListJSON = {}
 let readyState = true
+let localDeviceListJSON = []
 
 let readyStateToggle = () => {
 	readyState = false
@@ -287,7 +287,7 @@ let readyStateToggle = () => {
 	},5000)
 }
 
-socket.on('devices', (message) => {
+handleDevices('/devices', (message) => {
 	let messageJSON = JSON.stringify(message)
 	let localJSON = localDeviceListJSON
 	
@@ -299,7 +299,24 @@ socket.on('devices', (message) => {
 		updateDevices(JSON.parse(localDeviceListJSON))
 	}
 })
+	
 
+let getDevices = (url, callback) => {
+	let xml = new XMLHttpRequest()
+	xml.onload = function () {
+		if(localDeviceListJSON != xml.responseText){
+			localDeviceListJSON = xml.responseText
+			console.log(xml.responseText)
+			callback(JSON.parse(localDeviceListJSON))
+		}
+	}
+	xml.open('POST', url)
+	xml.send()
+}
+
+setInterval(()=>{
+	getDevices('/devices', handleDevices)
+},2500)
 
 let postMessage = async (url, message) => {
 	readyStateToggle()

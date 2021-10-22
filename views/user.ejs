@@ -64,33 +64,33 @@
 		var source = zone.source ? 'Input: ' + zone.source.name : 'Input: -Mute-'
 
 		return	$(`<li id="${zone.ip}" class="bg-white shadow-sm border-2 rounded-lg flex flex-col p-2 my-1" />`).append(
-            		$('<div class="flex flex-col space-y-1 w-full"/>').append(
-              			$('<div class"flex flex-row justify-between relative"/>').append(
-              				$('<span class="font-bold" />').text(zone.name),
-              				$(`<select data-rx='${JSON.stringify(zone)}' class="rounded zoneinput bg-white absolute right-10 mt-1" />`) .append(getInputAsOption({
-              					name : "-Mute-",
-              					source : "muted"
-              				}), 
-              				($('<option disabled selected/>').text(`${source}`))
-              			)
-              			),
-              			$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none blue rounded-50 h-10" value="${zone.volume}" />`)
-            		)
-        		)
+			$('<div class="flex flex-col space-y-1 w-full"/>').append(
+				$('<div class"flex flex-row justify-between relative"/>').append(
+					$('<span class="font-bold" />').text(zone.name),
+					$(`<select data-rx='${JSON.stringify(zone)}' class="rounded zoneinput bg-white absolute right-10 mt-1" />`) .append(getInputAsOption({
+						name : "-Mute-",
+						source : "muted"
+					}), 
+					($('<option disabled selected/>').text(`${source}`))
+					)
+					),
+				$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none blue rounded-50 h-10" value="${zone.volume}" />`)
+				)
+			)
 	}
 
 	function createDeviceLi(device) {
 
 		return	$('<li id="'+ device.ip + '" class="bg-white shadow-lg border rounded flex flex-row p-2 my-2 md:space-x-2 justify-between sm:pr-10 md:pr-8 lg:pr-2 pr-4"/>').append(
-					$('<div class="flex flex-row space-x-2"/>').append(
-						$('<label />').text("Name: "),
-						$(`<input type="text" class="w-full font-bold" name="${device.type}.name" value="${device.name}"/>`)
-					),
-					$('<div class="flex flex-row space-x-2"/>').append(
-						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink"/>`).text("Blink"),
-						$(`<img class="flex flex-row space-x-2 h-8 cursor-pointer" src="images/gear.svg" onclick="window.open('http://${device.ip}:5000/settings')"/>`)
-					)
+			$('<div class="flex flex-row space-x-2"/>').append(
+				$('<label />').text("Name: "),
+				$(`<input type="text" class="w-full font-bold" name="${device.type}.name" value="${device.name}"/>`)
+				),
+			$('<div class="flex flex-row space-x-2"/>').append(
+				$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink"/>`).text("Blink"),
+				$(`<img class="flex flex-row space-x-2 h-8 cursor-pointer" src="images/gear.svg" onclick="window.open('http://${device.ip}:5000/settings')"/>`)
 				)
+			)
 	}
 
 	function updateDevices(devices) {
@@ -127,7 +127,7 @@
 			$('#zones').append(zone)
 			$('#destinations').append(li)
 		}
-			
+		
 		for (tx of txDevices) {
 			var li = createDeviceLi(tx)
 			$('#inputs').append(li)
@@ -139,116 +139,145 @@
 		
 	}
 
-let localDeviceListJSON = {}
-let readyState = true
+	function debounce(fn, timeout) {
+		let interval = null
 
-let readyStateToggle = () => {
-	readyState = false
-	setTimeout(()=>{
-		readyState = true
-	},7500)
-}
+		return function (...args) {
+			if (interval)
+				clearInterval(interval)
 
-socket.on('devices', (message) => {
-	let messageJSON = JSON.stringify(message)
-	let localJSON = localDeviceListJSON
+			interval = setTimeout(function () {
+				fn.apply(null, args)
+			}, timeout)
+		}
+	}
+
+	let readyState = true
+	let localDeviceListJSON = []
+
+	let readyStateToggle = () => {
+		readyState = false
+		debounce(()=>{
+			readyState = true
+		},1000)
+	}
+
+	let handleDevices = (message) => {
+		console.log(message)
+		let messageJSON = message
+		let localJSON = localDeviceListJSON
+		
+		if(messageJSON == localJSON){
+			console.log(true)
+			readyStateToggle()
+		}
+		if(readyState){
+			localDeviceListJSON = message
+			updateDevices(JSON.parse(localDeviceListJSON))
+		}
+	}
 	
-	if(messageJSON == localJSON){
+	let getDevices = (url, callback) => {
+		let xml = new XMLHttpRequest()
+		xml.onload = function () {
+			callback(xml.responseText)
+		}
+		xml.open('POST', url)
+		xml.send()
+	}
+
+	setInterval(()=>{
+		if(readyState){
+			getDevices('/devices', handleDevices)
+		}
+	},1000)
+
+	let postMessage = async (url, message) => {
 		readyStateToggle()
-	}
-	if(readyState){
-		localDeviceListJSON = JSON.stringify(message)
-		updateDevices(JSON.parse(localDeviceListJSON))
-	}
-})
-
-
-let postMessage = async (url, message) => {
-	readyStateToggle()
-	let res = await fetch( url , {
-        method:'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(message) 
-      })
-
-      let response = await res.json()  
-
-      if(response.successful) {
-      }
-}
-
-let quack = () => {
-	new Audio('quack.mp3').play();
-}
-
-function loadHandlers(){
-	
-	$('select').on('change', function () {
-		var message = {
-			ip : this.closest('li').id,
-			type : 'source', 
-			value : {
-				send: $('option:selected',this).attr('name'),
-				socket: $('option:selected',this).val(),
-				name: $('option:selected',this).text(),
-				recv: this.closest('li').id,
-				txdata: $('option:selected',this).data(),
+		let res = await fetch( url , {
+			method:'POST',
+			headers: {
+				'Content-Type': 'application/json'
 			},
+			body: JSON.stringify(message) 
+		})
+
+		let response = await res.json()  
+
+		if(response.successful) {
 		}
-		postMessage('forward', message)
-	})
+	}
 
-	$('input[type=range]').on('input', function () {
-		var message = {
-			ip : this.closest('li').id,
-			type : 'rx.volume', 
-			value : this.value
-		}
+	let quack = () => {
+		new Audio('quack.mp3').play();
+	}
 
-		postMessage('forward', message)
+	function loadHandlers(){
+		
+		$('select').on('change', function () {
+			var message = {
+				ip : this.closest('li').id,
+				type : 'source', 
+				value : {
+					send: $('option:selected',this).attr('name'),
+					socket: $('option:selected',this).val(),
+					name: $('option:selected',this).text(),
+					recv: this.closest('li').id,
+					txdata: $('option:selected',this).data(),
+				},
+			}
+			postMessage('forward', message)
+		})
 
-	})
-	$('input[type=text]').on('keyup', function () {
+		$('input[type=range]').on('input', function () {
+			var message = {
+				ip : this.closest('li').id,
+				type : 'rx.volume', 
+				value : this.value
+			}
 
-		var message = {
-			ip : this.closest('li').id,
-			type : this.name, 
-			value : this.value
-		}
+			postMessage('forward', message)
 
-		postMessage('forward', message)
-	})
-	$('button').on('click', function () {
+		})
+		$('input[type=text]').on('keyup', function () {
 
-		var message = {
-			ip : this.closest('li').id,
-			type : this.name, 
-			value : this.value
-		}
+			var message = {
+				ip : this.closest('li').id,
+				type : this.name, 
+				value : this.value
+			}
 
-		postMessage('forward', message)
-	})
+			postMessage('forward', message)
+		})
+		$('button').on('click', function () {
 
-	$('#reload').on('click' , function(){
-		loading(true)
-		postMessage('reload')
-		setTimeout( () => {
-			location.reload()
-		}, 1000)
-	})
+			var message = {
+				ip : this.closest('li').id,
+				type : this.name, 
+				value : this.value
+			}
 
-	let clickcount = 0
-	$('#duck').on('click' , function (){
-		clickcount = clickcount + 1
-		setTimeout( function (){
-			clickcount = 0
-		}, 1000)
-		if (clickcount >= 2) {
-			window.location.href = '/settings'
-		}
-	})
+			postMessage('forward', message)
+		})
+
+		$('#reload').on('click' , function(){
+			loading(true)
+			postMessage('reload')
+			setTimeout( () => {
+				location.reload()
+			}, 1000)
+		})
+
+		let clickcount = 0
+		$('#duck').on('click' , function (){
+			clickcount = clickcount + 1
+			setTimeout( function (){
+				clickcount = 0
+			}, 1000)
+			if (clickcount >= 2) {
+				window.location.href = '/settings'
+			}
+		})
 
 /*
 	let trackdata = false
@@ -260,7 +289,7 @@ function loadHandlers(){
 			$('#player').removeClass('h-36')
 		},3000)
 	})
-*/
+
 	$('#swipeup').on('click', function (){
 		$(trackdata ? '#player' : '#services').addClass('h-full')
 		$(trackdata ? '#player' : '#services').removeClass('h-0')
@@ -272,7 +301,7 @@ function loadHandlers(){
 		$(trackdata ? '#player' : '#services').addClass('h-0')
 		$('#swipeup').removeClass('hidden')
 	})
-
+	*/
 }
 
 </script>

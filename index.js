@@ -97,7 +97,7 @@ devices.receive('ctrl message', (message) => {
   }
 })
 
-// user control 
+/*/ user control 
 io.on('connection', (socket) => {
   devices.startKeepAlive()
   devices.onChange((list) => {
@@ -107,7 +107,12 @@ io.on('connection', (socket) => {
     devices.stopKeepAlive()
   })
 })
+*/
 
+app.post('/devices', (req,res)=>{
+  console.log('devices please')
+  return res.json(devices.getDeviceList())
+})
 
 app.post('/forward', (req,res) => {
   let message = req.body
