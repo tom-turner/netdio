@@ -66,7 +66,7 @@ setInterval(()=>{
   devices.forward('ctrl message', config.get('source')['send'], message, (err) => {
     if(err) { throw(err) }
   })
-}, 2500)
+}, 1000)
 
 // auto discover devices on the network
 var devices = new Devices(config)
