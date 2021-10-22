@@ -65,8 +65,10 @@ setInterval(()=>{
     value: config.get('source'),
     ip: config.get('source')['send']
   }
-  devices.forward('ctrl message', message.ip, message, (err) => {
-        return console.log(err)
+  devices.forward('ctrl message', message.ip, message, (res) => {
+        if (res.error) {
+          return console.log(res.error)
+        }
   })
 
 }, 2500)
