@@ -74,35 +74,28 @@ devices.receive('discovery', (device) => {
   devices.addDevice(device)
 })
 devices.receive('ctrl message', (message) => {
-    switch (message.type) {
-      case 'source':
-        config.set( message.type , message.value)
-        roc.kill(roc.get('rx'))
-        roc.rocRecv(config.get('source'))
-      break
-      case 'devices' :
-      console.log('roc')
-        config.set( message.type , message.value)
-        message.value.send = devices.getDeviceIp(message.value.send)
-        message.value.recv = devices.getDeviceIp(message.value.recv)
-        roc.rocSend(message.value)
-      break
-      case 'rx.volume':
-        config.set( message.type , message.value)
-        process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
-      break
-      case 'blink':
-        exec('python ./lib/python/blink.py')
-        setTimeout( () => {
-            exec('python ./lib/python/ledOn.py')
-        }, 6000 )
-      break
-      case 'playerctrl' :
-        message = message.value
-        message.transport ? player[message.transport]() : ''
-        message.service == 'destroy' ? player.kill(player.get('player')) : ''
-      break
-    }
+  config.set( message.type , message.value)
+  switch (message.type) {
+    case 'source':
+    roc.kill(roc.get('rx'))
+    roc.rocRecv(config.get('source'))
+    break
+    case 'devices' :
+    console.log('roc')
+    message.value.send = devices.getDeviceIp(message.value.send)
+    message.value.recv = devices.getDeviceIp(message.value.recv)
+    roc.rocSend(message.value)
+    break
+    case 'rx.volume':
+    process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
+    break
+    case 'blink':
+    exec('python ./lib/python/blink.py')
+    setTimeout( () => {
+      exec('python ./lib/python/ledOn.py')
+    }, 6000 )
+    break
+  }
 })
 
 

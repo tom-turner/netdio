@@ -215,18 +215,18 @@
 			if (device.rx) {
 				var rx = device.rx
 				rx.source = device.source
-				rx.ip = device.device.ip
+				rx.ip = device.device.id
 				rxDevices.push(rx)
 			}
 			if (device.tx) {
 				var tx = device.tx
-				tx.ip = device.device.ip
+				tx.ip = device.device.id
 				txDevices.push(tx)
 			}
 
 			if (device.player) {
 				var player = device.player
-				player.ip = device.device.ip
+				player.ip = device.device.id
 				txDevices.push(player)
 			}
 		}
@@ -264,17 +264,45 @@
 		$('#ipDisplay').toggleClass("hidden")
 	})
 
+function debounce(fn, timeout) {
+  let interval = null
 
-let localDeviceListJSON = []
+  return function (...args) {
+    if (interval)
+      clearInterval(interval)
+
+    interval = setTimeout(function () {
+      fn.apply(null, args)
+    }, timeout)
+  }
+}
+
+let localDeviceListJSON = {}
+let readyState = true
+
+let readyStateToggle = () => {
+	readyState = false
+	debounce(()=>{
+		readyState = true
+	},5000)
+}
 
 socket.on('devices', (message) => {
-	if(localDeviceListJSON != message){
-		localDeviceListJSON = message
-		updateDevices(localDeviceListJSON)
+	let messageJSON = JSON.stringify(message)
+	let localJSON = localDeviceListJSON
+	
+	if(messageJSON == localJSON){
+		readyStateToggle()
+	}
+	if(readyState){
+		localDeviceListJSON = JSON.stringify(message)
+		updateDevices(JSON.parse(localDeviceListJSON))
 	}
 })
 
+
 let postMessage = async (url, message) => {
+	readyStateToggle()
 	let res = await fetch( url , {
         method:'POST',
         headers: {
@@ -301,19 +329,6 @@ function loadHandlers(){
 
 		postMessage('/forward', message)
 	})
-
-	/* breaks stuff... duh.
-	$('button').on('click', function () {
-
-		var message = {
-			ip : this.closest('li').id,
-			type : this.name, 
-			value : this.value
-		}
-
-		postMessage('/forward', message)
-	})
-	*/
 
 	$('#blinkSelf').on("click" , function(){
 		blink('<%= config.device.ip %>')
