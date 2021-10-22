@@ -58,15 +58,19 @@ config.get('rx')
   ? roc.rocRecv(config.get('source'))
   : console.log('no rx')
 
+
 setInterval(()=>{ 
   let message = {
     type: 'devices',
-    value: config.get('source')
+    value: config.get('source'),
+    ip: config.get('source')['send']
   }
-  devices.forward('ctrl message', config.get('source')['send'], message, (err) => {
-    if(err) { throw(err) }
+  devices.forward('ctrl message', message.ip, message, (err) => {
+        return console.log(err)
   })
+  
 }, 2500)
+
 
 // auto discover devices on the network
 var devices = new Devices(config)
