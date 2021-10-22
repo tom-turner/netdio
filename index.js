@@ -103,7 +103,6 @@ devices.receive('ctrl message', (message) => {
         message.service == 'destroy' ? player.kill(player.get('player')) : ''
       break
     }
-    devices.updateService()
 })
 
 
@@ -150,7 +149,6 @@ app.post('/connectservice', (req,res) => {
     player.kill(player.get('player'))
     config.set('player')
   }
-  devices.updateService()
   res.json({url : '/', successful : true })
 })
 
