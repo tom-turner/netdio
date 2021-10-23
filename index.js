@@ -75,7 +75,7 @@ setInterval(()=>{
 // auto discover devices on the network
 var devices = new Devices(config)
 devices.receive('discovery', (device) => {
-  devices.addDevice(device)
+  return devices.addDevice(device)
 })
 devices.receive('ctrl message', (message) => {
   config.set( message.type , message.value)
@@ -99,9 +99,11 @@ devices.receive('ctrl message', (message) => {
     }, 6000 )
     break
   }
+  return
 })
 
-app.post('/devices', (req,res)=>{
+app.get('/devices', (req,res)=>{
+  console.log('devices')
   return res.json(devices.getDeviceList())
 })
 
@@ -138,17 +140,18 @@ app.post('/connectservice', (req,res) => {
   if(req.body.return){
     player.kill(player.get('player'))
     config.set('player')
+    return
   }
-  res.json({url : '/', successful : true })
+  return res.json({url : '/', successful : true })
 })
 
 app.post('/reload', (req,res) => {
-  console.log('reload')
+  return console.log('reload')
 })
 
 app.post('/reboot', () => {
   console.log('rebooting')
-  exec('sudo reboot')
+    exec('sudo reboot')
 });
 
 app.post('/factoryreset', () => {

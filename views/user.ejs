@@ -139,7 +139,18 @@
 		
 	}
 
+	let debounce = (callback, delay) =>{
+		let interval;
+		return (...args) => {
+			clearTimeout(interval)
+			interval = setTimeout(() => {
+				callback(...args)
+				interval = null
+			},delay)
+		}
+	}
 
+	let updateInterval = 1000
 	let readyState = true
 	let localDeviceListJSON = []
 
@@ -149,16 +160,21 @@
 	let readyStateTrue = () => {
 		readyState = true
 	}
+	let debouncedReadyStateTrue = debounce( () => readyStateTrue() , updateInterval * 2 )
+
+	let readyStateToggle = () => {
+		readyStateFalse()
+		debouncedReadyStateTrue()
+	}
+
 	let handleDevices = (message) => {
 		let messageJSON = message
 		let localJSON = localDeviceListJSON
 
 		if(messageJSON == localJSON){
-			readyStateFalse()
+			readyStateToggle()
 		}
-		if(messageJSON !== localJSON){
-			readyStateTrue()
-		}
+
 		if(readyState){
 			localDeviceListJSON = message
 			updateDevices(JSON.parse(localDeviceListJSON))
@@ -170,15 +186,16 @@
 		xml.onload = function () {
 			callback(xml.responseText)
 		}
-		xml.open('POST', url)
+		xml.open('GET', url)
 		xml.send()
 	}
 
 	setInterval(()=>{
 			getDevices('/devices', handleDevices)
-	},1000)
+	},updateInterval)
 
 	let postMessage = async (url, message) => {
+		readyStateToggle()
 		let res = await fetch( url , {
 			method:'POST',
 			headers: {
@@ -221,7 +238,7 @@
 			}
 			postMessage('forward', message)
 		})
-		
+
 		$('input[type=text]').on('keyup', function () {
 
 			var message = {
