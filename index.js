@@ -36,7 +36,7 @@ app.set('layout', 'application');
 app.set('view engine', 'ejs'); 
 
 // config
-let updateInterval = 1000
+let updateInterval = 1000 // lower means faster communcation between devices but inceased CPU useage
 let config = new Configuration('./config/config.json')
 config.set("device.ip", ip)
 
@@ -170,13 +170,13 @@ app.post('/update', (req,res) =>{
 
 // Routes
 app.get('/', async (req, res) => {
-  res.render('user.ejs', {config: config.configObject});
+  res.render('user.ejs', {config: config.configObject, updateInterval: updateInterval});
 });
 app.get('/settings', (req, res) => {
-  res.render('settings.ejs', {config: config.configObject});
+  res.render('settings.ejs', {config: config.configObject, updateInterval: updateInterval});
 });
 app.get('/player', (req, res) => {
-  res.render('player/player.ejs', {config: config.configObject});
+  res.render('player/player.ejs', {config: config.configObject, updateInterval: updateInterval});
 });
 app.get('/spotify', (req, res) => {
   res.render('player/services/spotify.ejs', {config: config.configObject});
