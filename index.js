@@ -36,6 +36,7 @@ app.set('layout', 'application');
 app.set('view engine', 'ejs'); 
 
 // config
+let updateInterval = 1000
 let config = new Configuration('./config/config.json')
 config.set("device.ip", ip)
 
@@ -103,7 +104,6 @@ devices.receive('ctrl message', (message) => {
 })
 
 app.get('/devices', (req,res)=>{
-  console.log('devices')
   return res.json(devices.getDeviceList())
 })
 
@@ -120,7 +120,6 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
   config.set("device.colordark", color.darken(req.body.color))
   config.set("device.ip", req.body.ip)
   config.set("device.name", req.body.name)
-
   return res.json('Configuration Received')
 }) 
 
@@ -140,7 +139,6 @@ app.post('/connectservice', (req,res) => {
   if(req.body.return){
     player.kill(player.get('player'))
     config.set('player')
-    return
   }
   return res.json({url : '/', successful : true })
 })
