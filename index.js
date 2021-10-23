@@ -52,8 +52,8 @@ config.get('tx')
   : console.log('no tx')
 
 // audio
-let roc = new Roc(config.configObject)
-const player = new Player(config.configObject)
+let roc = new Roc(config.configObject, updateInterval)
+const player = new Player(config.configObject, updateInterval)
 
 config.get('rx')
   ? roc.rocRecv(config.get('source'))
@@ -70,11 +70,11 @@ setInterval(()=>{
           return console.log(res.error)
         }
   })
-}, 500)
+}, updateInterval / 2)
 
 
 // auto discover devices on the network
-var devices = new Devices(config)
+var devices = new Devices(config, updateInterval)
 devices.receive('discovery', (device) => {
   return devices.addDevice(device)
 })
