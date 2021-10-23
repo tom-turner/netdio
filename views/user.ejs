@@ -74,7 +74,7 @@
 					($('<option disabled selected/>').text(`${source}`))
 					)
 					),
-				$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none blue rounded-50 h-10" value="${zone.volume}" />`)
+				$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none blue rounded-50 h-10" value="${getLin(zone.volume)}" />`)
 				)
 			)
 	}
@@ -211,6 +211,15 @@
 		}
 	}
 
+let getLog = (input) =>{
+	return Math.round( Math.log(input - -1) / Math.log(100) * 100 )
+}
+
+let getLin = (input) =>{
+	return input
+}
+
+
 	let quack = () => {
 		new Audio('quack.mp3').play();
 	}
@@ -235,7 +244,7 @@
 			var message = {
 				ip : this.closest('li').id,
 				type : 'rx.volume', 
-				value : this.value
+				value : getLog(this.value)
 			}
 			postMessage('forward', message)
 		})
