@@ -212,11 +212,15 @@
 	}
 
 let getLog = (input) =>{
-	return Math.round( Math.log(input - -1) / Math.log(100) * 100 )
+	let log = Math.round( Math.log(input) / Math.log(100) * 100 )
+	log == -Infinity ? log = 0 : log = log
+	return log
 }
 
 let getLin = (input) =>{
-	return input
+	let lin = Math.round(Math.pow(100, input / 100))
+	input === 0 ? lin = lin -1 : lin = lin
+	return lin
 }
 
 
