@@ -170,7 +170,8 @@
 	}
 
 	let handleDevices = (message) => {
-		let messageJSON = message
+		console.log(message)
+		let messageJSON = JSON.stringify(message)
 		let localJSON = localDeviceListJSON
 
 		if(messageJSON == localJSON){
@@ -178,23 +179,12 @@
 		}
 
 		if(readyState){
-			localDeviceListJSON = message
+			localDeviceListJSON = messageJSON
 			updateDevices(JSON.parse(localDeviceListJSON))
 		}
 	}
 	
-	let getDevices = (url, callback) => {
-		let xml = new XMLHttpRequest()
-		xml.onload = function () {
-			callback(xml.responseText)
-		}
-		xml.open('GET', url)
-		xml.send()
-	}
-
-	setInterval(()=>{
-			getDevices('/devices', handleDevices)
-	},updateInterval)
+	socket.on('devices', handleDevices)
 
 	let postMessage = async (url, message) => {
 		readyStateToggle()

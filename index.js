@@ -74,7 +74,7 @@ setInterval(()=>{
 
 
 // auto discover devices on the network
-var devices = new Devices(config, updateInterval)
+let devices = new Devices(config, updateInterval)
 devices.receive('discovery', (device) => {
   return devices.addDevice(device)
 })
@@ -103,8 +103,19 @@ devices.receive('ctrl message', (message) => {
   return
 })
 
-app.get('/devices', (req,res)=>{
-  return res.json(devices.getDeviceList())
+// player stuff
+//player.start()
+let playerService = devices.publish('player')
+let findPlayer = devices.discover('player')
+
+io.on('connection', (socket) => {
+  setInterval(() => {
+    socket.emit('devices', devices.getDeviceList())
+  }, updateInterval)
+    
+    socket.on('end', () => {
+      socket.close()
+    })
 })
 
 app.post('/forward', (req,res) => {
