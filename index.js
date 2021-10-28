@@ -109,12 +109,13 @@ let playerService = devices.publish('player')
 let findPlayer = devices.discover('player')
 
 io.on('connection', (socket) => {
-  setInterval(() => {
+  let interval = setInterval(() => {
     socket.emit('devices', devices.getDeviceList())
   }, updateInterval)
     
-    socket.on('end', () => {
-      socket.close()
+    socket.on('disconnect', () => {
+      clearInterval(interval)
+      socket.disconnect(true)
     })
 })
 
