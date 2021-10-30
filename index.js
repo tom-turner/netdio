@@ -10,7 +10,7 @@ const ip = require('./lib/getIp')
 const Configuration = require('./lib/configuration')
 const Devices = require('./lib/devices')
 const Color = require('./lib/color')
-const Player = require('./lib/player')
+const Spotify = require('./lib/spotify')
 const platform = require('./lib/platform')
 const port = process.env.port || 5000;
 const fs = require('fs')
@@ -51,10 +51,8 @@ config.get('tx')
     : config.set( "tx.source", config.getNewPort() )
   : console.log('no tx')
 
-// audio
+// Network audio stuff
 let roc = new Roc(config.configObject, updateInterval)
-const player = new Player(config.configObject, updateInterval)
-
 config.get('rx')
   ? roc.rocRecv(config.get('source'))
   : console.log('no rx')
@@ -62,10 +60,9 @@ config.get('rx')
 setInterval(()=>{ 
   let message = {
     type: 'devices',
-    value: config.get('source'),
-    ip: config.get('source')['send']
+    value: config.get('source')
   }
-  devices.forward('ctrl message', message.ip, message, (res) => {
+  devices.forward('ctrl message', config.get('source')['send'], message, (res) => {
         if (res.error) {
           return console.log(res.error)
         }
@@ -73,7 +70,7 @@ setInterval(()=>{
 }, updateInterval / 2)
 
 
-// auto discover devices on the network
+// auto discover devices on the network and receive messages
 let devices = new Devices(config, updateInterval)
 devices.receive('discovery', (device) => {
   return devices.addDevice(device)
@@ -103,16 +100,67 @@ devices.receive('ctrl message', (message) => {
   return
 })
 
-// player stuff
-//player.start()
-let playerService = devices.publish('player')
-let findPlayer = devices.discover('player')
+// spotify stuff
+devices.receive('spotify', () => { return })
+let spotifyConfig = { 
+    priority : Math.random().toString().slice(-6), 
+    player: JSON.stringify({
+      name:"Spotify Connect",
+      type:"tx",
+      driver:"alsa",
+      hardware:"dsnoop:Loopback,0",
+      source: config.getNewPort()
+    }),
+    device: JSON.stringify({
+      id: config.hash('spotify'),
+      ip: config.get('device')['ip'],
+      name: 'Duckado-Connect'
+    })
+  } 
+let spotify = new Spotify(spotifyConfig, updateInterval)
+let spotifyService = devices.publish('duck-spot', spotifyConfig)
+let findSpotify = devices.discover('duck-spot')
+let spotifyServices = []
+let i = 0
+setInterval(()=>{
+  spotifyServices = findSpotify.services.sort((a,b) => {
+    return a.txt.priority - b.txt.priority
+  })
+  let currentSpotifyService = spotifyServices[i]
+  if(!currentSpotifyService){
+    devices.removeDevice({device: {id: config.hash('spotify')}})
+    i = 0
+    return
+  }
+  let deviceObj = JSON.parse(currentSpotifyService.txt.device) || ''
+  let playerObj = JSON.parse(currentSpotifyService.txt.player) || ''
+  let spotifyPlayer = {
+    device: deviceObj,
+    tx: playerObj
+  }
+  devices.forward('spotify', currentSpotifyService.name, 'keepalive', (res) => {
+    if(res.error){
+      deviceObj ? devices.removeDevice(spotifyPlayer) : ''
+      i = i + 1
+      return
+    }
+    deviceObj ? devices.addDevice(spotifyPlayer) : ''
+    let highestPriority = currentSpotifyService.name == config.get('device')['id']
+    if(highestPriority){
+      console.log('keep alive')
+      spotify.startAndKeepAlive()
+    } else {
+      spotify.kill()
+    }
+  })
+},updateInterval)
 
+
+// UI stuff
 io.on('connection', (socket) => {
   let interval = setInterval(() => {
     socket.emit('devices', devices.getDeviceList())
   }, updateInterval)
-    
     socket.on('disconnect', () => {
       clearInterval(interval)
       socket.disconnect(true)
@@ -135,8 +183,11 @@ app.post('/configure', upload.single('file'), (req, res, next) => {
   return res.json('Configuration Received')
 }) 
 
+/* old player stuff
 app.post('/startservice', (req,res) => {
-  let started = player.start(req.body.service)
+  let started = player.start(req.body.service, (res) => {
+
+  })
   config.set('player', {})
   config.set('player.name', req.body.service.charAt(0).toUpperCase() + req.body.service.slice(1))
   config.set('player.type', 'tx')
@@ -146,14 +197,12 @@ app.post('/startservice', (req,res) => {
   config.set('player.hardware', 'dsnoop:Loopback,1')
   return res.json({ url : `/${started.service}`, successful : started.successful }) 
 })
+*/
 
 app.post('/connectservice', (req,res) => {
-  if(req.body.return){
-    player.kill(player.get('player'))
-    config.set('player')
-  }
   return res.json({url : '/', successful : true })
 })
+
 
 app.post('/reload', (req,res) => {
   return console.log('reload')
