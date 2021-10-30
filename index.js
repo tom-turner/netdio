@@ -147,8 +147,7 @@ setInterval(()=>{
     deviceObj ? devices.addDevice(spotifyPlayer) : ''
     let highestPriority = currentSpotifyService.name == config.get('device')['id']
     if(highestPriority){
-      console.log('keep alive')
-      spotify.startAndKeepAlive()
+      spotify.startAndKeepAlive(currentSpotifyService.name)
     } else {
       spotify.kill()
     }
