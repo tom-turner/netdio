@@ -128,6 +128,7 @@ setInterval(()=>{
   })
   let currentSpotifyService = spotifyServices[i]
   if(!currentSpotifyService){
+    console.log('no spotify services')
     devices.removeDevice({device: {id: config.hash('spotify')}})
     i = 0
     return
@@ -144,13 +145,15 @@ setInterval(()=>{
       i = i + 1
       return
     }
-    deviceObj ? devices.addDevice(spotifyPlayer) : ''
     let highestPriority = currentSpotifyService.name == config.get('device')['id']
     if(highestPriority){
-      spotify.startAndKeepAlive(currentSpotifyService.name)
+      spotify.startAndKeepAlive(currentSpotifyService.name, (err) => {
+        i = i + 1 
+      })
     } else {
       spotify.kill()
     }
+    deviceObj ? devices.addDevice(spotifyPlayer) : ''
   })
 },updateInterval)
 
