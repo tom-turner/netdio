@@ -166,9 +166,7 @@ setInterval(()=>{
 // UI stuff
 io.on('connection', (socket) => {
   let interval = setInterval(() => {
-    console.log(devices.getDeviceList())
     socket.emit('devices', devices.getDeviceList())
-
   }, updateInterval)
     socket.on('disconnect', () => {
       clearInterval(interval)
