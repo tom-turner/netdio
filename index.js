@@ -101,7 +101,7 @@ devices.receive('ctrl message', (message) => {
 })
 
 
-/*
+
 
 // spotify stuff
 devices.receive('spotify', () => { return })
@@ -125,7 +125,7 @@ let spotifyService = devices.publish('duck-spot', spotifyConfig)
 let findSpotify = devices.discover('duck-spot')
 let spotifyServices = []
 let i = 0
-setInterval(()=>{
+let spotifyPing = setInterval(()=>{
   spotifyServices = findSpotify.services.sort((a,b) => {
     return a.txt.priority - b.txt.priority
   })
@@ -144,24 +144,24 @@ setInterval(()=>{
   }
   devices.forward('spotify', currentSpotifyService.name, 'keepalive', (res) => {
     if(res.error){
-      deviceObj ? devices.removeDevice(spotifyPlayer.device.id, spotifyPlayer) : ''
+      deviceObj ? devices.removeDevice(devices.alphabetify(spotifyPlayer.device.id)) : ''
       i = i + 1
       return
     }
     let highestPriority = currentSpotifyService.name == config.get('device')['id']
     
     if(highestPriority){
-      //console.log(currentSpotifyService.txt.priority)
-      //spotify.startAndKeepAlive(currentSpotifyService.name, (err) => {
-      //  spotifyConfig.priority = Math.random().toString().slice(-5)
-      //})
+      console.log(currentSpotifyService.txt.priority)
+      spotify.startAndKeepAlive(currentSpotifyService.name, (err) => {
+        spotifyConfig.priority = Math.random().toString().slice(-4)
+        clearInterval(spotifyPing)
+      })
     }
 
-    deviceObj ? devices.addDevice(spotifyPlayer.device.id, spotifyPlayer) : ''
+    deviceObj ? devices.addDeviceAndKeepUp(devices.alphabetify(spotifyPlayer.device.id), spotifyPlayer) : ''
   })
 },updateInterval)
 
-*/
 
 // UI stuff
 io.on('connection', (socket) => {
