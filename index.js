@@ -100,7 +100,7 @@ devices.receive('ctrl message', (message) => {
   return
 })
 
-/*
+
 
 // spotify stuff
 devices.receive('spotify', () => { return })
@@ -158,7 +158,7 @@ setInterval(()=>{
   })
 },updateInterval)
 
-*/
+
 
 // UI stuff
 io.on('connection', (socket) => {
