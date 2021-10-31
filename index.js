@@ -73,7 +73,7 @@ setInterval(()=>{
 // auto discover devices on the network and receive messages
 let devices = new Devices(config, updateInterval)
 devices.receive('discovery', (device) => {
-  return devices.addDevice(device)
+  return //devices.addDevice(device.device.id, device)
 })
 devices.receive('ctrl message', (message) => {
   config.set( message.type , message.value)
@@ -101,6 +101,7 @@ devices.receive('ctrl message', (message) => {
 })
 
 
+/*
 
 // spotify stuff
 devices.receive('spotify', () => { return })
@@ -143,22 +144,24 @@ setInterval(()=>{
   }
   devices.forward('spotify', currentSpotifyService.name, 'keepalive', (res) => {
     if(res.error){
-      deviceObj ? devices.removeDevice(spotifyPlayer) : ''
+      deviceObj ? devices.removeDevice(spotifyPlayer.device.id, spotifyPlayer) : ''
       i = i + 1
       return
     }
     let highestPriority = currentSpotifyService.name == config.get('device')['id']
+    
     if(highestPriority){
-      console.log(currentSpotifyService.txt.priority)
-      spotify.startAndKeepAlive(currentSpotifyService.name, (err) => {
-        spotifyConfig.priority = Math.random().toString().slice(-5)
-      })
+      //console.log(currentSpotifyService.txt.priority)
+      //spotify.startAndKeepAlive(currentSpotifyService.name, (err) => {
+      //  spotifyConfig.priority = Math.random().toString().slice(-5)
+      //})
     }
-    deviceObj ? devices.addDevice(spotifyPlayer) : ''
+
+    deviceObj ? devices.addDevice(spotifyPlayer.device.id, spotifyPlayer) : ''
   })
 },updateInterval)
 
-
+*/
 
 // UI stuff
 io.on('connection', (socket) => {
