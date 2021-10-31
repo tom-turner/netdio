@@ -48,6 +48,18 @@ pcm.snoopback {
         period_time 0
     }
 }
+pcm.dmix {
+    type dmix
+    slave {
+        pcm "hw:Loopback,0" 
+        channels 2 
+        period_size 1024
+        buffer_size 4096
+        rate 48000
+        periods 0 
+        period_time 0
+    }
+}
 EOT
 
 
