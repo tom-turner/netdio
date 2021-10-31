@@ -54,7 +54,7 @@ config.get('tx')
 // Network audio stuff
 let roc = new Roc(config.configObject, updateInterval)
 config.get('rx')
-  ? roc.rocRecv(config.get('source'))
+  ? ''//roc.rocRecv(config.get('source'))
   : console.log('no rx')
 
 setInterval(()=>{ 
@@ -80,12 +80,12 @@ devices.receive('ctrl message', (message) => {
   switch (message.type) {
     case 'source':
     roc.kill(roc.get('rx'))
-    roc.rocRecv(config.get('source'))
+    //roc.rocRecv(config.get('source'))
     break
     case 'devices' :
     message.value.send = devices.getDeviceIp(message.value.send)
     message.value.recv = devices.getDeviceIp(message.value.recv)
-    roc.rocSend(message.value)
+    //roc.rocSend(message.value)
     break
     case 'rx.volume':
     process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
@@ -150,8 +150,6 @@ setInterval(()=>{
       spotify.startAndKeepAlive(currentSpotifyService.name, (err) => {
         spotifyConfig.priority = Math.random().toString().slice(-5)
       })
-    } else {
-      spotify.kill()
     }
     deviceObj ? devices.addDevice(spotifyPlayer) : ''
   })
@@ -216,6 +214,9 @@ app.post('/reboot', () => {
 });
 
 app.post('/factoryreset', () => {
+  fs.copyFile('public/images/duckado-logo.jpg', 'public/images/logo', (err) => {
+    if (err) { console.log('error resetting logo file:', err)}
+  })
   fs.unlinkSync('config/config.json')
   setTimeout( () => {
     exec('sudo reboot')

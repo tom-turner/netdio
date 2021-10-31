@@ -19,10 +19,15 @@
 	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-md shadow-md pt-2 px-4 overflow-hidden border">
 		<div class="justify-between flex w-full">
 			<img class="h-14 my-auto py-2" src="images/logo"/>
-			<img id="duck" class="h-12 my-auto cursor-pointer" src="images/duck.svg"/>
-			<svg id="reload" class="hidden h-10 w-10 my-auto cursor-pointer transform duration-500 fill-current blue-fill" >
-				<use xlink:href="images/reload.svg#reload"/>
-			</svg>
+			<img onclick="showMenu()" src="images/menu.svg#menu" class="h-10 w-10 my-auto cursor-pointer"/>
+		</div>
+
+		<div id="homeMenu" class="flex flex-row justify-end text-right w-full py-2 hidden">
+			<span class="space-x-2">
+				<a href="/spotify" class="p-2 bg-black text-white rounded-full my-auto shadow-md">Spotify</a>
+				<a href="/" class="p-2 bg-black text-white rounded-full my-auto shadow-md">Reload</a>
+				<a href="/settings" class="p-2 bg-black text-white rounded-full my-auto shadow-md">Settings</a>
+			</span>
 		</div>
 
 		<div class="h-full overflow-auto">
@@ -219,6 +224,10 @@ let getLin = (input) =>{
 		new Audio('quack.mp3').play();
 	}
 
+	let showMenu = () => {
+		document.getElementById('homeMenu').classList.toggle('hidden')
+	}
+
 	function loadHandlers(){
 		$('select').on('change', function () {
 			var message = {
@@ -254,24 +263,6 @@ let getLin = (input) =>{
 
 			postMessage('forward', message)
 		})
-		$('button').on('click', function () {
-
-			var message = {
-				ip : this.closest('li').id,
-				type : this.name, 
-				value : this.value
-			}
-
-			postMessage('forward', message)
-		})
-
-		$('#reload').on('click' , function(){
-			loading(true)
-			postMessage('reload')
-			setTimeout( () => {
-				location.reload()
-			}, 1000)
-		})
 
 		let clickcount = 0
 		$('#duck').on('click' , function (){
@@ -279,8 +270,8 @@ let getLin = (input) =>{
 			setTimeout( function (){
 				clickcount = 0
 			}, 1000)
-			if (clickcount >= 2) {
-				window.location.href = '/settings'
+			if (clickcount >= 1) {
+				quack()
 			}
 		})
 
