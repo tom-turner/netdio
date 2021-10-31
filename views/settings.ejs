@@ -100,15 +100,15 @@
 			
 			<label class="w-full">Action:</label>
 
-			<button id="cancel" class="button border px-2 rounded-full text-white blue">Home </button>
+			<a href="/"class="button border px-2 rounded-full text-white blue">Home</button>
 
-			<button id="blinkSelf" class="button bg-black text-white border px-2 rounded-full text-grey-400">Blink</button>
+			<a id="blinkSelf" class="button bg-black text-white border px-2 rounded-full text-grey-400">Blink</a>
 
-			<button class="button bg-black text-white border px-2 rounded-full text-grey-400" >Spotify</button>
+			<a href="/spotify" class="button bg-black text-white border px-2 rounded-full text-grey-400" >Spotify</a>
 
-			<button id="update" class="button bg-black text-white border px-2 rounded-full text-grey-400">Update</button>
+			<a id="update" class="button bg-black text-white border px-2 rounded-full text-grey-400">Update</a>
 
-			<button id="reboot" class="button bg-black text-white border px-2 rounded-full text-grey-400">Reboot</button>
+			<a id="reboot" class="button bg-black text-white border px-2 rounded-full text-grey-400">Reboot</a>
 
 			<button id="factoryreset" class="button bg-black text-white border px-2 rounded-full text-grey-400"> Reset</button>
 			
@@ -374,9 +374,7 @@ function loadHandlers(){
 		postMessage('/factoryreset')
 		loading(true)
 	})
-	$('#cancel').on("click" , function() {
-		window.location.href="/"
-	})
+
 	$('#update').on("click" , function() {
 		let xhr = new XMLHttpRequest()
 		xhr.open('POST', '/update')
@@ -397,10 +395,6 @@ function loadHandlers(){
 		})
 		
 	})
-
-	$('#manageSpotify').on("click" , async function() {
-		location.href= "/spotify"
-	})	
 
 }
 
