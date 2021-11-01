@@ -150,6 +150,8 @@ let spotifyPing = setInterval(()=>{
     }
     let highestPriority = currentSpotifyService.name == config.get('device')['id']
     
+    console.log(currentSpotifyService)
+
     if(highestPriority){
       spotify.startAndKeepAlive(currentSpotifyService.name, (err) => {
         spotifyConfig.priority = Math.random().toString().slice(-4)
