@@ -151,13 +151,9 @@ let spotifyPing = setInterval(()=>{
 },updateInterval)
 
 devices.receive('spotify', (message) => {
-
-  exec('~/librespot/target/release/librespot')
-
-  //spotify.startAndKeepUp((err) => {
-  //  console.log(err)
-  //})
-  
+  spotify.startAndKeepUp((err) => {
+    console.log(err)
+  })
 })
 
 // UI stuff
