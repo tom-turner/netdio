@@ -145,12 +145,15 @@ let spotifyPing = setInterval(()=>{
 
   devices.forward('spotify', currentSpotifyService.name, 'keep alive', (res) => {
     if(res.error){ return console.log(res) }
-      console.log(spotifyPlayer)
-    devices.addDeviceAndKeepUp(devices.alphabetify(spotifyPlayer.device.id), spotifyPlayer)
+      console.log(1, spotifyPlayer.device.ip)
+    devices.addDeviceAndKeepUp(config.hash('spotify'), spotifyPlayer)
   })
 },updateInterval)
 
 devices.receive('spotify', (message) => {
+  spotify.startAndKeepUp((err) => {
+    console.log(err)
+  })
   
 })
 
