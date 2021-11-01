@@ -104,7 +104,6 @@ devices.receive('ctrl message', (message) => {
 
 
 // spotify stuff
-devices.receive('spotify', () => { return })
 let spotifyConfig = { 
     priority : Math.random().toString().slice(-6), 
     player: JSON.stringify({
@@ -115,53 +114,45 @@ let spotifyConfig = {
       source: config.getNewPort()
     }),
     device: JSON.stringify({
-      id: config.hash('spotify'),
+      id: config.get('device')['id'],
       ip: config.get('device')['ip'],
       name: 'Duckado-Connect'
     })
   } 
-let spotify = new Spotify(spotifyConfig, updateInterval)
+let spotify = new Spotify(updateInterval)
 let spotifyService = devices.publish('duck-spot', spotifyConfig)
 let findSpotify = devices.discover('duck-spot')
 let spotifyServices = []
-let i = 0
+
 let spotifyPing = setInterval(()=>{
   spotifyServices = findSpotify.services.sort((a,b) => {
-    return a.txt.priority - b.txt.priority
+    return a.txt.priority < b.txt.priority
   })
-  let currentSpotifyService = spotifyServices[i]
+  let currentSpotifyService = spotifyServices[0]
+
   if(!currentSpotifyService){
     console.log('no spotify services')
     devices.removeDevice({device: {id: config.hash('spotify')}})
-    i = 0
     return
   }
+
   let deviceObj = JSON.parse(currentSpotifyService.txt.device) || ''
   let playerObj = JSON.parse(currentSpotifyService.txt.player) || ''
   let spotifyPlayer = {
     device: deviceObj,
     tx: playerObj
   }
-  devices.forward('spotify', currentSpotifyService.name, 'keepalive', (res) => {
-    if(res.error){
-      deviceObj ? devices.removeDevice(devices.alphabetify(spotifyPlayer.device.id)) : ''
-      i = i + 1
-      return
-    }
-    let highestPriority = currentSpotifyService.name == config.get('device')['id']
-    
-    console.log(currentSpotifyService)
 
-    if(highestPriority){
-      spotify.startAndKeepAlive(currentSpotifyService.name, (err) => {
-        spotifyConfig.priority = Math.random().toString().slice(-4)
-        clearInterval(spotifyPing)
-      })
-    }
-    deviceObj ? devices.addDeviceAndKeepUp(devices.alphabetify(spotifyPlayer.device.id), spotifyPlayer) : ''
+  devices.forward('spotify', currentSpotifyService.name, 'keep alive', (res) => {
+    if(res.error){ return console.log(res) }
+      console.log(spotifyPlayer)
+    devices.addDeviceAndKeepUp(devices.alphabetify(spotifyPlayer.device.id), spotifyPlayer)
   })
 },updateInterval)
 
+devices.receive('spotify', (message) => {
+  
+})
 
 // UI stuff
 io.on('connection', (socket) => {
