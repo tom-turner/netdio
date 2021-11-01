@@ -156,6 +156,8 @@ devices.receive('spotify', (message) => {
   })
 })
 
+
+
 // UI stuff
 io.on('connection', (socket) => {
   let interval = setInterval(() => {
