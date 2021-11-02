@@ -123,16 +123,17 @@ let spotify = new Spotify(updateInterval)
 let spotifyService = devices.publish('duck-spot', spotifyConfig)
 let findSpotify = devices.discover('duck-spot')
 let spotifyServices = []
-
+let i = 0
 let spotifyPing = setInterval(()=>{
   spotifyServices = findSpotify.services.sort((a,b) => {
     return a.txt.priority < b.txt.priority
   })
-  let currentSpotifyService = spotifyServices[0]
+  let currentSpotifyService = spotifyServices[i]
 
   if(!currentSpotifyService){
     console.log('no spotify services')
     devices.removeDevice({device: {id: config.hash('spotify')}})
+    i = 0
     return
   }
 
@@ -144,8 +145,12 @@ let spotifyPing = setInterval(()=>{
   }
 
   devices.forward('spotify', currentSpotifyService.name, 'keep alive', (res) => {
-    if(res.error){ return console.log(res) }
-      console.log(1, spotifyPlayer.device.ip)
+    if(res.error){ 
+      i = i + 1
+      console.log('error connecting to spotify device', res.error)
+      return
+     }
+    console.log(1, spotifyPlayer.device.ip)
     devices.addDeviceAndKeepUp(config.hash('spotify'), spotifyPlayer)
   })
 },updateInterval)
