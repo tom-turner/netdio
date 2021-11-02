@@ -36,15 +36,44 @@ sudo tee -a /etc/modules-load.d/modules.conf > /dev/null <<EOT
 snd-aloop
 EOT
 sudo tee -a ~/.asoundrc > /dev/null <<EOT
+defaults.pcm.card 0
+defaults.ctl.card 1
+
+pcm.librespot{
+    format S16_LE
+    rate 44100
+    type hw
+    card 0
+    device 0
+}
+pcm.adc{
+    format S16_LE
+    rate 44100
+    type hw
+    card 1
+    device 0
+}
+pcm.snoopberry {
+    type dsnoop
+    slave {
+        pcm "hw:sndrpihifiberry,0"
+        channels 2
+        period_size 1024
+        buffer_size 4096
+        rate 44100
+        periods 0
+        period_time 0
+    }
+}
 pcm.snoopback {
     type dsnoop
     slave {
-        pcm "hw:Loopback,1" 
-        channels 2 
+        pcm "hw:Loopback,1"
+        channels 2
         period_size 1024
         buffer_size 4096
-        rate 48000
-        periods 0 
+        rate 44100
+        periods 0
         period_time 0
     }
 }
