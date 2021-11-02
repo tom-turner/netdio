@@ -5,8 +5,9 @@ sudo tee -a ~/netdio/config/startupconfig.json > /dev/null <<EOT
 "device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"EtherDAC AMP"},
 "source":{"name":"-Mute-"}}
 EOT
-sudo tee -a /etc/asound.conf > /dev/null <<EOT 
-defaults.pcm.card 1
+sudo rm -r ~/.asoundrc
+sudo tee -a ~/.asoundrc > /dev/null <<EOT 
+defaults.pcm.card 0
 defaults.ctl.card 1
 pcm.snoopberry {
     type dsnoop
