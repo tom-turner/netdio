@@ -83,13 +83,13 @@ devices.receive('ctrl message', (message) => {
     case 'source':
     roc.kill(roc.get('rx'))
     roc.rocRecv(config.get('source'))
-    console.log(config.get('source'))
+    console.log('recv',config.get('source'))
     break
     case 'devices' :
     message.value.send = devices.getDeviceIp(message.value.send)
     message.value.recv = devices.getDeviceIp(message.value.recv)
     roc.rocSend(message.value)
-    console.log(message.value)
+    console.log('send',message.value)
     break
     case 'rx.volume':
     process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
