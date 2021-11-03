@@ -77,6 +77,7 @@ devices.receive('discovery', (device) => {
 })
 devices.receive('ctrl message', (message) => {
   console.log("ctrl message", message)
+  console.log("tx data", message.value.txdata)
   config.set( message.type , message.value)
   switch (message.type) {
     case 'source':
