@@ -76,6 +76,7 @@ devices.receive('discovery', (device) => {
   return //devices.addDevice(device.device.id, device)
 })
 devices.receive('ctrl message', (message) => {
+  console.log("ctrl message", message)
   config.set( message.type , message.value)
   switch (message.type) {
     case 'source':
