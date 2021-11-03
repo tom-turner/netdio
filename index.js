@@ -64,7 +64,18 @@ setInterval(()=>{
   }
   devices.forward('ctrl message', config.get('source')['send'], message, (res) => {
         if (res.error) {
-          // recall mute in config
+          config.set('source', {
+            "send":"undefined",
+            "socket":"muted",
+            "name":"-Mute-",
+            "recv":config.get('device')['id'],
+            "txdata":{
+              "tx":{
+                "name":"-Mute-",
+                "source":"muted"
+              }
+            }
+          })
           return console.log('could not find input on network',res.error)
         }
   })
