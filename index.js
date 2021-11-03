@@ -152,7 +152,7 @@ let spotifyPing = setInterval(()=>{
       console.log('error connecting to spotify device', res.error)
       return
      }
-    console.log(1, spotifyPlayer.device.ip)
+    console.log("spotify ip", spotifyPlayer.device.ip)
     devices.addDeviceAndKeepUp(config.hash('spotify'), spotifyPlayer)
   })
 },updateInterval)
