@@ -64,7 +64,8 @@ setInterval(()=>{
   }
   devices.forward('ctrl message', config.get('source')['send'], message, (res) => {
         if (res.error) {
-          return console.log(res.error)
+          // recall mute in config
+          return console.log('could not find input on network',res.error)
         }
   })
 }, updateInterval / 2)
@@ -73,7 +74,7 @@ setInterval(()=>{
 // auto discover devices on the network and receive messages
 let devices = new Devices(config, updateInterval)
 devices.receive('discovery', (device) => {
-  return //devices.addDevice(device.device.id, device)
+  return 
 })
 devices.receive('ctrl message', (message) => {
   //console.log("tx data", message.value.txdata)
