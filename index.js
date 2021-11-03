@@ -76,18 +76,20 @@ devices.receive('discovery', (device) => {
   return //devices.addDevice(device.device.id, device)
 })
 devices.receive('ctrl message', (message) => {
-  console.log("ctrl message", message)
-  console.log("tx data", message.value.txdata)
+  //console.log("ctrl message", message)
+  //console.log("tx data", message.value.txdata)
   config.set( message.type , message.value)
   switch (message.type) {
     case 'source':
     roc.kill(roc.get('rx'))
     roc.rocRecv(config.get('source'))
+    console.log(config.get('source'))
     break
     case 'devices' :
     message.value.send = devices.getDeviceIp(message.value.send)
     message.value.recv = devices.getDeviceIp(message.value.recv)
     roc.rocSend(message.value)
+    console.log(message.value)
     break
     case 'rx.volume':
     process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
