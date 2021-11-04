@@ -40,7 +40,7 @@ lcd_rotate=2
 #clone sd card fast
 https://blog.jaimyn.dev/the-fastest-way-to-clone-sd-card-macos/
 diskutil list
-sudo dd if=/dev/rdisk2 of=/Users/tomturner/Desktop/duckos2.img bs=16m
+sudo dd if=/dev/rdisk4 of=/Users/tomturner/Desktop/duckos-fast.img bs=16m
 
 #hifiberry config
 https://www.hifiberry.com/docs/software/configuring-linux-3-18-x/
