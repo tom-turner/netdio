@@ -26,9 +26,6 @@ source ~/.bash_profile
 sudo tee -a /boot/config.txt > /dev/null <<EOT
 lcd_rotate=2 
 EOT
-sudo tee -a /etc/sudoers.d/reboot > /dev/null <<EOT 
-duck ALL=NOPASSWD:/sbin/reboot
-EOT
 sudo rm -r ~/netdio/config/startupconfig.json
 sudo rm -r ~/netdio/config/config.json
 sudo tee -a ~/netdio/config/startupconfig.json > /dev/null <<EOT 
