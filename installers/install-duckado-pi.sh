@@ -2,6 +2,7 @@
 sudo apt update -y
 sudo apt upgrade -y
 
+# Do change user to duck
 # Do boot optimisation stuff: http://himeshp.blogspot.com/2018/08/fast-boot-with-raspberry-pi.html
 
 # Install GIT & Node
