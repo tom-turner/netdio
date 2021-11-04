@@ -2,6 +2,8 @@
 sudo apt update -y
 sudo apt upgrade -y
 
+# Do boot optimisation stuff: http://himeshp.blogspot.com/2018/08/fast-boot-with-raspberry-pi.html
+
 # Install GIT & Node
 sudo apt install git -y
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | sh -s -- -y
