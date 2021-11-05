@@ -124,7 +124,7 @@ let spotifyConfig = {
       name:"Spotify Connect",
       type:"tx",
       driver:"alsa",
-      hardware:"dsnoop:Loopback,1",
+      hardware:"dsnoop:Loopback,1,0",
       source: config.getNewPort()
     }),
     device: JSON.stringify({

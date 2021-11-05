@@ -53,6 +53,15 @@ pcm.librespot{
     type hw
     card 0
     device 0
+    subdevice 0
+}
+pcm.radio{
+    format S16_LE
+    rate 44100
+    type hw
+    card 0
+    device 0
+    subdevice 1
 }
 pcm.adc{
     format S16_LE
