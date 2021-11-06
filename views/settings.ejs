@@ -26,52 +26,52 @@
 		<div class="flex flex-row justify-evenly h-full w-full">
 
 			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="00. 31 Hz" min="54" max="72">
+				<input class="eq-slider h-full" type="range" name="00. 31 Hz" min="54" max="78">
 				<label class="text-black p-1 mx-auto">31hz</label>
 			</span>
 
 			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="01. 63 Hz" min="54" max="72">
+				<input class="eq-slider h-full" type="range" name="01. 63 Hz" min="54" max="78">
 				<label class="text-black p-1 mx-auto">62hz</label>
 			</span>
 			
 			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="02. 125 Hz" min="54" max="72">
+				<input class="eq-slider h-full" type="range" name="02. 125 Hz" min="54" max="78">
 				<label class="text-black p-1 mx-auto">125hz</label>
 			</span>
 
 			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="03. 250 Hz" min="54" max="72">
+				<input class="eq-slider h-full" type="range" name="03. 250 Hz" min="54" max="78">
 				<label class="text-black p-1  mx-auto">250hz</label>
 			</span>
 
 			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="04. 500 Hz" min="54" max="72">
+				<input class="eq-slider h-full" type="range" name="04. 500 Hz" min="54" max="78">
 				<label class="text-black p-1  mx-auto">500hz</label>
 			</span>
 
 			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="05. 1 kHz" min="54" max="72">
+				<input class="eq-slider h-full" type="range" name="05. 1 kHz" min="54" max="78">
 				<label class="text-black p-1  mx-auto">1khz</label>
 			</span>
 			
 			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="06. 2 kHz" min="54" max="72">
+				<input class="eq-slider h-full" type="range" name="06. 2 kHz" min="54" max="78">
 				<label class="text-black p-1  mx-auto">2khz</label>
 			</span>
 
 			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="07. 4 kHz">
+				<input class="eq-slider h-full" type="range" name="07. 4 kHz" min="54" max="78">
 				<label class="text-black p-1 mx-auto">4khz</label>
 			</span>
 
 			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="08. 8 kHz">
+				<input class="eq-slider h-full" type="range" name="08. 8 kHz" min="54" max="78">
 				<label class="text-black p-1 mx-auto">8khz</label>
 			</span>
 
 			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="09. 16 kHz">
+				<input class="eq-slider h-full" type="range" name="09. 16 kHz" min="54" max="78">
 				<label class="text-black p-1  mx-auto">16khz</label>
 			</span>
 
@@ -231,6 +231,7 @@
 	}
 
 	function flatEq(ip){
+		$('input[type=range]').val('66')
 		var message = {
 				ip : $('#eq').attr('name'),
 				type : 'eq', 
