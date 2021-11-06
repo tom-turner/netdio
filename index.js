@@ -12,6 +12,7 @@ const Devices = require('./lib/devices')
 const Color = require('./lib/color')
 const Spotify = require('./lib/spotify')
 const platform = require('./lib/platform')
+const EQ = require('./lib/eq')
 const port = process.env.port || 5000;
 const fs = require('fs')
 const Roc = require('./lib/roc')
@@ -53,6 +54,7 @@ config.get('tx')
 
 // Network audio stuff
 let roc = new Roc(config.configObject, updateInterval)
+let eq = new EQ()
 config.get('rx')
   ? roc.rocRecv(config.get('source'))
   : console.log('no rx')
@@ -103,6 +105,9 @@ devices.receive('ctrl message', (message) => {
     break
     case 'rx.volume':
     process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
+    break
+    case 'eq' :
+      eq.set(Object.keys(message.value)[0], message.value[Object.keys(message.value)[0]])
     break
     case 'blink':
     exec('python ./lib/python/blink.py')
