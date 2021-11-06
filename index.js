@@ -107,7 +107,7 @@ devices.receive('ctrl message', (message) => {
     process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
     break
     case 'eq' :
-      eq.set(Object.keys(message.value)[0], message.value[Object.keys(message.value)[0]])
+      eq.set(message.value.param, message.value.value)
     break
     case 'blink':
     exec('python ./lib/python/blink.py')

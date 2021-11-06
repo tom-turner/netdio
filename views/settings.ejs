@@ -477,7 +477,8 @@ function loadHandlers(){
 				ip : $('#eq').attr('name'),
 				type : 'eq', 
 				value : {
-					[this.name] : this.value
+					param : this.name,
+					value : this.value
 				}
 			}
 			postMessage('forward', message)
