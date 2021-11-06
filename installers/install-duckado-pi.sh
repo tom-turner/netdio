@@ -63,19 +63,23 @@ pcm.radio{
     device 0
     subdevice 1
 }
-pcm.adc{
-    format S16_LE
-    rate 44100
-    type hw
-    card 1
-    device 0
-}
 pcm.loopback{
     format S16_LE
     rate 44100
     type hw
     card 0
     device 1
+}
+ctl.equal {
+    type equal
+}
+pcm.plugequal {
+  type equal;
+  slave.pcm "plughw:1,0";
+}
+pcm.adc {
+  type plug;
+  slave.pcm plugequal;
 }
 EOT
 
