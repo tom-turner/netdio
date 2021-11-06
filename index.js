@@ -55,6 +55,9 @@ config.get('tx')
 // Network audio stuff
 let roc = new Roc(config.configObject, updateInterval)
 let eq = new EQ()
+
+console.log(eq.get())
+
 config.get('rx')
   ? roc.rocRecv(config.get('source'))
   : console.log('no rx')
@@ -107,7 +110,6 @@ devices.receive('ctrl message', (message) => {
     process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
     break
     case 'eq' :
-    console.log(message)
       if(message.value == 'flat') {
         eq.flat()
       } else {
