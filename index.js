@@ -56,8 +56,6 @@ config.get('tx')
 let roc = new Roc(config.configObject, updateInterval)
 let eq = new EQ()
 
-console.log(eq.get())
-
 config.get('rx')
   ? roc.rocRecv(config.get('source'))
   : console.log('no rx')
@@ -198,6 +196,10 @@ io.on('connection', (socket) => {
       clearInterval(interval)
       socket.disconnect(true)
     })
+})
+
+app.post('/geteq', async (req, res) => {
+  console.log(eq.get())
 })
 
 app.post('/forward', (req,res) => {
