@@ -226,6 +226,12 @@
 	}
 
 	function showEq(ip){
+		let message = {
+			id : ip
+		}
+		postMessageWithResponse('/geteq', message ,(res) => {
+			console.log(res.message)
+		})
 		$('#eq').show()
 		$('#eq').attr('name', ip)
 	}
@@ -375,7 +381,6 @@
 	}
 
 	let handleDevices = (message) => {
-		console.log(message)
 		let messageJSON = JSON.stringify(message)
 		let localJSON = localDeviceListJSON
 
@@ -404,6 +409,24 @@ let postMessage = async (url, message) => {
       let response = await res.json()  
 
       if(response.successful) {
+      }
+}
+let postMessageWithResponse = async (url, message, callback) => {
+	readyStateToggle()
+	let res = await fetch( url , {
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(message) 
+      })
+
+      let response = await res.json()  
+
+      console.log(response)
+
+      if(response.successful) {
+      	callback(response)
       }
 }
 
@@ -488,7 +511,6 @@ function loadHandlers(){
 				}
 			}
 			postMessage('forward', message)
-			console.log(message)
 		})
 
 }

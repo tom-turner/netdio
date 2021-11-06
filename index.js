@@ -90,6 +90,11 @@ let devices = new Devices(config, updateInterval)
 devices.receive('discovery', (device) => {
   return 
 })
+devices.receive('geteq', async (device) => {
+  devices.forward('eqconfig', device, await eq.get(), (err) => {
+    return
+  })
+})
 devices.receive('ctrl message', (message) => {
   //console.log("tx data", message.value.txdata)
   config.set( message.type , message.value)
@@ -123,8 +128,6 @@ devices.receive('ctrl message', (message) => {
   }
   return
 })
-
-
 
 
 // spotify stuff
@@ -174,7 +177,7 @@ let spotifyPing = setInterval(()=>{
       console.log('error connecting to spotify device', res.error)
       return
      }
-    console.log("spotify ip", spotifyPlayer.device.ip)
+    //console.log("spotify ip", spotifyPlayer.device.ip)
     devices.addDeviceAndKeepUp(config.hash('spotify'), spotifyPlayer)
   })
 },updateInterval)
@@ -184,7 +187,6 @@ devices.receive('spotify', (message) => {
     console.log(err)
   })
 })
-
 
 
 // UI stuff
@@ -198,8 +200,13 @@ io.on('connection', (socket) => {
     })
 })
 
-app.post('/geteq', async (req, res) => {
-  console.log(eq.get())
+app.post('/geteq', async (req,res) => {
+  devices.receive('eqconfig', (message) => {
+    return res.json(message)
+  })
+  devices.forward('geteq', req.body.id, config.get('device')['id'], (err) => {
+    return
+  })  
 })
 
 app.post('/forward', (req,res) => {
