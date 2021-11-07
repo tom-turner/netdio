@@ -221,7 +221,6 @@ app.post('/startservice', (req,res) => {
 */
 
 app.post('/seteq', (req,res) => {
-  console.log(1, req.body.value)
   if(req.body.value == 'flat') { 
     eq.flat() 
   } else {
@@ -281,6 +280,7 @@ app.get('/cloud', (req, res) => {
 });
 app.get('/eq', (req, res) => {
   eq.get((message) => {
+    console.log(message)
     res.render('processing/eq.ejs', { config: config.configObject, processing: message });
   })
 });
