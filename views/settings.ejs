@@ -14,72 +14,6 @@
 
 </div>
 
-<div id="eq" class="hidden h-screen w-full blue absolute text-white z-10 p-4">
-
-	<div class="w-full bg-white rounded shadow-lg flex flex-col h-full">
-
-		<div class="flex flex-row justify-end p-4 space-x-4">
-			<a onclick="flatEq()" class="bg-black rounded-full px-2">Flat</a>
-			<a href="/settings" class="bg-black rounded-full px-2">Close</a>
-		</div>
-
-		<div class="flex flex-row justify-evenly h-full w-full">
-
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="00. 31 Hz" min="48" max="84" step='1'>
-				<label class="text-black p-1 mx-auto">31hz</label>
-			</span>
-
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="01. 63 Hz" min="48" max="84" step='1'>
-				<label class="text-black p-1 mx-auto">62hz</label>
-			</span>
-			
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="02. 125 Hz" min="48" max="84" step='1'>
-				<label class="text-black p-1 mx-auto">125hz</label>
-			</span>
-
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="03. 250 Hz" min="48" max="84" step='1'>
-				<label class="text-black p-1  mx-auto">250hz</label>
-			</span>
-
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="04. 500 Hz" min="48" max="84" step='1'>
-				<label class="text-black p-1  mx-auto">500hz</label>
-			</span>
-
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="05. 1 kHz" min="48" max="84" step='1'>
-				<label class="text-black p-1  mx-auto">1khz</label>
-			</span>
-			
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="06. 2 kHz" min="48" max="84" step='1'>
-				<label class="text-black p-1  mx-auto">2khz</label>
-			</span>
-
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="07. 4 kHz" min="48" max="84" step='1'>
-				<label class="text-black p-1 mx-auto">4khz</label>
-			</span>
-
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="08. 8 kHz" min="48" max="84" step='1'>
-				<label class="text-black p-1 mx-auto">8khz</label>
-			</span>
-
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="09. 16 kHz" min="48" max="84" step='1'>
-				<label class="text-black p-1  mx-auto">16khz</label>
-			</span>
-
-		</div>
-	</div>
-
-</div>
-
 
 <div class="flex items-center justify-center h-screen blue flex flex-col p-4">
 
@@ -225,26 +159,6 @@
 		postMessage('/forward', message)
 	}
 
-	function showEq(ip){
-		let message = {
-			id : ip
-		}
-		postMessageWithResponse('/geteq', message ,(res) => {
-			console.log(res.message)
-		})
-		$('#eq').show()
-		$('#eq').attr('name', ip)
-	}
-
-	function flatEq(ip){
-		$('input[type=range]').val('66')
-		var message = {
-				ip : $('#eq').attr('name'),
-				type : 'eq', 
-				value : 'flat'
-			}
-			postMessage('forward', message)
-	}
 
 	function getInputAsOption(device){
 		return $(`<option value="${device.source}" name="${device.id}"/>`).text(device.name)
@@ -278,7 +192,7 @@
 						$(`<input type="text" class="w-full font-bold" name="${device.type}.name" value="${device.name}"/>`)
 					),
 					$('<div class="flex flex-row space-x-2"/>').append(
-						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink" onclick="showEq('${device.id}')"/>`).text('EQ'),
+						$(`<a class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink" href="http://${device.ip}:5000/eq"/>`).text('EQ'),
 						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink" onclick="blink('${device.id}')"/>`).text("Blink"),
 						$(`<svg class="h-8 w-8 cursor-pointer fill-current blue-fill" onclick="window.location.href='http://${device.ip}:5000/settings'" src="images/gear.svg"><use xlink:href="images/gear.svg#gear"/></svg>`)
 					)
@@ -411,24 +325,6 @@ let postMessage = async (url, message) => {
       if(response.successful) {
       }
 }
-let postMessageWithResponse = async (url, message, callback) => {
-	readyStateToggle()
-	let res = await fetch( url , {
-        method:'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(message) 
-      })
-
-      let response = await res.json()  
-
-      console.log(response)
-
-      if(response.successful) {
-      	callback(response)
-      }
-}
 
 function loadHandlers(){
 
@@ -499,19 +395,6 @@ function loadHandlers(){
 		})
 		
 	})
-
-	$('input[type=range]').on('input', function () {
-
-			var message = {
-				ip : $('#eq').attr('name'),
-				type : 'eq', 
-				value : {
-					param : this.name,
-					value : this.value
-				}
-			}
-			postMessage('forward', message)
-		})
 
 }
 

@@ -1,0 +1,111 @@
+<div id="eq" class=" h-screen w-full blue absolute text-white z-10 p-4">
+
+	<div class="w-full bg-white rounded shadow-lg flex flex-col h-full">
+
+		<div class="flex flex-row justify-end p-4 space-x-4">
+			<a onclick="flatEq()" class="bg-black rounded-full px-2">Flat</a>
+			<a href="javascript:history.back()" class="bg-black rounded-full px-2">Close</a>
+		</div>
+
+		<div class="flex flex-row justify-evenly h-full w-full">
+
+			<span class="h-full flex flex-col eq-slider w-10">
+				<input class="eq-slider h-full" type="range" name="00. 31 Hz" min="48" max="84" step='1'>
+				<label class="text-black p-1 mx-auto">31hz</label>
+			</span>
+
+			<span class="h-full flex flex-col eq-slider w-10">
+				<input class="eq-slider h-full" type="range" name="01. 63 Hz" min="48" max="84" step='1'>
+				<label class="text-black p-1 mx-auto">62hz</label>
+			</span>
+			
+			<span class="h-full flex flex-col eq-slider w-10">
+				<input class="eq-slider h-full" type="range" name="02. 125 Hz" min="48" max="84" step='1'>
+				<label class="text-black p-1 mx-auto">125hz</label>
+			</span>
+
+			<span class="h-full flex flex-col eq-slider w-10">
+				<input class="eq-slider h-full" type="range" name="03. 250 Hz" min="48" max="84" step='1'>
+				<label class="text-black p-1  mx-auto">250hz</label>
+			</span>
+
+			<span class="h-full flex flex-col eq-slider w-10">
+				<input class="eq-slider h-full" type="range" name="04. 500 Hz" min="48" max="84" step='1'>
+				<label class="text-black p-1  mx-auto">500hz</label>
+			</span>
+
+			<span class="h-full flex flex-col eq-slider w-10">
+				<input class="eq-slider h-full" type="range" name="05. 1 kHz" min="48" max="84" step='1'>
+				<label class="text-black p-1  mx-auto">1khz</label>
+			</span>
+			
+			<span class="h-full flex flex-col eq-slider w-10">
+				<input class="eq-slider h-full" type="range" name="06. 2 kHz" min="48" max="84" step='1'>
+				<label class="text-black p-1  mx-auto">2khz</label>
+			</span>
+
+			<span class="h-full flex flex-col eq-slider w-10">
+				<input class="eq-slider h-full" type="range" name="07. 4 kHz" min="48" max="84" step='1'>
+				<label class="text-black p-1 mx-auto">4khz</label>
+			</span>
+
+			<span class="h-full flex flex-col eq-slider w-10">
+				<input class="eq-slider h-full" type="range" name="08. 8 kHz" min="48" max="84" step='1'>
+				<label class="text-black p-1 mx-auto">8khz</label>
+			</span>
+
+			<span class="h-full flex flex-col eq-slider w-10">
+				<input class="eq-slider h-full" type="range" name="09. 16 kHz" min="48" max="84" step='1'>
+				<label class="text-black p-1  mx-auto">16khz</label>
+			</span>
+
+		</div>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+
+	console.log('<%= eq %>')
+
+	function flatEq(ip){
+		$('input[type=range]').val('66')
+		var message = {
+				ip : $('#eq').attr('name'),
+				type : 'eq', 
+				value : 'flat'
+			}
+			postMessage('forward', message)
+	}	
+
+
+	let postMessage = async (url, message) => {
+	readyStateToggle()
+	let res = await fetch( url , {
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(message) 
+      })
+
+      let response = await res.json()  
+
+      if(response.successful) {
+      }
+}
+
+	$('input[type=range]').on('input', function () {
+
+			var message = {
+				ip : $('#eq').attr('name'),
+				type : 'eq', 
+				value : {
+					param : this.name,
+					value : this.value
+				}
+			}
+			postMessage('forward', message)
+	})
+
+</script>

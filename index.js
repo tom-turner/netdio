@@ -280,6 +280,9 @@ app.get('/spotify', (req, res) => {
 app.get('/cloud', (req, res) => {
   res.render('player/services/duckadocloud.ejs', {config: config.configObject});
 });
+app.get('/eq', (req, res) => {
+  res.render('processing/eq.ejs', {config: config.configObject, eq: eq.get()});
+});
 
 
 //
