@@ -222,7 +222,11 @@ app.post('/startservice', (req,res) => {
 
 app.post('/seteq', (req,res) => {
   console.log(1, req.body.value)
-  eq.set(req.body.value.param, req.body.value.value)
+  if(req.body.value == 'flat') { 
+    eq.flat() 
+  } else {
+    eq.set(req.body.value.param, req.body.value.value)
+  }
   return res.json({successful: true})
 })
 
