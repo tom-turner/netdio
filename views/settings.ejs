@@ -192,8 +192,8 @@
 						$(`<input type="text" class="w-full font-bold" name="${device.type}.name" value="${device.name}"/>`)
 					),
 					$('<div class="flex flex-row space-x-2"/>').append(
-						$(`<a class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink" href="http://${device.ip}:5000/eq"/>`).text('EQ'),
-						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink" onclick="blink('${device.id}')"/>`).text("Blink"),
+						$(`<a class="text-white rounded-full px-2 bg-black hidden sm:inline" value="true" name="blink" href="http://${device.ip}:5000/eq"/>`).text('EQ'),
+						$(`<a class="text-white rounded-full px-2 bg-black hidden sm:inline" value="true" name="blink" onclick="blink('${device.id}')"/>`).text("Blink"),
 						$(`<svg class="h-8 w-8 cursor-pointer fill-current blue-fill" onclick="window.location.href='http://${device.ip}:5000/settings'" src="images/gear.svg"><use xlink:href="images/gear.svg#gear"/></svg>`)
 					)
 				)
