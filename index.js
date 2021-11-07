@@ -120,7 +120,7 @@ devices.receive('ctrl message', (message) => {
 
 // spotify stuff
 let spotifyConfig = { 
-    priority : Math.random().toString().slice(-6), 
+    priority : process.platform == 'linux' ? Math.random().toString().slice(-6) : 0,
     player: JSON.stringify({
       name:"Spotify Connect",
       type:"tx",
