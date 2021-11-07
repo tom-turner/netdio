@@ -66,7 +66,12 @@
 
 <script type="text/javascript">
 
-	console.log('<%= eq %>')
+	if('<%= processing.error %>') {
+		alert('No EQ available on this device')
+		history.back()
+	}
+
+	let processing = '<%= processing.message %>'
 
 	function flatEq(ip){
 		$('input[type=range]').val('66')
@@ -75,12 +80,11 @@
 				type : 'eq', 
 				value : 'flat'
 			}
-			postMessage('forward', message)
+			postMessage('seteq', message)
 	}	
 
 
 	let postMessage = async (url, message) => {
-	readyStateToggle()
 	let res = await fetch( url , {
         method:'POST',
         headers: {
@@ -105,7 +109,7 @@
 					value : this.value
 				}
 			}
-			postMessage('forward', message)
+			postMessage('seteq', message)
 	})
 
 </script>

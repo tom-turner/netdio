@@ -107,13 +107,6 @@ devices.receive('ctrl message', (message) => {
     case 'rx.volume':
     process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
     break
-    case 'eq' :
-      if(message.value == 'flat') {
-        eq.flat()
-      } else {
-        eq.set(message.value.param, message.value.value)
-      }
-    break
     case 'blink':
     exec('python ./lib/python/blink.py')
     setTimeout( () => {
@@ -195,10 +188,6 @@ io.on('connection', (socket) => {
     })
 })
 
-app.post('/geteq', async (req,res) => {
-  return res.json({successful: true})
-})
-
 app.post('/forward', (req,res) => {
   let message = req.body
   devices.forward('ctrl message', message.ip, message, (err) => {
@@ -230,6 +219,11 @@ app.post('/startservice', (req,res) => {
   return res.json({ url : `/${started.service}`, successful : started.successful }) 
 })
 */
+
+app.post('/seteq', (req,res) => {
+  eq.set(req.body.value.param, req.body.value.value)
+  return res.json({successful: true})
+})
 
 app.post('/connectservice', (req,res) => {
   return res.json({url : '/', successful : true })
@@ -281,7 +275,10 @@ app.get('/cloud', (req, res) => {
   res.render('player/services/duckadocloud.ejs', {config: config.configObject});
 });
 app.get('/eq', (req, res) => {
-  res.render('processing/eq.ejs', {config: config.configObject, eq: eq.get()});
+  eq.get((message) => {
+    console.log(message)
+    res.render('processing/eq.ejs', { config: config.configObject, processing: message });
+  })
 });
 
 
