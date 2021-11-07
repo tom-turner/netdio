@@ -1,4 +1,2 @@
-{"rx":{"name":"Duck Rx","type":"rx","volume":"80","driver":"","hardware":""},
-"tx":{"name":"Duck Tx", "type":"tx", "driver":"","hardware":""},
-"device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"Duckado"},
+{"device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"Duckado"},
 "source":{"name":"-Mute-"}}
