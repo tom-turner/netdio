@@ -75,7 +75,7 @@
 
 	for ( var eq of processing ) {
 		console.log(document.getElementsByName(eq.param)[0])
-		document.getElementsByName(eq.param)[0].value = '10'
+		document.getElementsByName(eq.param)[0].value = eq.level.toString()
 	}
 	
 
