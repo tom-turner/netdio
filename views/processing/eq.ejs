@@ -71,7 +71,7 @@
 		history.back()
 	}
 
-	let processing = '<%= processing.eq %>'
+	let processing = JSON.parse(<%= processing.eq %>)
 
 	for ( var eq of processing ) {
 		console.log(eq)
