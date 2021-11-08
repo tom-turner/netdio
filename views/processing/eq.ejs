@@ -11,43 +11,43 @@
 		<div id="eqContainer" class="flex flex-row justify-between h-full w-full">
 
 			<div id="eqSlider" class="relative h-full w-10 mx-auto">
-				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="00. 31 Hz" min="48" max="84" step='1'>
+				<input class="absolute inset-y-0 rounded-full eq-slider" type="range" name="00. 31 Hz" min="48" max="84" step='1'>
 			</div>
 
 			<div id="eqSlider" class="relative h-full w-10 mx-auto">
-				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="01. 63 Hz" min="48" max="84" step='1'>
+				<input class="absolute inset-y-0 rounded-full eq-slider" type="range" name="01. 63 Hz" min="48" max="84" step='1'>
 			</div>
 
 			<div id="eqSlider" class="relative h-full w-10 mx-auto">
-				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="02. 125 Hz" min="48" max="84" step='1'>
+				<input class="absolute inset-y-0 rounded-full eq-slider" type="range" name="02. 125 Hz" min="48" max="84" step='1'>
 			</div>
 
 			<div id="eqSlider" class="relative h-full w-10 mx-auto">
-				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="03. 250 Hz" min="48" max="84" step='1'>
+				<input class="absolute inset-y-0 rounded-full eq-slider" type="range" name="03. 250 Hz" min="48" max="84" step='1'>
 			</div>
 
 			<div id="eqSlider" class="relative h-full w-10 mx-auto">
-				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="04. 500 Hz" min="48" max="84" step='1'>
+				<input class="absolute inset-y-0 rounded-full eq-slider" type="range" name="04. 500 Hz" min="48" max="84" step='1'>
 			</div>
 
 			<div id="eqSlider" class="relative h-full w-10 mx-auto">
-				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="05. 1 kHz" min="48" max="84" step='1'>
+				<input class="absolute inset-y-0 rounded-full eq-slider" type="range" name="05. 1 kHz" min="48" max="84" step='1'>
 			</div>
 
 			<div id="eqSlider" class="relative h-full w-10 mx-auto">
-				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="06. 2 kHz" min="48" max="84" step='1'>
+				<input class="absolute inset-y-0 rounded-full eq-slider" type="range" name="06. 2 kHz" min="48" max="84" step='1'>
 			</div>
 
 			<div id="eqSlider" class="relative h-full w-10 mx-auto">
-				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="07. 4 kHz" min="48" max="84" step='1'>
+				<input class="absolute inset-y-0 rounded-full eq-slider" type="range" name="07. 4 kHz" min="48" max="84" step='1'>
 			</div>
 
 			<div id="eqSlider" class="relative h-full w-10 mx-auto">
-				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="08. 8 kHz" min="48" max="84" step='1'>
+				<input class="absolute inset-y-0 rounded-full eq-slider" type="range" name="08. 8 kHz" min="48" max="84" step='1'>
 			</div>
 
 			<div id="eqSlider" class="relative h-full w-10 mx-auto">
-				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="09. 16 kHz" min="48" max="84" step='1'>
+				<input class="absolute inset-y-0 rounded-full eq-slider" type="range" name="09. 16 kHz" min="48" max="84" step='1'>
 			</div>
 
 		</div>
@@ -75,17 +75,18 @@
 <script type="text/javascript">
 
 	if('<%= processing.error %>') {
+		$('#eq').hide()
 		alert('No EQ available on this device')
 		history.back()
 	}
 
-	
+
 	let processing = <%- JSON.stringify(processing) %>
 
 	for ( var eq of processing ) {
 		document.getElementsByName(eq.param)[0].value = eq.level
 	}
-	
+
 
 	$('input[type=range]').width($('#eqContainer').height() )
 
