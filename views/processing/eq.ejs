@@ -75,17 +75,17 @@
 <script type="text/javascript">
 
 	if('<%= processing.error %>') {
-		//alert('No EQ available on this device')
-		//history.back()
+		alert('No EQ available on this device')
+		history.back()
 	}
 
-	/*
+	
 	let processing = <%- JSON.stringify(processing) %>
 
 	for ( var eq of processing ) {
 		document.getElementsByName(eq.param)[0].value = eq.level
 	}
-	*/
+	
 
 	$('input[type=range]').width($('#eqContainer').height() )
 
