@@ -74,8 +74,8 @@
 	let processing = <%- JSON.stringify(processing) %>
 
 	for ( var eq of processing ) {
-		console.log(document.getElementsByName(eq.param))
-		document.getElementsByName(eq.param).value = eq.level
+		console.log(document.getElementsByName(eq.param)[0])
+		document.getElementsByName(eq.param)[0].value = eq.level
 	}
 	
 
