@@ -7,59 +7,67 @@
 			<a href="javascript:history.back()" class="bg-black rounded-full px-2">Close</a>
 		</div>
 
-		<div class="flex flex-row justify-evenly h-full w-full">
 
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="00. 31 Hz" min="48" max="84" step='1'>
-				<label class="text-black p-1 mx-auto">31hz</label>
-			</span>
+		<div id="eqContainer" class="flex flex-row justify-between h-full w-full">
 
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="01. 63 Hz" min="48" max="84" step='1'>
-				<label class="text-black p-1 mx-auto">62hz</label>
-			</span>
-			
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="02. 125 Hz" min="48" max="84" step='1'>
-				<label class="text-black p-1 mx-auto">125hz</label>
-			</span>
+			<div id="eqSlider" class="relative h-full w-10 mx-auto">
+				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="00. 31 Hz" min="48" max="84" step='1'>
+			</div>
 
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="03. 250 Hz" min="48" max="84" step='1'>
-				<label class="text-black p-1  mx-auto">250hz</label>
-			</span>
+			<div id="eqSlider" class="relative h-full w-10 mx-auto">
+				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="01. 63 Hz" min="48" max="84" step='1'>
+			</div>
 
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="04. 500 Hz" min="48" max="84" step='1'>
-				<label class="text-black p-1  mx-auto">500hz</label>
-			</span>
+			<div id="eqSlider" class="relative h-full w-10 mx-auto">
+				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="02. 125 Hz" min="48" max="84" step='1'>
+			</div>
 
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="05. 1 kHz" min="48" max="84" step='1'>
-				<label class="text-black p-1  mx-auto">1khz</label>
-			</span>
-			
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="06. 2 kHz" min="48" max="84" step='1'>
-				<label class="text-black p-1  mx-auto">2khz</label>
-			</span>
+			<div id="eqSlider" class="relative h-full w-10 mx-auto">
+				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="03. 250 Hz" min="48" max="84" step='1'>
+			</div>
 
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="07. 4 kHz" min="48" max="84" step='1'>
-				<label class="text-black p-1 mx-auto">4khz</label>
-			</span>
+			<div id="eqSlider" class="relative h-full w-10 mx-auto">
+				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="04. 500 Hz" min="48" max="84" step='1'>
+			</div>
 
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="08. 8 kHz" min="48" max="84" step='1'>
-				<label class="text-black p-1 mx-auto">8khz</label>
-			</span>
+			<div id="eqSlider" class="relative h-full w-10 mx-auto">
+				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="05. 1 kHz" min="48" max="84" step='1'>
+			</div>
 
-			<span class="h-full flex flex-col eq-slider w-10">
-				<input class="eq-slider h-full" type="range" name="09. 16 kHz" min="48" max="84" step='1'>
-				<label class="text-black p-1  mx-auto">16khz</label>
-			</span>
+			<div id="eqSlider" class="relative h-full w-10 mx-auto">
+				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="06. 2 kHz" min="48" max="84" step='1'>
+			</div>
+
+			<div id="eqSlider" class="relative h-full w-10 mx-auto">
+				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="07. 4 kHz" min="48" max="84" step='1'>
+			</div>
+
+			<div id="eqSlider" class="relative h-full w-10 mx-auto">
+				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="08. 8 kHz" min="48" max="84" step='1'>
+			</div>
+
+			<div id="eqSlider" class="relative h-full w-10 mx-auto">
+				<input class="absolute inset-y-0 rounded-lg eq-slider" type="range" name="09. 16 kHz" min="48" max="84" step='1'>
+			</div>
 
 		</div>
+		
+		<div class="flex flex-row justify-between h-10 w-full">
+
+			<label class="text-black mx-auto p-2">31 Hz</label>
+			<label class="text-black mx-auto p-2">62 Hz</label>
+			<label class="text-black mx-auto p-2">125 Hz</label>
+			<label class="text-black mx-auto p-2">250 Hz</label>
+			<label class="text-black mx-auto p-2">500 Hz</label>
+			<label class="text-black mx-auto p-2">1 kHz</label>
+			<label class="text-black mx-auto p-2">2 Hz</label>
+			<label class="text-black mx-auto p-2">4 kHz</label>
+			<label class="text-black mx-auto p-2">8 kHz</label>
+			<label class="text-black mx-auto p-2">16 kHz</label>
+
+
+		</div>
+
 	</div>
 
 </div>
@@ -67,16 +75,23 @@
 <script type="text/javascript">
 
 	if('<%= processing.error %>') {
-		alert('No EQ available on this device')
-		history.back()
+		//alert('No EQ available on this device')
+		//history.back()
 	}
 
+	/*
 	let processing = <%- JSON.stringify(processing) %>
 
 	for ( var eq of processing ) {
 		document.getElementsByName(eq.param)[0].value = eq.level
 	}
-	
+	*/
+
+	$('input[type=range]').width($('#eqContainer').height() )
+
+	let position = ($('#eqContainer').height() / 2) - ( $('#eqSlider').width() /2 )
+
+	$('input[type=range]').css('transform',`translate(-${position}px, ${position}px) rotate(270deg)`)
 
 	function flatEq(ip){
 		$('input[type=range]').val('66')

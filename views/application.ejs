@@ -14,17 +14,22 @@
 	<title>Netdio</title>
 
 	<style type="text/css">
-		.range-slider::-webkit-slider-thumb {
-      		width: 1.5rem;
+		.volume-slider::-webkit-slider-thumb {
+      		width: 2rem;
       		-webkit-appearance: none;
-      		height: 2.5rem;
+      		height: 2rem;
       		cursor: pointer;
       		border-style: solid;
       		border-width: 2px;
       		border-color: #404040;
-      		border-radius: 25%;
+      		border-radius: 50%;
       		background: <%= config.device.colordark%>;
       		box-shadow: -1800px 0 0 1790px <%= config.device.colordark%>;
+            }
+            .volume-slider {
+                  -webkit-appearance: none;
+                  background: <%= config.device.color%>;
+                  overflow: hidden;
             }
 
             html {
@@ -51,8 +56,23 @@
             .blue-fill {
                   color: <%= config.device.color%>;
             }
+            .eq-slider::-webkit-slider-thumb {
+                  width: 1.5rem;
+                  -webkit-appearance: none;
+                  height: 1.5rem;
+                  cursor: pointer;
+                  border-style: solid;
+                  border-width: 2px;
+                  border-color: #404040;
+                  border-radius: 50%;
+                  background: <%= config.device.colordark%>;
+                  box-shadow: -1800px 0 0 1790px <%= config.device.colordark%>;
+            }
             .eq-slider {
-                 -webkit-appearance: slider-vertical
+                  height: 1.5rem;
+                  -webkit-appearance: none;
+                  background: <%= config.device.color%>;
+                  overflow: hidden;
             }
 
 	</style>

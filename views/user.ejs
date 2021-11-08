@@ -16,7 +16,7 @@
 
 <div class="flex items-center justify-center h-screen blue flex flex-col p-4 space-y-2 relative">
 
-	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-md shadow-md pt-2 px-4 overflow-hidden border">
+	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-lg shadow-md pt-2 px-4 overflow-hidden border">
 		<div class="justify-between flex w-full">
 			<img class="h-14 my-auto py-2" src="images/logo"/>
 			<img onclick="showMenu()" src="images/menu.svg#menu" class="h-10 w-10 my-auto cursor-pointer"/>
@@ -80,7 +80,7 @@
 						($('<option disabled selected/>').text(`${	source}`))
 						)
 					)),
-				$(`<input type="range" class="w-full rounded-lg overflow-hidden appearance-none blue rounded-50 h-10 range-slider" value="${getLin(zone.volume)}" />`)
+				$(`<input type="range" class="w-full rounded-full volume-slider" value="${getLin(zone.volume)}" />`)
 				)
 			)
 	}
