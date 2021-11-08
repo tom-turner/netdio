@@ -71,10 +71,9 @@
 		history.back()
 	}
 
-	let processing = JSON.parse('<%= processing %>')
-	let eq = processing.eq
+	let processing = '<%= processing.eq %>'
 
-	console.log(eq)
+	console.log(processing)
 
 	function flatEq(ip){
 		$('input[type=range]').val('66')
