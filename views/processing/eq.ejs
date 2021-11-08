@@ -74,8 +74,8 @@
 	let processing = <%- JSON.stringify(processing) %>
 
 	for ( var eq of processing ) {
-		console.log($(`td[name="${eq.param}"]`).attr('name'))
-		$(`td[name="${eq.param}"]`).val(eq.level) 
+		console.log(document.getElementsByName(eq.param))
+		document.getElementsByName(eq.param).value = eq.level
 	}
 	
 
