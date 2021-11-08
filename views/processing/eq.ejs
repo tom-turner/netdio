@@ -73,7 +73,10 @@
 
 	let processing = '<%= processing.eq %>'
 
-	console.log(processing)
+	for ( var eq of processing ) {
+		console.log(eq)
+	}
+	
 
 	function flatEq(ip){
 		$('input[type=range]').val('66')
