@@ -22,9 +22,7 @@
 			<img id="duck" class="hidden h-14 cursor-pointer" onclick="quack()" src="images/duck.svg"/>
 			<img class="h-14 my-auto py-2" src="images/logo"/>
 
-			<svg id="menu" class="h-10 w-10 cursor-pointer transform duration-500 fill-current blue-fill my-auto " onclick="toggleSettings('devices','hidden')" >
-				<use xlink:href="images/menu.svg#menu"/>
-			</svg>
+			<img id="menuImg" onclick="showMenu()" src="images/menu.svg#menu" class="w-8 my-auto cursor-pointer transform duration-200"/>
 		</div>
 	</div>
 
@@ -32,7 +30,7 @@
 
 	<div id="settings" class="flex flex-col flex-grow w-full bg-white rounded-b shadow-lg p-2 px-4 overflow-auto">
 
-		<div id="devices" class="flex flex-row justify-between w-full bg-white space-x-2 hidden pb-4 transform duration-500">
+		<div id="devices" class="flex flex-row justify-between w-full bg-white space-x-2 -translate-y-96 transform duration-200 h-0">
 
 		<div class="flex flex-col w-1/2">
 			<h2 class="">Sources: </h2>
@@ -247,6 +245,21 @@
 		loadHandlers()
 		loading(false)
 		
+	}
+
+	let showMenu = () => {
+		document.getElementById('devices').classList.toggle('-translate-y-96')
+		document.getElementById('devices').classList.toggle('h-0')
+		document.getElementById('devices').classList.toggle('pb-4')
+		document.getElementById('menuImg').classList.toggle('-rotate-90')
+
+		let open = document.getElementById('menuImg').src == 'http://localhost:5000/images/menu.svg#menu'
+
+		if(open){
+			document.getElementById('menuImg').src ='images/menuopen.svg#menu'
+		} else {
+			document.getElementById('menuImg').src ='images/menu.svg#menu'
+		}
 	}
 
 	// listens for new config

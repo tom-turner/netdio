@@ -19,16 +19,18 @@
 	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-lg shadow-md pt-2 px-4 overflow-hidden border">
 		<div class="justify-between flex w-full">
 			<img class="h-14 my-auto py-2" src="images/logo"/>
-			<img onclick="showMenu()" src="images/menu.svg#menu" class="h-10 w-10 my-auto cursor-pointer"/>
+			
+			<div id="homeMenu" class="flex flex-row justify-end text-right w-full px-2 my-auto transform duration-200 translate-x-full">
+				<span class="space-x-2">
+					<a href="/spotify" class="p-2 bg-black text-white rounded-full my-auto shadow-md">Spotify</a>
+					<a href="/" class="p-2 bg-black text-white rounded-full my-auto shadow-md">Reload</a>
+					<a href="/settings" class="p-2 bg-black text-white rounded-full my-auto shadow-md">Settings</a>
+				</span>
+			</div>
+			<img id="menuImg" onclick="showMenu()" src="images/menu.svg#menu" class="w-10 my-auto cursor-pointer transform duration-200"/>
 		</div>
 
-		<div id="homeMenu" class="flex flex-row justify-end text-right w-full py-2 hidden">
-			<span class="space-x-2">
-				<a href="/spotify" class="p-2 bg-black text-white rounded-full my-auto shadow-md">Spotify</a>
-				<a href="/" class="p-2 bg-black text-white rounded-full my-auto shadow-md">Reload</a>
-				<a href="/settings" class="p-2 bg-black text-white rounded-full my-auto shadow-md">Settings</a>
-			</span>
-		</div>
+		
 
 		<div class="h-full overflow-auto">
 			<ol id="zones" class="h-full flex flex-col">
@@ -225,7 +227,16 @@ let getLin = (input) =>{
 	}
 
 	let showMenu = () => {
-		document.getElementById('homeMenu').classList.toggle('hidden')
+		document.getElementById('homeMenu').classList.toggle('translate-x-full')
+		document.getElementById('menuImg').classList.toggle('-rotate-90')
+
+		let open = document.getElementById('menuImg').src == 'http://localhost:5000/images/menu.svg#menu'
+
+		if(open){
+			document.getElementById('menuImg').src ='images/menuopen.svg#menu'
+		} else {
+			document.getElementById('menuImg').src ='images/menu.svg#menu'
+		}
 	}
 
 	function loadHandlers(){
