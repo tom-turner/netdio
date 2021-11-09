@@ -22,6 +22,14 @@
 			<img id="duck" class="hidden h-14 cursor-pointer" onclick="quack()" src="images/duck.svg"/>
 			<img class="h-14 my-auto py-2" src="images/logo"/>
 
+			<div id="homeMenu" class="flex flex-row justify-end text-right w-full my-auto transform duration-200 translate-x-full">
+				<span class="space-x-2">
+					<a href="/spotify" class="px-2 p-1 bg-black text-white rounded-full my-auto shadow-md" >Spotify</a>
+					<a href="/" class="px-2 p-1 bg-black text-white rounded-full my-auto shadow-md">Home</a>
+
+				</span>
+			</div>
+
 			<img id="menuImg" onclick="showMenu()" src="images/menu.svg#menu" class="w-10 my-auto cursor-pointer transform duration-200"/>
 		</div>
 	</div>
@@ -99,17 +107,11 @@
 			
 			<label class="w-full">Action:</label>
 
-			<a href="/"class="button border px-2 rounded-full text-white blue">Home</button>
+			<a id="update" class="px-2 bg-black text-white rounded-full my-auto shadow-md">Update</a>
 
-			<a id="blinkSelf" class="button bg-black text-white border px-2 rounded-full text-grey-400">Blink</a>
+			<a id="reboot" class="px-2 bg-black text-white rounded-full my-auto shadow-md">Reboot</a>
 
-			<a href="/spotify" class="button bg-black text-white border px-2 rounded-full text-grey-400" >Spotify</a>
-
-			<a id="update" class="button bg-black text-white border px-2 rounded-full text-grey-400">Update</a>
-
-			<a id="reboot" class="button bg-black text-white border px-2 rounded-full text-grey-400">Reboot</a>
-
-			<button id="factoryreset" class="button bg-black text-white border px-2 rounded-full text-grey-400"> Reset</button>
+			<button id="factoryreset" class="px-2 bg-black text-white rounded-full my-auto shadow-md"> Reset</button>
 			
 
 			</div>
@@ -189,7 +191,7 @@
 						$('<label />').text("Label: "),
 						$(`<input type="text" class="w-full font-bold" name="${device.type}.name" value="${device.name}"/>`)
 					),
-					$('<div class="flex flex-row space-x-2"/>').append(
+					$('<div class="flex flex-row space-x-2 "/>').append(
 						$(`<a class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink" href="http://${device.ip}:5000/eq"/>`).text('EQ'),
 						$(`<button class="text-white rounded-full px-2 blue hidden sm:inline" value="true" name="blink" onclick="blink('${device.id}')"/>`).text("Blink"),
 						$(`<svg class="h-8 w-8 cursor-pointer fill-current blue-fill" onclick="window.location.href='http://${device.ip}:5000/settings'" src="images/gear.svg"><use xlink:href="images/gear.svg#gear"/></svg>`)
@@ -248,6 +250,7 @@
 	}
 
 	let showMenu = () => {
+		document.getElementById('homeMenu').classList.toggle('translate-x-full')
 		document.getElementById('devices').classList.toggle('-translate-y-96')
 		document.getElementById('devices').classList.toggle('h-0')
 		document.getElementById('devices').classList.toggle('pb-4')
@@ -350,10 +353,6 @@ function loadHandlers(){
 		}
 
 		postMessage('/forward', message)
-	})
-
-	$('#blinkSelf').on("click" , function(){
-		blink('<%= config.device.ip %>')
 	})
 
 	$('#configure').on("click" , function() {
