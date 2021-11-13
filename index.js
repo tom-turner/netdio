@@ -65,7 +65,6 @@ setInterval(()=>{
     type: 'devices',
     value: config.get('source')
   }
-  console.log(message)
   devices.forward('ctrl message', config.get('source')['send'], message, (res) => {
         if (res.error) {
           config.set('source', {
@@ -94,6 +93,7 @@ devices.receive('discovery', (device) => {
 devices.receive('ctrl message', (message) => {
   //console.log("tx data", message.value.txdata)
   config.set( message.type , message.value)
+  console.log(message)
   switch (message.type) {
     case 'source':
     roc.kill(roc.get('rx'))
