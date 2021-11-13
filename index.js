@@ -107,7 +107,11 @@ devices.receive('ctrl message', (message) => {
     roc.rocSend(message.value)
     break
     case 'rx.volume':
-    process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
+    process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`, (err, stdio, stderr) => {
+      console.log("err", err)
+      console.log("sdio", stdio)
+      console.log('stderr', stderr)
+    }) : ''
     break
     case 'blink':
     exec('python ./lib/python/blink.py')
