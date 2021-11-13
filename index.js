@@ -93,7 +93,7 @@ devices.receive('discovery', (device) => {
 devices.receive('ctrl message', (message) => {
   //console.log("tx data", message.value.txdata)
   config.set( message.type , message.value)
-  console.log(message)
+  //console.log(message)
   switch (message.type) {
     case 'source':
     roc.kill(roc.get('rx'))
@@ -103,6 +103,7 @@ devices.receive('ctrl message', (message) => {
     case 'devices' :
     message.value.send = devices.getDeviceIp(message.value.send)
     message.value.recv = devices.getDeviceIp(message.value.recv)
+    console.log(message.value.recv)
     roc.rocSend(message.value)
     break
     case 'rx.volume':
