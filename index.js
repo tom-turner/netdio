@@ -65,6 +65,7 @@ setInterval(()=>{
     type: 'devices',
     value: config.get('source')
   }
+  console.log(message)
   devices.forward('ctrl message', config.get('source')['send'], message, (res) => {
         if (res.error) {
           config.set('source', {
