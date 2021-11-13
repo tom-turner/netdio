@@ -38,6 +38,7 @@ sudo sed -i '/\b\dtparam=audio=on\b/d' /boot/config.txt
 sudo tee -a /etc/modules-load.d/modules.conf > /dev/null <<EOT
 snd-aloop
 EOT
+sudo apt-get install libasound2-plugin-equal -y
 sudo tee -a ~/.asoundrc > /dev/null <<EOT
 pcm.!default {
     type hw
