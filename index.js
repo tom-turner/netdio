@@ -37,7 +37,7 @@ app.set('layout', 'application');
 app.set('view engine', 'ejs'); 
 
 // config
-let updateInterval = 100 // lower means faster communcation between devices but inceased CPU useage
+let updateInterval = 1000 // lower means faster communcation between devices but inceased CPU useage
 let config = new Configuration('./config/config.json')
 config.set("device.ip", ip)
 
