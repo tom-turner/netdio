@@ -33,6 +33,14 @@ scons -Q --enable-pulseaudio-modules --build-3rdparty=libuv,openfec,pulseaudio,c
 sudo scons -Q --enable-pulseaudio-modules --build-3rdparty=libuv,openfec,pulseaudio,cpputest install
 #
 
+# Install TRX
+# sudo apt-get install libasound2-dev libopus-dev libortp-dev libasound2-doc
+# wget http://www.pogo.org.uk/~mark/trx/releases/trx-0.5.tar.gz
+# tar -xf trx-0.5.tar.gz
+# cd trx-0.5.tar.gz
+# make 
+# sudo make install
+
 # Create ALSA loopback
 sudo sed -i '/\b\dtparam=audio=on\b/d' /boot/config.txt
 sudo tee -a /etc/modules-load.d/modules.conf > /dev/null <<EOT
