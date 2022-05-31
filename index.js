@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const expressLayouts = require('express-layouts')
 const fileUpload = require('express-fileupload');
@@ -13,7 +14,7 @@ const Color = require('./lib/color')
 const Spotify = require('./lib/spotify')
 const platform = require('./lib/platform')
 const EQ = require('./lib/eq')
-const port = process.env.port || 5000;
+const PORT = process.env.PORT || 5000;
 const fs = require('fs')
 const Roc = require('./lib/roc')
 const multer  = require('multer')
@@ -291,6 +292,6 @@ app.get('/eq', (req, res) => {
 //
 // Starting the App
 //
-const server = http.listen(process.env.PORT || port, function() {
-  console.log('listening on *:' + port);
+const server = http.listen(process.env.PORT, function() {
+  console.log('listening on *:' + PORT);
 });
