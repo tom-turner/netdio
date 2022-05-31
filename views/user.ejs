@@ -14,20 +14,17 @@
 
 </div>
 
-<div class="flex items-center justify-center h-screen blue flex flex-col p-4">
+<div class="flex items-center justify-center h-screen blue flex flex-col sm:p-4">
 
 	<div id="zone" class="flex flex-col h-screen w-full bg-white rounded-lg shadow-md pt-2 px-4 overflow-hidden border">
-		<div class="justify-between flex w-full">
+		<div class="justify-between flex w-full hidden sm:flex">
 			<img class="h-14 my-auto py-2" src="images/logo"/>
-			
-			<div id="homeMenu" class="flex flex-row justify-end text-right w-full px-2 my-auto transform duration-200 translate-x-full">
-				<span class="space-x-2">
+			<div id="homeMenu" class="flex flex-row justify-end text-right w-full px-2 my-auto transform duration-200 translate-x-full space-x-2 ">
 					<a href="/spotify" class="px-2 p-1 bg-black text-white rounded-full my-auto shadow-md">Spotify</a>
 					<a href="/" class="px-2 p-1 bg-black text-white rounded-full my-auto shadow-md">Reload</a>
 					<a href="/settings" class="px-2 p-1 bg-black text-white rounded-full my-auto shadow-md">Settings</a>
-				</span>
 			</div>
-			<img id="menuImg" onclick="showMenu()" src="images/menu.svg#menu" class="w-10 my-auto cursor-pointer transform duration-200"/>
+			<img id="menuImg" onclick="showMenu()" src="images/menu.svg#menu" class="w-10 my-auto cursor-pointer transform duration-200"/>		
 		</div>
 
 		
@@ -73,9 +70,9 @@
 		return	$(`<li id="${zone.ip}" class="bg-white shadow-sm border-2 rounded-lg flex flex-col p-2 my-1" />`).append(
 			$('<div class="flex flex-col space-y-1 w-full"/>').append(
 				$('<div class="flex flex-row justify-between" />').append(
-					$('<p class="font-bold flex flex-grow" />').text(zone.name),
+					$('<p class="font-bold flex flex-grow pr-4 my-auto" />').text(zone.name),
 					$('<div class="" />').append(
-						$(`<select data-rx='${JSON.stringify(zone)}' class="rounded zoneinput bg-white mt-1" />`) .append(	getInputAsOption({
+						$(`<select data-rx='${JSON.stringify(zone)}' class="rounded flex truncate max-w-20 w-full zoneinput bg-white mt-1" />`) .append(	getInputAsOption({
 							name : "-Mute-",
 							source : "muted"
 						}), 
