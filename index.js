@@ -14,7 +14,7 @@ const Color = require('./lib/color')
 const Spotify = require('./lib/spotify')
 const platform = require('./lib/platform')
 const EQ = require('./lib/eq')
-const PORT = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 const fs = require('fs')
 const Roc = require('./lib/roc')
 const multer  = require('multer')
@@ -292,6 +292,6 @@ app.get('/eq', (req, res) => {
 //
 // Starting the App
 //
-const server = http.listen(process.env.PORT, function() {
-  console.log('listening on *:' + PORT);
+const server = http.listen(port, function() {
+  console.log('listening on *:' + port);
 });
