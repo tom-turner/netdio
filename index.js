@@ -123,6 +123,13 @@ devices.receive('ctrl message', (message) => {
 // spotify stuff
 let spotifyConfig = { 
     priority : process.platform == 'linux' ? Math.random().toString().slice(-6) : 0,
+    player: JSON.stringify({
+      name:"Spotify Connect",
+      type:"tx",
+      driver:"alsa",
+      hardware:"dsnoop:Loopback,1,0",
+      source: config.getNewPort()
+    }),
     device: JSON.stringify({
       id: config.get('device')['id'],
       ip: config.get('device')['ip'],
@@ -147,8 +154,8 @@ let spotifyPing = setInterval(()=>{
     return
   }
 
-  let deviceObj = currentSpotifyService.txt.device ? JSON.parse(currentSpotifyService.txt.device) : ''
-  let playerObj = currentSpotifyService.txt.player ? JSON.parse(currentSpotifyService.txt.player) : ''
+  let deviceObj = JSON.parse(currentSpotifyService.txt.device) || ''
+  let playerObj = JSON.parse(currentSpotifyService.txt.player) || ''
   let spotifyPlayer = {
     device: deviceObj,
     tx: playerObj
@@ -168,18 +175,6 @@ let spotifyPing = setInterval(()=>{
 devices.receive('spotify', (message) => {
   spotify.startAndKeepUp((err) => {
     console.log(err)
-    if(err) 
-      return
-
-    spotifyConfig.player = JSON.stringify({
-      name:"Spotify Connect",
-      type:"tx",
-      driver:"alsa",
-      hardware:"dsnoop:Loopback,1,0",
-      source: config.getNewPort()
-    })
-
-
   })
 })
 
