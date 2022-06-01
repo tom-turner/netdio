@@ -7,12 +7,11 @@ const http = require('http').Server(app);
 const bp = require('body-parser');
 const config = require('./lib/config')();
 const setup = require('./lib/setup')(config);
-const { Discovery } = require('./lib/networkServices')
+const { Network, Tx, Rx, Spotify } = require('./lib/networkServices')
 const control = require('./lib/control')
 
-Discovery.publish()
-Discovery.find()
-
+Network.publish()
+Network.find()
 
 app.get('/', async (req, res) => {
   res.send( Discovery.getDeviceList() )

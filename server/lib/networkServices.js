@@ -5,7 +5,7 @@ let bonjour = require('bonjour')({
     loopback: true
 })
 
-class NetworkService {
+class NetworkServices {
     constructor(type) {
         this.port = process.env.PORT 
         this.config = require('./config')();
@@ -22,7 +22,6 @@ class NetworkService {
                 this.getDeviceConfig(device)
             }
         }, this.updateInterval)
-
     }
 
     publish(config){
@@ -91,4 +90,7 @@ class NetworkService {
 
 }
 
-exports.Discovery = new NetworkService('discovery')
+exports.Network = new NetworkServices('network')
+exports.Tx = new NetworkServices('tx')
+exports.Rx = new NetworkServices('rx')
+exports.Spotify = new NetworkServices('spotify')
