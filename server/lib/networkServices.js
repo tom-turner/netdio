@@ -5,23 +5,44 @@ let bonjour = require('bonjour')({
     loopback: true
 })
 
+class Http {
+    constructor(headers) {
+        this.headers = headers
+    }
+
+    async request(method, url, params, body, headers) {
+        if (params)
+          url = url + '?' + new URLSearchParams(params).toString()
+
+        headers = headers || {}
+
+        try {
+            return fetch(`${url}`, {
+              method,
+              body,
+              credentials: 'include',
+              headers: Object.fromEntries(Object.entries({ ...this.headers, ...headers }).map(([name, value]) => {
+                return [name, typeof value === 'function' ? value() : value]
+              }))
+            })
+        } catch(error) {
+            return { error: error }
+        }
+    }
+
+    async get(url, params) { return this.request('GET', url, params) }
+    async post(url, params, body) { return this.request('POST', url, params, body) }
+}
+
 class NetworkServices {
     constructor(type) {
+        this.http = new Http();
         this.port = process.env.PORT 
         this.config = require('./config')();
         this.type = type
+        this.foundServices = bonjour.find({ type: this.type }).services
         this.updateInterval = 1000
-        this.foundServices = []
         this.devices = []
-
-        // currently need to fetch devices for their configs to ensure they are up.
-        // A better solution would be to use Bonjour to know when a device is down or has changed, if that functionality existed.
-        setInterval(() => {
-            this.find()
-            for (var device of Object.values(this.foundServices)) {
-                this.getDeviceConfig(device)
-            }
-        }, this.updateInterval)
     }
 
     parseBonjour(service){
@@ -42,47 +63,40 @@ class NetworkServices {
         })
     }
     
-    find(){
-        let services = bonjour.find({ type: this.type })
-        services.on('up', (service) => {
-            this.addDevice(this.parseBonjour(service))
-        })
-        return services
-    }
+    subscribe(callback){
+        // currently need to fetch devices for their configs to ensure they are up.
+        // A better solution would be to use Bonjour to know when a device is down or has changed, if that functionality existed.
+        // if a device disapears bojour does not remove it from the foundServices list and we still ping it, may cause issues later. 
+        setInterval( async () => {
+            for (var service of this.foundServices) {
+                let device = this.parseBonjour(service)
+                let deviceConfig = await this.getDeviceConfig(device)
+                if(!deviceConfig)
+                    return
 
-    addDevice(device){
-        this.foundServices[this.hash(device.id)] = device
+                this.devices[this.hash(device.id)] = deviceConfig  
+            }
+            callback(this.getDeviceList()) 
+        }, this.updateInterval)
     }
 
     removeDevice(device){
-        delete this.foundServices[this.hash(device.id)]
-        delete this.devices[this.hash(device.id)]
-    }
-
-    async fetch(ip, path){
-        try {
-            let result = await fetch(`http://${ip}:${this.port}/${path}`)
-            return result.json()
-        } catch(error) {
-            return { error: error }
-        }  
+        delete this.devices[this.hash(device.id)] 
     }
 
     async getDeviceConfig(device){
-        let response = await this.fetch( device.ip, 'get-config')
+        let fetch = await this.http.get(`http://${device.ip}:${this.port}/get-config`)
+        let result = fetch.json()
 
-        if(response.error) {
-            this.removeDevice(device)
-        }
+        if(result.error) 
+            return this.removeDevice(device)
+        
 
-        response.up = true
-        this.devices[this.hash(device.id)] = response
+        return result
     }  
 
     getDeviceList() {
-        return Object.values(this.devices).filter((event) => {
-            return event.up !== false
-        })
+        return Object.values(this.devices)
     }
 
     getDeviceById(id){
@@ -95,6 +109,7 @@ class NetworkServices {
 
 }
 
+exports.Http = Http
 exports.Network = new NetworkServices('network')
 exports.Tx = new NetworkServices('tx')
 exports.Rx = new NetworkServices('rx')

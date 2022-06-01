@@ -1,3 +1,4 @@
+const config = require('./config')();
 
 class Setup{
 	constructor(config){
