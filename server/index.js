@@ -14,7 +14,7 @@ Network.publish()
 Network.find()
 
 app.get('/', async (req, res) => {
-  res.send( Discovery.getDeviceList() )
+  res.send( Network.getDeviceList() )
 });
 
 app.get('/get-config', async (req, res) => {

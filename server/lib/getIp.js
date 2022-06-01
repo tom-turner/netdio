@@ -9,7 +9,6 @@ function getIp() {
 
 	for (interface of networkInterfaces) {
 		for (address of interface[1]) {
-			console.log(address)
 			if ( ( address.family == 'IPv4' || address.family == 4 ) && address.internal === false) {
 
 				localInterface.push(address)
