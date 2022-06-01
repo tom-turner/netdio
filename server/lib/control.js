@@ -1,5 +1,5 @@
 
-let router = (message, config, bonjour) => {
+let router = (message, config, devices) => {
 	switch (message.type) {
 		case 'source':
 			roc.kill(roc.get('rx'))
@@ -7,8 +7,8 @@ let router = (message, config, bonjour) => {
     		//console.log('recv',config.get('source'))
     	break
     	case 'devices' :
-    		message.value.send = bonjour.getDeviceIp(message.value.send)
-		    message.value.recv = bonjour.getDeviceIp(message.value.recv)
+    		message.value.send = devices.getDeviceIp(message.value.send)
+		    message.value.recv = devices.getDeviceIp(message.value.recv)
 		    console.log(message.value.recv)
 		    roc.rocSend(message.value)
 		   break

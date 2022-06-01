@@ -1,29 +1,26 @@
 require('dotenv').config()
 const port = process.env.PORT || 5000;
-
+const updateInterval = 1000
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const bp = require('body-parser');
 const config = require('./lib/config')();
 const setup = require('./lib/setup')(config);
-const bonjour = require('./lib/bonjour')(config, 1000)
+const { Discovery } = require('./lib/networkServices')
 const control = require('./lib/control')
 
-
-bonjour.receive('discovery', (device) => {
-  return 
-})
-
-bonjour.receive('ctrl message', (message) => {
-  config.set( message.type , message.value)
-  control.router(message, config, bonjour)
-  return
-})
+Discovery.publish()
+Discovery.find()
 
 
+app.get('/', async (req, res) => {
+  res.send( Discovery.getDeviceList() )
+});
 
-
+app.get('/get-config', async (req, res) => {
+  res.send(config.configObject);
+});
 
 
 //
