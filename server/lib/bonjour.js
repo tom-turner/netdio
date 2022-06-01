@@ -9,7 +9,7 @@ let bonjour = require('bonjour')({
 
 let defaultType = 'duckado-config'
 
-class Devices {
+class Bonjour {
     constructor(config, updateInterval) {
         this.config = config
         this.updateInterval = updateInterval
@@ -180,4 +180,6 @@ class Devices {
 
 }
 
-module.exports = Devices
+module.exports = (config, updateInterval) => {
+    return new Bonjour(config, updateInterval)
+} 

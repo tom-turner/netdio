@@ -45,6 +45,7 @@ config.set("device.ip", ip)
 config.get('device')['id']
   ? config.get('device')['id']
   : config.set("device.id", config.hash(ip))
+
 let id = config.get('device')['id']
 
 config.get('tx') 
@@ -57,11 +58,13 @@ config.get('tx')
 let roc = new Roc(config.configObject, updateInterval)
 let eq = new EQ()
 
+
+// setting up ROC on receiver port
 config.get('rx')
   ? roc.rocRecv(config.get('source'))
   : console.log('no rx')
 
-setInterval(()=>{ 
+setInterval(()=>{
   let message = {
     type: 'devices',
     value: config.get('source')
@@ -137,9 +140,12 @@ let spotifyConfig = {
       name: 'Duckado-Connect'
     })
   } 
+
 let spotify = new Spotify(updateInterval)
+
 let spotifyService = devices.publish('duck-spot', spotifyConfig)
 let findSpotify = devices.discover('duck-spot')
+
 let spotifyServices = []
 let i = 0
 let spotifyPing = setInterval(()=>{

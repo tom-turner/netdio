@@ -105,3 +105,9 @@ pcm.!default {
 }
 EOT
 # alsamixer -D equal
+
+
+default startup config:
+
+{"device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"Duckado"},
+"source":{"name":"-Mute-"}}

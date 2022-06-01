@@ -1,2 +1,4 @@
-{"device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"Duckado"},
+{"rx":{"name":"Mac Speakers","type":"rx","volume":"80","driver":"coreaudio","hardware":""},
+"tx":{"name":"Mac Input", "type":"tx", "driver":"Coreaudio","hardware":"BlackHole"},
+"device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"EtherDAC"},
 "source":{"name":"-Mute-"}}

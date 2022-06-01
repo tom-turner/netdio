@@ -20,10 +20,10 @@
   },
   "name": "template",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "yarn build:css && node ./bin/www",
+    "start": "node server/index.js",
     "build:css": "npx postcss public/css/tailwind.css -o public/css/app.css",
     "logs": "pm2 monit"
   },

@@ -1,4 +1,5 @@
 const fs = require('fs')
+const ip = require('./getIp')();
 
 function debounce(fn, timeout) {
   let interval = null
@@ -15,19 +16,19 @@ function debounce(fn, timeout) {
 
 
 class Configuration {
-  constructor(configFile, type, debounceTimeout) {
-    this.configFile = configFile
-    this.debouncedSave = debounce(() => this.save(), debounceTimeout || 100)
+  constructor() {
+    this.configFile = './config/config.json'
+    this.startupConfigFile = "./config/startupconfig.json"
+    this.debouncedSave = debounce(() => this.save(), 100)
+    this.configObject = this.config()
   }
   
-
-
   config() {
     if (!this.configObject)
       if (fs.existsSync(this.configFile))
         this.configObject = JSON.parse(fs.readFileSync(this.configFile))
       else
-        this.configObject = JSON.parse(fs.readFileSync("config/startupconfig.json"))
+        this.configObject = JSON.parse(fs.readFileSync(this.startupConfigFile))
 
     return this.configObject
   }
@@ -85,4 +86,6 @@ class Configuration {
   }
 }
 
-module.exports = Configuration
+module.exports = () => {
+  return new Configuration()
+}
