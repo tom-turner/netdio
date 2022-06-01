@@ -17,11 +17,19 @@ class NetworkServices {
         // currently need to fetch devices for their configs to ensure they are up.
         // A better solution would be to use Bonjour to know when a device is down or has changed, if that functionality existed.
         setInterval(() => {
+            this.find()
             for (var device of Object.values(this.foundServices)) {
-                console.log(this.devices)
                 this.getDeviceConfig(device)
             }
         }, this.updateInterval)
+    }
+
+    parseBonjour(service){
+        return {
+            ip: service.referer.address,
+            id: service.name,
+            config: JSON.parse(Object.values(service.txt).join(''))
+        } 
     }
 
     publish(config){
@@ -42,14 +50,6 @@ class NetworkServices {
         return services
     }
 
-    parseBonjour(service){
-        return {
-            ip: service.referer.address,
-            id: service.name,
-            config: JSON.parse(Object.values(service.txt).join(''))
-        } 
-    }
-
     addDevice(device){
         this.foundServices[this.hash(device.id)] = device
     }
@@ -60,18 +60,23 @@ class NetworkServices {
     }
 
     async fetch(ip, path){
-        let result = await fetch(`http://${ip}:${this.port}/${path}`)
-        return await result.json()
+        try {
+            let result = await fetch(`http://${ip}:${this.port}/${path}`)
+            return result.json()
+        } catch(error) {
+            return { error: error }
+        }  
     }
 
     async getDeviceConfig(device){
-            let response = await this.fetch( device.ip, 'get-config')
+        let response = await this.fetch( device.ip, 'get-config')
 
-            if(!response)
-                this.removeDevice(device)
+        if(response.error) {
+            this.removeDevice(device)
+        }
 
-            response.up = true
-            this.devices[this.hash(device.id)] = response
+        response.up = true
+        this.devices[this.hash(device.id)] = response
     }  
 
     getDeviceList() {
