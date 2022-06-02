@@ -70,7 +70,7 @@ class NetworkServices {
 
     publish(config){
         return bonjour.publish({
-            name: this.config.configObject.device.id || this.config.get('device.id'),
+            name: `${this.type}-${this.config.configObject.device.id}`|| `${this.type}-${this.config.get('device.id')}`,
             type: this.type,
             host: '224.0.1.1',
             port: 20000,
