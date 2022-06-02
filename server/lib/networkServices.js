@@ -89,7 +89,7 @@ class NetworkServices {
                 if(!deviceConfig)
                     return
 
-                this.devices[this.hash(device.id)] = deviceConfig  
+                return this.devices[this.hash(device.id)] = deviceConfig  
             }
             callback(this.getDeviceList()) 
         }, this.updateInterval)

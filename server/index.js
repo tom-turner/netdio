@@ -13,6 +13,10 @@ app.use(cors({
   origin: (origin, next) => next(null, origin),
 }))
 
+//process.on('uncaughtException', function (err) {
+//    console.log(err);
+//}); 
+
 Tx.publish()
 Tx.subscribe( async device => {} )
 
