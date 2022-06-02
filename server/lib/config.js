@@ -62,8 +62,8 @@ class Configuration {
     await this.save()
   }
 
-  hash(id){
-    return SHA256(id).toString()
+  hash(input){
+    return SHA256(input).toString()
   }
 
   getNewPort(){
@@ -94,7 +94,7 @@ class Setup{
   }
 
   id(){
-    this.config.set("device.id", this.config.hash(this.ip))
+    this.config.set("device.id", this.config.hash(this.ip()))
     return this.config.get('device')['id']
   }
 

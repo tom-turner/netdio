@@ -116,8 +116,8 @@ class NetworkServices {
         return this.devices[this.hash(id)]
     }
 
-    hash(id){
-        return SHA256(id).toString()
+    hash(input){
+        return SHA256(input).toString()
     }
 
 }
