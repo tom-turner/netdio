@@ -16,11 +16,11 @@ function debounce(fn, timeout) {
 
 
 class Configuration {
-  constructor() {
-    this.configFile = './config/config.json'
+  constructor(configFile) {
+    this.configFile = configFile
     this.startupConfigFile = "./config/startupconfig.json"
     this.debouncedSave = debounce(() => this.save(), 100)
-    this.configObject = this.config()
+    this.configObject = this.config();
   }
   
   config() {
@@ -35,7 +35,7 @@ class Configuration {
 
   async save() {
     return new Promise((resolve, reject) => {
-      if (this.configFile)
+      if (fs.existsSync(this.configFile)) 
         fs.writeFileSync(this.configFile, JSON.stringify(this.config()), (err) => {
           if (err) {
             console.error('An error occoured whilst writing:', err.message)
@@ -86,6 +86,6 @@ class Configuration {
   }
 }
 
-module.exports = () => {
-  return new Configuration()
+module.exports = (configFile) => {
+  return new Configuration(configFile)
 }

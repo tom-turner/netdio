@@ -4,17 +4,21 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const bp = require('body-parser');
-const cors = require('cors')
-const routes = require("./routes")
-const setup = require('./lib/setup')
-const { Network, Spotify } = require('./lib/networkServices')
+const cors = require('cors');
+const routes = require("./routes");
+const config = require('./lib/config')('./config/config.json');
+const setup = require('./lib/setup');
+//const { Network, Tx, Rx, Spotify } = require('./lib/networkServices')
+
 
 app.use(cors({
   origin: (origin, next) => next(null, origin),
 }))
 
-Network.publish()
-Network.subscribe( async device => {} )
+
+
+//Network.publish()
+//Network.subscribe( async device => {} )
 
 app.use(routes)
 

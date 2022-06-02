@@ -1,7 +1,7 @@
 let express = require('express');
 let routes = express.Router();
 const config = require('./lib/config')();
-const { Network, Spotify } = require('./lib/networkServices')
+const { Network, Tx, Rx, Spotify } = require('./lib/networkServices')
 const Roc = require('./lib/roc')
 let roc = new Roc(config.configObject)
 
@@ -28,6 +28,7 @@ routes.post('/blink', async (req, res) => {
 });
 
 routes.post('/set-volume', async (req, res) => {
+	config.set( message.type , message.value)
 	process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
 	res.status(200).send()
 });
@@ -40,7 +41,7 @@ routes.post('/set-audio-source', async (req, res) => {
 	res.status(200).send()
 });
 
-routes.get('/get-audio-stream', async (req, res) => {
+routes.post('/set-audio-stream', async (req, res) => {
 	let message = req.body
 	config.set( message.type , message.value)
 	roc.rocSend(message.value)
@@ -49,6 +50,14 @@ routes.get('/get-audio-stream', async (req, res) => {
 
 routes.get('/get-network-device-list', async (req, res) => {
 	res.json( Network.getDeviceList() )
+});
+
+routes.get('/get-list-of-transmitters', async (req, res) => {
+	res.json( Tx.getDeviceList() )
+});
+
+routes.get('/get-list-of-receivers', async (req, res) => {
+	res.json( Rx.getDeviceList() )
 });
 
 routes.get('/get-config', async (req, res) => {

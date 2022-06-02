@@ -112,4 +112,6 @@ class NetworkServices {
 
 exports.Http = Http
 exports.Network = new NetworkServices('network')
+exports.Tx = new NetworkServices('tx')
+exports.Rx = new NetworkServices('rx')
 exports.Spotify = new NetworkServices('spotify')
