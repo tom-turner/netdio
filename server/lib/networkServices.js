@@ -34,6 +34,7 @@ class Http {
     async post(url, params, body) { return this.request('POST', url, params, body) }
 }
 
+
 class NetworkServices {
     constructor(type) {
         this.http = new Http();
@@ -111,6 +112,4 @@ class NetworkServices {
 
 exports.Http = Http
 exports.Network = new NetworkServices('network')
-exports.Tx = new NetworkServices('tx')
-exports.Rx = new NetworkServices('rx')
 exports.Spotify = new NetworkServices('spotify')

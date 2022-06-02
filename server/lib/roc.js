@@ -25,9 +25,9 @@ function notEqual(arr1, arr2){
 }
 
 class Roc {
-  constructor(config, updateInterval) {
+  constructor(config) {
     this.config = config
-    this.updateInterval = updateInterval
+    this.updateInterval = 1000
     this.childProcesses = []
     this.file = "config/rocprocesses.json"
     this.outputDriver = this.config.rx ? `-d${this.config.rx.driver}` : ''
