@@ -1,3 +1,4 @@
+const config = require('./config')();
 const fetch = require('node-fetch');
 let SHA256 = require("crypto-js/sha256");
 let bonjour = require('bonjour')({
@@ -26,24 +27,37 @@ class Http {
               }))
             })
         } catch(error) {
-            return { error: error }
+            return { error: error, status : 400 }
         }
     }
 
-    async get(url, params) { return this.request('GET', url, params) }
-    async post(url, params, body) { return this.request('POST', url, params, body) }
+    async get(url, params) {
+        let response = await this.request('GET', url, params)
+        if(response.status !== 200)
+            return { error: response.status }
+
+        return response.json()
+    }
+    async post(url, params, body) {
+        let response = this.request('POST', url, params, body)
+        if(response.status !==200)
+            return { error: response.status }
+
+        return response.json()
+    }
 }
 
 
 class NetworkServices {
     constructor(type) {
+        this.config = config
         this.http = new Http();
         this.port = process.env.PORT 
-        this.config = require('./config')();
         this.type = type
         this.foundServices = bonjour.find({ type: this.type }).services
         this.updateInterval = 1000
         this.devices = []
+
     }
 
     parseBonjour(service){
@@ -56,7 +70,7 @@ class NetworkServices {
 
     publish(config){
         return bonjour.publish({
-            name: this.config.configObject.device.id,
+            name: this.config.configObject.device.id || this.config.get('device.id'),
             type: this.type,
             host: '224.0.1.1',
             port: 20000,
@@ -86,12 +100,10 @@ class NetworkServices {
     }
 
     async getDeviceConfig(device){
-        let fetch = await this.http.get(`http://${device.ip}:${this.port}/get-config`)
-        let result = fetch.json()
-
+        let result = await this.http.get(`http://${device.ip}:${this.port}/get-config/${this.type}`)
+        
         if(result.error) 
             return this.removeDevice(device)
-        
 
         return result
     }  
@@ -105,13 +117,12 @@ class NetworkServices {
     }
 
     hash(id){
-        return SHA256(id)
+        return SHA256(id).toString()
     }
 
 }
 
 exports.Http = Http
-exports.Network = new NetworkServices('network')
 exports.Tx = new NetworkServices('tx')
 exports.Rx = new NetworkServices('rx')
 exports.Spotify = new NetworkServices('spotify')

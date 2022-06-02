@@ -11,19 +11,18 @@ export function Zones({ children }) {
 }
 
 
-export function Zone({ zone, selected, muted }) {
-
+export function Zone({ name, options, selected, muted }) {
 	return(
 			<div className={`border shadow-sm w-full p-4 space-y-4 rounded ${ selected ? 'border-zinc-800' : 'border-zinc-300 shadow-sm' }`} >
 			 	
 				<div className="flex justify-between">
-			 		<p className="font-bold text-zinc-800"> Livingroom </p>
+			 		<p className="font-bold text-zinc-800"> ${name} </p>
 			 		<div className={`${ muted || selected ? '' : 'hidden'}`}>
 			 			<InputSelect >
-			 				
+			 				{options}
 			 			</InputSelect>
 			 		</div>
-			 		<LoadingMeters className={`h-4 fill-zinc-800 ${ muted || selected ? 'hidden' : ''}`} />
+			 		<LoadingMeters className={`h-6 fill-zinc-800 ${ muted || selected ? 'hidden' : ''}`} />
 			 	</div>
 
 			 	<input type="range" className="w-full" />

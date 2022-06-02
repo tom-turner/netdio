@@ -33,4 +33,17 @@ let getNetworkDeviceList = async (query) => {
     .then(res => res.json())
 }
 
+let getTransmitters = async (query) => {
+  return http.get(`http://localhost:5050/get-list-of-transmitters`)
+    .then(res => res.json())
+}
+
+let getReceivers = async (query) => {
+  return http.get(`http://localhost:5050/get-list-of-receivers`)
+    .then(res => res.json())
+}
+
+
 module.exports.getNetworkDeviceList = getNetworkDeviceList
+module.exports.getTransmitters = getTransmitters
+module.exports.getReceivers = getReceivers

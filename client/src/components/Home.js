@@ -1,21 +1,27 @@
 import { useState, useEffect } from "react";
-import { getNetworkDeviceList } from '../lib/api'
+import { getTransmitters, getReceivers } from '../lib/api'
 import Loading from './Loading'
 import { Zones, Zone } from './Zones'
 
 let Home = () => {
-	let [ deviceList, setDeviceList ] = useState([])
+	let [ transmitters, setTransmitters ] = useState([])
+	let [ receivers, setReceivers ] = useState([])
 
 	useEffect(() => {
 		setInterval( async () => {
-			setDeviceList( await getNetworkDeviceList() )
+			setTransmitters( await getTransmitters() )
+			setReceivers( await getReceivers() )
 		}, 1000)
 	}, []);
 
-	console.log(deviceList)
+	if(transmitters.length == 0 && receivers.length == 0 )
+		return <Loading loadedWhen={transmitters.length !== 0} />
 
-	if(deviceList.length == 0)
-		return <Loading loadedWhen={deviceList.length !== 0} />
+
+	let zones = receivers.map((rx, i) => {
+		console.log(rx)
+		return <Zone key={i} name={rx.name} />
+	})
 
 	return(
 			<div className="w-full h-screen text-xl flex flex-col overflow-hidden" >
@@ -26,8 +32,7 @@ let Home = () => {
 
 
 				<Zones className="flex flex-col w-full p-4 pt-8 space-y-4 ">
-					<Zone selected={false} />
-					<Zone selected={true} />
+					{zones}
 				</Zones >
 			</div>
 	)	

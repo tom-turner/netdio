@@ -1,12 +1,10 @@
-const config = require('./config')();
-
 class Setup{
-	constructor(){
-		this.config = config;
-		this.ip = this.ip();
-		this.id = this.id();
-		this.tx = this.tx();
-		this.rx = this.rx();
+	constructor(config){
+		this.config = config
+		this.ip();
+		this.id();
+		this.tx();
+		this.rx();
 	}
 
 	ip(){
@@ -23,11 +21,11 @@ class Setup{
 		if(!this.config.get('tx'))
 			return
 
-		if(!this.config.get('tx')['source'] )
-			this.config.set( "tx.source", this.config.getNewPort() )
+		this.config.set('tx.ip', this.ip() )
+		this.config.set('tx.id', this.id() )
 
-		this.config.set('tx.ip', this.ip )
-		this.config.set('tx.id', this.id )
+		if(!this.config.get('tx')['source'])
+			this.config.set( "tx.source", this.config.getNewPort() )
 
 		return this.config.get('tx')
 	}
@@ -36,15 +34,14 @@ class Setup{
 		if(!this.config.get('rx'))
 			return
 
-		this.config.set('rx.ip', this.ip )
-		this.config.set('rx.id', this.id )
+		this.config.set('rx.ip', this.ip() )
+		this.config.set('rx.id', this.id() )
 
 		return this.config.get('rx')
 	}
 }
 
 
-
-module.exports = () => {
-	return new Setup()
+module.exports = (config) => {
+	return new Setup(config)
 }
