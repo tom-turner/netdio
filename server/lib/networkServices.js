@@ -57,7 +57,6 @@ class NetworkServices {
         this.foundServices = bonjour.find({ type: this.type }).services
         this.updateInterval = 1000
         this.devices = []
-
     }
 
     parseBonjour(service){
