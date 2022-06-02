@@ -61,7 +61,7 @@ routes.get('/get-config/tx', async (req, res) => {
 });
 
 routes.get('/get-config/rx', async (req, res) => {
-	res.json(config.configObject.rx);
+	res.json({ ...config.configObject.rx, source: config.configObject.source });
 });
 
 

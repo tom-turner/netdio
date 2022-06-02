@@ -1,7 +1,6 @@
 const fs = require('fs')
 const ip = require('./getIp')();
 const SHA256 = require("crypto-js/sha256");
-const setupConfigs = require('./setup')
 
 function debounce(fn, timeout) {
   let interval = null
@@ -118,6 +117,9 @@ class Setup{
 
     this.config.set('rx.ip', this.ip() )
     this.config.set('rx.id', this.id() )
+
+    if(!this.config.get('source'))
+      this.config.set( "source.name", '-Mute-' )
 
     return this.config.get('rx')
   }

@@ -18,9 +18,8 @@ let Home = () => {
 		return <Loading loadedWhen={transmitters.length !== 0} />
 
 
-	let zones = receivers.map((rx, i) => {
-		console.log(rx)
-		return <Zone key={i} name={rx.name} />
+	let zones = receivers.map((receiver, i) => {
+		return <Zone key={i} receiver={receiver} transmitters={transmitters} />
 	})
 
 	return(
@@ -29,7 +28,6 @@ let Home = () => {
 				<div className="border-b border-zinc-300 pt-12 pb-4 text-zinc-800 text-center font-bold shadow-inner">
 					<h2 >Home</h2>
 				</div>
-
 
 				<Zones className="flex flex-col w-full p-4 pt-8 space-y-4 ">
 					{zones}
