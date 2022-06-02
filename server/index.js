@@ -9,9 +9,7 @@ const routes = require("./routes");
 const config = require('./lib/config')();
 const { Tx, Rx, Spotify } = require('./lib/networkServices')
 
-app.use(cors({
-  origin: (origin, next) => next(null, origin),
-}))
+app.use(cors());
 
 //process.on('uncaughtException', function (err) {
 //    console.log(err);
@@ -20,8 +18,8 @@ app.use(cors({
 Tx.publish()
 Tx.subscribe( async device => {} )
 
-Rx.publish()
-Rx.subscribe( async device => {} )
+//Rx.publish()
+//Rx.subscribe( async device => {} )
 
 
 app.use(routes)
