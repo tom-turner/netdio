@@ -53,7 +53,8 @@ class NetworkServices {
         this.config = config
         this.http = new Http({
             'Content-Type': 'application/json',
-            'Authorization': () => process.env.AUTH
+            'Authorization': () => process.env.AUTH,
+            'Accept': '*'
         });
         this.port = process.env.PORT 
         this.type = type
