@@ -48,12 +48,19 @@ routes.post('/set-audio-stream', async (req, res) => {
 	res.status(200).send()
 });
 
-routes.get('/get-list-of-transmitters', async (req, res) => {
-	res.json( Tx.getDeviceList() )
+routes.get('/get-devices', async (req, res) => {
+	res.json({
+		transmitters: Tx.getDeviceList(),
+		receivers: Rx.getDeviceList(),
+	})
 });
 
-routes.get('/get-list-of-receivers', async (req, res) => {
-	res.json( Rx.getDeviceList() )
+routes.get('/get-bonjour-services/tx', async (req, res) => {
+	res.json( Tx.getServiceList() )
+});
+
+routes.get('/get-bonjour-services/rx', async (req, res) => {
+	res.json( Rx.getServiceList() )
 });
 
 routes.get('/get-config/tx', async (req, res) => {

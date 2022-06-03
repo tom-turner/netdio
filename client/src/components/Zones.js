@@ -15,7 +15,7 @@ export function Zone({ receiver, transmitters, muted }) {
 	let [ selected, setSelected ] = useState(true)
 
 	let inputOptions = transmitters.map((transmitter, i)=>{
-		return <option value={transmitter}>{transmitter.name}</option>
+		return <option key={i} value={transmitter}>{transmitter.name}</option>
 	})
 
 	return(
@@ -24,8 +24,8 @@ export function Zone({ receiver, transmitters, muted }) {
 				<div className="flex justify-between">
 			 		<p className="font-bold text-zinc-800"> {receiver.name} </p>
 			 		<div className={`${ muted || selected ? '' : 'hidden'}`}>
-						<select >
-							<option disabled selected >{receiver.source.name}</option>
+						<select defaultValue={'default'} >
+							<option disabled value={'default'} >{receiver.source.name}</option>
 							{inputOptions}
 						</select>
 			 		</div>

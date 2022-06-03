@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getTransmitters, getReceivers } from '../lib/api'
+import { Tx, Rx } from '../lib/api'
 import Loading from './Loading'
 import { Zones, Zone } from './Zones'
 
@@ -8,13 +8,14 @@ let Home = () => {
 	let [ receivers, setReceivers ] = useState([])
 
 	useEffect(() => {
-		setInterval( async () => {
-			setTransmitters( await getTransmitters() )
-			setReceivers( await getReceivers() )
-		}, 1000)
+		Tx.subscribe((devices) =>{
+			setTransmitters(devices)
+		})
+		Rx.subscribe((devices) =>{
+			setReceivers(devices)
+		})
 	}, []);
-
-	console.log(transmitters)
+ 
 
 	if(transmitters.length == 0 && receivers.length == 0 )
 		return <Loading loadedWhen={transmitters.length !== 0} />

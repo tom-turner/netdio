@@ -67,7 +67,7 @@ class NetworkServices {
         return {
             ip: service.referer.address,
             id: service.name,
-            config: JSON.parse(Object.values(service.txt).join(''))
+            type: this.type
         } 
     }
 
@@ -77,11 +77,11 @@ class NetworkServices {
             type: this.type,
             host: '224.0.1.1',
             port: 20000,
-            txt: JSON.stringify( config || '' ) // currently not using config on bojour as its not updateable.
+            txt: JSON.stringify( config || this.type ) // currently not using config on bojour as its not updateable.
         })
     }
     
-    subscribe(callback){
+    subscribe(){
         // currently need to fetch devices for their configs to ensure they are up.
         // A better solution would be to use Bonjour to know when a device is down or has changed, if that functionality existed.
         // if a device disapears bojour does not remove it from the foundServices list and we still ping it, may cause issues later. 
@@ -94,7 +94,6 @@ class NetworkServices {
 
                 return this.devices[this.hash(device.id)] = deviceConfig  
             }
-            callback(this.getDeviceList()) 
         }, this.updateInterval)
     }
 
@@ -113,6 +112,12 @@ class NetworkServices {
 
     getDeviceList() {
         return Object.values(this.devices)
+    }
+
+    getServiceList(){
+        return this.foundServices.map((service)=>{
+            return this.parseBonjour(service)
+        })
     }
 
     getDeviceById(id){

@@ -19,12 +19,11 @@ app.use(bodyParser.json());
 app.use(express.urlencoded());
 app.use(routes)
 
+if(config.configObject.tx)
+  Tx.publish()
 
-Tx.publish()
-Tx.subscribe(() => {})
-Rx.publish()
-Rx.subscribe(() => {})
-
+if(config.configObject.rx) 
+  Rx.publish()
 
 //process.on('uncaughtException', function (err) {
 //    console.log(err);
