@@ -14,6 +14,8 @@ let Home = () => {
 		}, 1000)
 	}, []);
 
+	console.log(transmitters)
+
 	if(transmitters.length == 0 && receivers.length == 0 )
 		return <Loading loadedWhen={transmitters.length !== 0} />
 

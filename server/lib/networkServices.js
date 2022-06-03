@@ -51,7 +51,10 @@ class Http {
 class NetworkServices {
     constructor(type) {
         this.config = config
-        this.http = new Http();
+        this.http = new Http({
+            'Content-Type': 'application/json',
+            'Authorization': () => process.env.AUTH
+        });
         this.port = process.env.PORT 
         this.type = type
         this.foundServices = bonjour.find({ type: this.type }).services

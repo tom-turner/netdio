@@ -3,26 +3,32 @@ const port = process.env.PORT || 5000;
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
-const bp = require('body-parser');
+const bodyParser = require('body-parser')
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const routes = require("./routes");
 const config = require('./lib/config')();
 const { Tx, Rx, Spotify } = require('./lib/networkServices')
 
-app.use(cors());
+app.use(cors({
+  origin: (origin, next) => next(null, origin),
+  credentials: true
+}))
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(express.urlencoded());
+app.use(routes)
+
+
+Tx.publish()
+Tx.subscribe(() => {})
+Rx.publish()
+Rx.subscribe(() => {})
+
 
 //process.on('uncaughtException', function (err) {
 //    console.log(err);
 //}); 
-
-Tx.publish()
-Tx.subscribe( async device => {} )
-
-//Rx.publish()
-//Rx.subscribe( async device => {} )
-
-
-app.use(routes)
 
 const server = http.listen(port, function() {
   console.log('listening on *:' + port);
