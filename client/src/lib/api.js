@@ -30,11 +30,6 @@ class Http {
   }
 }
 
-const http = new Http({
-  'Content-Type': 'application/json',
-})
-
-
 class NetworkServices {
       constructor(type) {
         this.updateInterval = 1000
@@ -53,17 +48,6 @@ class NetworkServices {
 
       return response.json()
     }
-
-    subscribe(callback){
-        // currently need to fetch devices for their configs to ensure they are up.
-        // A better solution would be to use Bonjour to know when a device is down or has changed, if that functionality existed.
-        // if a device disapears bojour does not remove it from the foundServices list and we still ping it, may cause issues later. 
-        setInterval( async () => {
-            this.services = await this.getServices()
-            callback( this.services )
-        }, this.updateInterval)
-    }
-
 }
 
 
@@ -76,27 +60,33 @@ class Devices {
         this.port = 5050
         this.type = type
         this.networkServices = new NetworkServices(type)
+        this.services = []
         this.devices = []
+        this.error = null
     }
 
-    subscribe(callback){
-        this.networkServices.subscribe((services) => {
-          callback(this.getDeviceList(this.devices))
-          
-          if(services.error){
-            return this.devices = []
-          }
+    async subscribe(callback){
+      setInterval( async () => { // can we get callbacks from devices when their state changes instead of polling them?
+        let services = await this.networkServices.getServices()
+        if(services.error)
+          this.error = services.error
+        else 
+          this.services = services
+        
+        this.services.map( async (service) => {
+          let deviceConfig = await this.getDeviceConfig(service)
+          if(!deviceConfig)
+                return this.removeDevice(service)
 
-          services.map( async (service) => {
-            let deviceConfig = await this.getDeviceConfig(service)
-            console.log(deviceConfig)
-            if(!deviceConfig)
-                  return this.removeDevice(service)
-
-            return this.devices[this.hash(service.id)] = deviceConfig  
-          })
-      
+          return this.devices[this.hash(service.id)] = deviceConfig  
         })
+
+        callback({
+          devices: this.getDeviceList(this.devices),
+          error: this.error
+        })
+        
+      }, this.updateInterval)
     }
 
     async getDeviceConfig(device){
@@ -124,8 +114,23 @@ class Devices {
 
 }
 
+let http = new Http({
+    'Content-Type': 'application/json',
+});
+
+let setAudioSource = async (ip, tx) => {
+  return http.post(`http://${ip}:${5050}/set-audio-source`, null, JSON.stringify(tx)).then(res => res.json())
+}
+
+let setVolume = async (ip, value) => {
+  return http.post(`http://${ip}:${5050}/set-volume`, null, JSON.stringify({ value: value })).then(res => res.json())
+}
+
+
 exports.NetworkServices = (type) => {
   return new NetworkServices(type)
 }
 exports.Tx = new Devices('tx')
 exports.Rx = new Devices('rx')
+module.exports.setAudioSource = setAudioSource
+module.exports.setVolume = setVolume

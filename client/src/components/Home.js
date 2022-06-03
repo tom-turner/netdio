@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
-import { Tx, Rx } from '../lib/api'
+import { Tx, Rx, setAudioSource, setVolume } from '../lib/api'
 import Loading from './Loading'
 import { Zones, Zone } from './Zones'
 
 let Home = () => {
+	let [ error, setError] = useState(null)
 	let [ transmitters, setTransmitters ] = useState([])
 	let [ receivers, setReceivers ] = useState([])
 
 	useEffect(() => {
-		Tx.subscribe((devices) =>{
+		Tx.subscribe(({ devices, error }) =>{
 			setTransmitters(devices)
 		})
-		Rx.subscribe((devices) =>{
+		Rx.subscribe(({ devices, error }) =>{
 			setReceivers(devices)
 		})
 	}, []);
@@ -21,9 +22,27 @@ let Home = () => {
 		return <Loading loadedWhen={transmitters.length !== 0} />
 
 
+	let handleInputChange = ({ip, value}) => {
+		let tx = JSON.parse(value)
+		setAudioSource( ip, { name: tx.name, source: tx.source })
+	}
+
+	let handleVolumeChange = ({ip, value}) => {
+		setVolume( ip, value )
+	}
+
+
 	let zones = receivers.map((receiver, i) => {
-		return <Zone key={i} receiver={receiver} transmitters={transmitters} />
+		return <Zone
+			key={i}
+			receiver={receiver}
+			transmitters={transmitters}
+			handleInputChange={ (e) => { handleInputChange(e)} }
+			handleVolumeChange={ (e) => { handleVolumeChange(e)} }
+		/>
 	})
+
+
 
 	return(
 			<div className="w-full h-screen text-xl flex flex-col overflow-hidden" >

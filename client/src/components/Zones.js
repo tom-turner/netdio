@@ -11,12 +11,14 @@ export function Zones({ children }) {
 }
 
 
-export function Zone({ receiver, transmitters, muted }) {
+export function Zone({ receiver, transmitters, muted, handleInputChange, handleVolumeChange }) {
 	let [ selected, setSelected ] = useState(true)
 
 	let inputOptions = transmitters.map((transmitter, i)=>{
-		return <option key={i} value={transmitter}>{transmitter.name}</option>
+		return <option key={i} value={JSON.stringify(transmitter)}>{transmitter.name}</option>
 	})
+
+	console.log(receiver)
 
 	return(
 			<div className={`border shadow-sm w-full p-4 space-y-4 rounded ${ selected ? 'border-zinc-800' : 'border-zinc-300 shadow-sm' }`} >
@@ -24,15 +26,16 @@ export function Zone({ receiver, transmitters, muted }) {
 				<div className="flex justify-between">
 			 		<p className="font-bold text-zinc-800"> {receiver.name} </p>
 			 		<div className={`${ muted || selected ? '' : 'hidden'}`}>
-						<select defaultValue={'default'} >
-							<option disabled value={'default'} >{receiver.source.name}</option>
+						<select onChange={ (e) => { handleInputChange({ ip: receiver.ip , value: e.target.value }) } } defaultValue={'default'} >
+							<option disabled value={'default'} >{`Input: ${receiver.source.name} `}</option>
+							<option value={ JSON.stringify({ name: '-Mute-'})} >{'-Mute-'}</option>
 							{inputOptions}
 						</select>
 			 		</div>
 			 		<LoadingMeters className={`h-6 fill-zinc-800 ${ muted || selected ? 'hidden' : ''}`} />
 			 	</div>
 
-			 	<input type="range" className={`w-full `} />
+			 	<input defaultValue={receiver.volume} type="range" className={`w-full `} onChange={ (e) => { handleVolumeChange({ ip: receiver.ip, value: e.target.value }) }} />
 			 </div>
 	)	
 }

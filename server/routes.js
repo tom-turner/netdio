@@ -28,22 +28,22 @@ routes.post('/blink', async (req, res) => {
 });
 
 routes.post('/set-volume', async (req, res) => {
-	config.set( message.type , message.value)
-	process.platform === 'linux' ? exec(`amixer -q sset Digital ${message.value}%`) : ''
-	res.status(200).send()
+	config.set( 'rx.volume' , req.body.value )
+	process.platform === 'linux' ? exec(`amixer -q sset Digital ${req.body.value}%`) : ''
+	res.status(200).json({success: true})
 });
 
 routes.post('/set-audio-source', async (req, res) => {
-	let message = req.body
-	config.set( message.type , message.value)
+	config.set( 'source' , req.body)
 	//roc.kill(roc.get('rx'))
     //roc.rocRecv(config.get('source'))
-	res.status(200).send()
+	res.status(200).json({success: true})
 });
 
 routes.post('/set-audio-stream', async (req, res) => {
 	let message = req.body
-	config.set( message.type , message.value)
+	console.log(message)
+	//config.set( message.type , message.value)
 	//roc.rocSend(message.value)
 	res.status(200).send()
 });
