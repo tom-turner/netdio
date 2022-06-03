@@ -17,18 +17,16 @@ class Http {
 
         headers = headers || {}
 
-        try {
-            return fetch(`${url}`, {
-              method,
-              body,
-              credentials: 'include',
-              headers: Object.fromEntries(Object.entries({ ...this.headers, ...headers }).map(([name, value]) => {
-                return [name, typeof value === 'function' ? value() : value]
-              }))
-            })
-        } catch(error) {
+        return fetch(`${url}`, {
+          method,
+          body,
+          credentials: 'include',
+          headers: Object.fromEntries(Object.entries({ ...this.headers, ...headers }).map(([name, value]) => {
+            return [name, typeof value === 'function' ? value() : value]
+          }))
+        }).catch((error) => {
             return { error: error, status : 400 }
-        }
+        })
     }
 
     async get(url, params) {
