@@ -38,7 +38,7 @@ routes.post('/set-volume', async (req, res) => {
 routes.post('/set-receiver-source', async (req, res) => {
 	config.set( 'source' , { name: req.body.name, socket: req.body.socket })
 	processes.kill(processes.get('rx'))
-    audio.recv(req.body.socket)
+    audio.receive(req.body.socket)
 	res.status(200).json({success: true})
 });
 

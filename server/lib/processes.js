@@ -38,7 +38,7 @@ class Processes {
   get(value){
     return this.childProcesses.filter((item) => {
       if (value) {
-        return item.type == value || item.pid == value || item.ip == value
+        return item.type == value || item.pid == value || item.ref == value
       } else return true
     })
   }

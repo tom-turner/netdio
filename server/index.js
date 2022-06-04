@@ -25,10 +25,11 @@ app.use(routes)
 if(config.configObject.tx)
   Tx.publish()
 
-
 if(config.configObject.rx) 
   Rx.publish()
-  audio.recv(config.configObject.source.socket)
+  audio.receive(config.configObject.source.socket)
+
+
 
 //process.on('uncaughtException', function (err) {
 //    console.log(err);

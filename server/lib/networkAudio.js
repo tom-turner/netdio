@@ -37,7 +37,7 @@ class NetworkAudio {
     this.outputDevice = this.config.rx ? `-o${this.config.rx.hardware}` : ''
   }
 
-  recv(socket) {
+  receive(socket) {
 
     if(!socket)
       return
@@ -64,30 +64,29 @@ class NetworkAudio {
     });
   }
 
-  send(data) {
+  transmit(data) {
     if(!data)
       return
 
     let inputDriver = data.txdata.tx.driver ? "-d" + data.txdata.tx.driver : ""
     let inputDevice = data.txdata.tx.hardware ? "-i" + data.txdata.tx.hardware : ""
-    let processId = data.ip + inputDevice
+    let ref = `ref-${data.ip}:${data.socket}`
 
-    if(this.processes.get(processId).toString()){
-      this.keepAlive(processId)
+    if(this.processes.get(ref).toString()){
+      this.keepAlive(ref)
       return
     }
 
-
-    let rocSend = spawn('roc-send', ['--nbsrc=10', '--nbrpr=5', '-vv', '-s', `rtp+rs8m:${data.ip}:${data.socket }`, '-r', `rs8m:${data.ip}:${getRepairPort(data.socket)}`, '--interleaving', inputDriver, inputDevice, rate, resampling, profile, poisoning]);
+    let rocSend = spawn('roc-send', ['--nbsrc=10', '--nbrpr=5', '-vv', '-s', `rtp+rs8m:${data.ip}:${data.socket}`, '-r', `rs8m:${data.ip}:${getRepairPort(data.socket)}`, '--interleaving', inputDriver, inputDevice, rate, resampling, profile, poisoning]);
 
     this.timeout((dead)=>{
       dead ? this.processes.kill(this.processes.get(rocSend.pid)) : ''
-    }, processId) 
+    }, ref) 
   
     this.processes.set({
       type : "tx",
       pid : rocSend.pid,
-      ip : processId
+      ref : ref
     })
     rocSend.stdout.on('data', (data) => {
       console.log('tx stdout: ', data )
@@ -104,10 +103,10 @@ class NetworkAudio {
     });
   }
 
-  timeout(callback, recv) {
+  timeout(callback, id) {
     let timer = this.updateInterval * 2.5
 
-    emitter.on(recv, () => {
+    emitter.on(id, () => {
       timer = this.updateInterval * 2.5
     })
 
@@ -124,8 +123,8 @@ class NetworkAudio {
     },this.updateInterval)
   }
   
-  keepAlive(recv){
-    emitter.emit(recv)
+  keepAlive(id){
+    emitter.emit(id)
   }
 
 }
