@@ -1,9 +1,9 @@
 const { spawn } = require('child_process');
 const EventEmitter = require('events');
 const platform = require('./platform')
-const Processes = require('./processes')
+const processes = require('./processes')
+const config = require('./config')
 const emitter = new EventEmitter();
-const processes = new Processes()
 
 //roc settings
 const latency = '' // --sess-latency=95ms
@@ -22,13 +22,8 @@ function getRepairPort(input) {
   return calc.toString()
 }
 
-function notEqual(arr1, arr2){
-  return JSON.stringify(arr1) != JSON.stringify(arr2)  
-}
-
-
 class NetworkAudio {
-  constructor(config) {
+  constructor() {
     this.config = config
     this.updateInterval = 1000
     this.processes = processes
@@ -68,11 +63,13 @@ class NetworkAudio {
     if(!data)
       return
 
-    let inputDriver = data.txdata.tx.driver ? "-d" + data.txdata.tx.driver : ""
-    let inputDevice = data.txdata.tx.hardware ? "-i" + data.txdata.tx.hardware : ""
+    let inputDriver = data.driver ? "-d" + data.driver : ""
+    let inputDevice = data.hardware ? "-i" + data.hardware : ""
     let ref = `ref-${data.ip}:${data.socket}`
 
+
     if(this.processes.get(ref).toString()){
+      console.log('keep alive')
       this.keepAlive(ref)
       return
     }
@@ -88,12 +85,12 @@ class NetworkAudio {
       pid : rocSend.pid,
       ref : ref
     })
+
     rocSend.stdout.on('data', (data) => {
       console.log('tx stdout: ', data )
     })
     rocSend.stderr.on('data', (data) => {
       console.log('tx stderr: ', data.toString('utf8'));
-      rocSend.stdin.end()
     });
     rocSend.on('close', (code) => {
       if (code !== 0) {
@@ -129,5 +126,6 @@ class NetworkAudio {
 
 }
 
+const audio = new NetworkAudio()
 
-module.exports = NetworkAudio
+module.exports = audio

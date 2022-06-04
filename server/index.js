@@ -7,12 +7,12 @@ const bodyParser = require('body-parser')
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const routes = require("./routes");
-const config = require('./lib/config')();
-const { Tx, Rx, Spotify } = require('./lib/networkServices')
-let { getAudioStream } = require('./lib/api')
 
-const NetworkAudio = require("./lib/NetworkAudio");
-let audio = new NetworkAudio(config)
+const config = require('./lib/config')
+const audio = require("./lib/NetworkAudio");
+const { Tx, Rx, Spotify } = require('./lib/networkServices')
+const { audioStream } = require('./lib/api')
+
 
 app.use(cors({
   origin: (origin, next) => next(null, origin),
@@ -26,10 +26,16 @@ app.use(routes)
 if(config.configObject.tx)
   Tx.publish()
 
-if(config.configObject.rx) 
+// could refactor to encapsulate subscribing to the audio stream into the audio.receive() function
+if(config.configObject.rx) {
   Rx.publish()
   audio.receive(config.configObject.source.socket)
 
+  //then subscribe to the audio stream
+  setInterval( async ()=>{
+    audioStream(config.configObject.source)
+  },1000)
+}
 
 
 //process.on('uncaughtException', function (err) {

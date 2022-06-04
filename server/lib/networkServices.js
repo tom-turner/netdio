@@ -1,4 +1,4 @@
-const config = require('./config')();
+const config = require('./config')
 let { getDeviceConfig } = require('./api')
 let SHA256 = require("crypto-js/sha256");
 let bonjour = require('bonjour')({

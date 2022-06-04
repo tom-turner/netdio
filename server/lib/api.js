@@ -31,7 +31,7 @@ class Http {
         return response.json()
     }
     async post(url, params, body) {
-        let response = this.request('POST', url, params, body)
+        let response = await this.request('POST', url, params, body)
         if(response.status !==200)
             return { error: response.status }
 
@@ -46,7 +46,7 @@ let http = new Http({
 });
 
 let getDeviceConfig = async (device) => {
-    let result = await this.http.get(`http://${device.ip}:${this.port}/get-config/${this.type}`)
+    let result = await http.get(`http://${device.ip}:${process.env.PORT}/get-config/${this.type}`)
     
     if(result.error) 
         return this.removeDevice(device)
@@ -54,5 +54,14 @@ let getDeviceConfig = async (device) => {
     return result
 }  
 
+let audioStream = async (source) => {
+    let result = await http.post(`http://${source.ip}:${process.env.PORT}/audio-stream`, null, JSON.stringify(source))
+    if(result.error) 
+        return 
+
+    return result
+}
+
 
 module.exports.getDeviceConfig = getDeviceConfig
+module.exports.audioStream = audioStream

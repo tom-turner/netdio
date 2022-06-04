@@ -1,11 +1,12 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path')
+const config = require('./config')
 const EventEmitter = require('events');
 const emitter = new EventEmitter();
 
 class Processes {
-  constructor(config) {
+  constructor() {
     this.config = config
     this.childProcesses = []
     this.file = "config/runningprocesses.json"
@@ -63,4 +64,6 @@ class Processes {
 
 }
 
-module.exports = Processes
+let processes = new Processes()
+
+module.exports = processes
