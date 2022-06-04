@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const routes = require("./routes");
 const config = require('./lib/config')();
 const { Tx, Rx, Spotify } = require('./lib/networkServices')
+let { getAudioStream } = require('./lib/api')
 
 const NetworkAudio = require("./lib/NetworkAudio");
 let audio = new NetworkAudio(config)

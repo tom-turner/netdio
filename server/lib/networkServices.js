@@ -1,59 +1,14 @@
 const config = require('./config')();
-const fetch = require('node-fetch');
+let { getDeviceConfig } = require('./api')
 let SHA256 = require("crypto-js/sha256");
 let bonjour = require('bonjour')({
     multicast: true,
     loopback: true
 })
 
-class Http {
-    constructor(headers) {
-        this.headers = headers
-    }
-
-    async request(method, url, params, body, headers) {
-        if (params)
-          url = url + '?' + new URLSearchParams(params).toString()
-
-        headers = headers || {}
-
-        return fetch(`${url}`, {
-          method,
-          body,
-          credentials: 'include',
-          headers: Object.fromEntries(Object.entries({ ...this.headers, ...headers }).map(([name, value]) => {
-            return [name, typeof value === 'function' ? value() : value]
-          }))
-        }).catch((error) => {
-            return { error: error, status : 400 }
-        })
-    }
-
-    async get(url, params) {
-        let response = await this.request('GET', url, params)
-        if(response.status !== 200)
-            return { error: response.status }
-
-        return response.json()
-    }
-    async post(url, params, body) {
-        let response = this.request('POST', url, params, body)
-        if(response.status !==200)
-            return { error: response.status }
-
-        return response.json()
-    }
-}
-
-
 class NetworkServices {
     constructor(type) {
         this.config = config
-        this.http = new Http({
-            'Content-Type': 'application/json',
-            'Authorization': () => process.env.AUTH,
-            'Accept': '*'
-        });
         this.port = process.env.PORT 
         this.type = type
         this.foundServices = bonjour.find({ type: this.type }).services
@@ -99,14 +54,6 @@ class NetworkServices {
         delete this.devices[this.hash(device.id)] 
     }
 
-    async getDeviceConfig(device){
-        let result = await this.http.get(`http://${device.ip}:${this.port}/get-config/${this.type}`)
-        
-        if(result.error) 
-            return this.removeDevice(device)
-
-        return result
-    }  
 
     getDeviceList() {
         return Object.values(this.devices)
@@ -128,7 +75,6 @@ class NetworkServices {
 
 }
 
-exports.Http = Http
 exports.Tx = new NetworkServices('tx')
 exports.Rx = new NetworkServices('rx')
 exports.Spotify = new NetworkServices('spotify')
