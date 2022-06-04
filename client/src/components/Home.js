@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Tx, Rx, setAudioSource, setVolume } from '../lib/api'
+import { Tx, Rx, setReceiverSource, setVolume } from '../lib/api'
 import Loading from './Loading'
 import { Zones, Zone } from './Zones'
 
@@ -24,7 +24,7 @@ let Home = () => {
 
 	let handleInputChange = ({ip, value}) => {
 		let tx = JSON.parse(value)
-		setAudioSource( ip, { name: tx.name, source: tx.source })
+		setReceiverSource( ip, tx )
 	}
 
 	let handleVolumeChange = ({ip, value}) => {

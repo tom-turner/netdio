@@ -1,9 +1,11 @@
 const { spawn } = require('child_process');
-const fs = require('fs');
-const path = require('path')
 const EventEmitter = require('events');
-const emitter = new EventEmitter();
 const platform = require('./platform')
+const Processes = require('./processes')
+const emitter = new EventEmitter();
+const processes = new Processes()
+
+//roc settings
 const latency = '' // --sess-latency=95ms
 const profile = '' // --resampler-profile=high(slow) - medium - low(fast)
 let rate = '--rate=44100'
@@ -24,72 +26,25 @@ function notEqual(arr1, arr2){
   return JSON.stringify(arr1) != JSON.stringify(arr2)  
 }
 
-class Roc {
+
+class NetworkAudio {
   constructor(config) {
     this.config = config
     this.updateInterval = 1000
-    this.childProcesses = []
+    this.processes = processes
     this.file = "config/rocprocesses.json"
     this.outputDriver = this.config.rx ? `-d${this.config.rx.driver}` : ''
     this.outputDevice = this.config.rx ? `-o${this.config.rx.hardware}` : ''
   }
 
-  savedProcesses(){
-    if(!fs.existsSync(this.file)) {
-      fs.writeFileSync(this.file, '[]')
-    }
-    return JSON.parse(fs.readFileSync(this.file))
-  }
+  recv(socket) {
 
-  depreciated() {
-      let depreciated = this.savedProcesses().filter( (obj) =>{
-      let compare = this.get(obj.pid)[0] ? this.get(obj.pid)[0] : '';
-        return obj.pid !== compare.pid
-      })
-      return depreciated
-  }
+    if(!socket)
+      return
 
-  update(data){
-    this.kill(this.depreciated())
-    this.childProcesses.push(data)
-
-    fs.writeFileSync( this.file , JSON.stringify(this.childProcesses)), (err) => {
-      if (err) { console.log("error", err) } 
-    }
-  }
-
-  get(value){
-    return this.childProcesses.filter((item) => {
-      if (value) {
-        return item.type == value || item.pid == value || item.ip == value
-      } else return true
-    })
-  }
-
-  kill(array){
-    for ( var obj of array) {
-      this.childProcesses = this.childProcesses.filter((item) => {
-        return item !== this.get(obj.pid)[0]
-      })
-      try { 
-        process.kill(obj.pid)
-        console.log(obj.pid, 'killed')
-      } catch {
-        console.log(obj.pid, 'process already dead')
-      }
-    }
-  }
-
-  rocRecv(data) {
-    let source = this.config.source.socket ? this.config.source.socket : ''
-
-    if(data) {
-      source = data.socket
-    }
-
-    let rocRecv = spawn('roc-recv', ['-vv', '-s' ,`rtp+rs8m::${source}`, '-r', `rs8m::${getRepairPort(source)}`, this.outputDriver, this.outputDevice, rate, resampling, latency, profile, poisoning]);
-    console.log('recv started', data, this.outputDevice, this.outputDriver)
-    this.update({
+    let rocRecv = spawn('roc-recv', ['-vv', '-s' ,`rtp+rs8m::${socket}`, '-r', `rs8m::${getRepairPort(socket)}`, this.outputDriver, this.outputDevice, rate, resampling, latency, profile, poisoning]);
+    console.log('starting recv:', rocRecv.pid, this.outputDevice, this.outputDriver)
+    this.processes.set({
       type : "rx",
       pid : rocRecv.pid
     })
@@ -109,27 +64,27 @@ class Roc {
     });
   }
 
-  rocSend(data) {
-    let source = data ? data.socket : ''
-    let recv = data ? data.recv : ''
+  send(data) {
+    if(!data)
+      return
+
     let inputDriver = data.txdata.tx.driver ? "-d" + data.txdata.tx.driver : ""
     let inputDevice = data.txdata.tx.hardware ? "-i" + data.txdata.tx.hardware : ""
-    let processId = recv + inputDevice
+    let processId = data.ip + inputDevice
 
-    if(this.get(processId).toString()){
+    if(this.processes.get(processId).toString()){
       this.keepAlive(processId)
       return
     }
 
-    console.log('starting', recv)
 
-    let rocSend = spawn('roc-send', ['--nbsrc=10', '--nbrpr=5', '-vv', '-s', `rtp+rs8m:${recv}:${source}`, '-r', `rs8m:${recv}:${getRepairPort(source)}`, '--interleaving', inputDriver, inputDevice, rate, resampling, profile, poisoning]);
+    let rocSend = spawn('roc-send', ['--nbsrc=10', '--nbrpr=5', '-vv', '-s', `rtp+rs8m:${data.ip}:${data.socket }`, '-r', `rs8m:${data.ip}:${getRepairPort(data.socket)}`, '--interleaving', inputDriver, inputDevice, rate, resampling, profile, poisoning]);
 
     this.timeout((dead)=>{
-      dead ? this.kill(this.get(rocSend.pid)) : ''
+      dead ? this.processes.kill(this.processes.get(rocSend.pid)) : ''
     }, processId) 
   
-    this.update({
+    this.processes.set({
       type : "tx",
       pid : rocSend.pid,
       ip : processId
@@ -176,4 +131,4 @@ class Roc {
 }
 
 
-module.exports = Roc
+module.exports = NetworkAudio

@@ -26,7 +26,7 @@ class Processes {
       return depreciated
   }
 
-  update(data){
+  set(data){
     this.kill(this.depreciated())
     this.childProcesses.push(data)
 
@@ -44,15 +44,19 @@ class Processes {
   }
 
   kill(array){
+    
+    if(array.length === 0)
+      return console.log('process not in array: likely already dead')
+
     for ( var obj of array) {
       this.childProcesses = this.childProcesses.filter((item) => {
         return item !== this.get(obj.pid)[0]
       })
       try { 
         process.kill(obj.pid)
-        console.log(obj.pid, 'killed')
+        console.log('killing old procesess:', obj.pid, 'killed')
       } catch {
-        console.log(obj.pid, 'process already dead')
+        console.log('killing old procesess:', obj.pid, 'process already dead')
       }
     }
   }

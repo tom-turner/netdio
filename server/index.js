@@ -10,6 +10,9 @@ const routes = require("./routes");
 const config = require('./lib/config')();
 const { Tx, Rx, Spotify } = require('./lib/networkServices')
 
+const NetworkAudio = require("./lib/NetworkAudio");
+let audio = new NetworkAudio(config)
+
 app.use(cors({
   origin: (origin, next) => next(null, origin),
   credentials: true
@@ -22,8 +25,10 @@ app.use(routes)
 if(config.configObject.tx)
   Tx.publish()
 
+
 if(config.configObject.rx) 
   Rx.publish()
+  audio.recv(config.configObject.source.socket)
 
 //process.on('uncaughtException', function (err) {
 //    console.log(err);

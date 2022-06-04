@@ -118,8 +118,8 @@ let http = new Http({
     'Content-Type': 'application/json',
 });
 
-let setAudioSource = async (ip, tx) => {
-  return http.post(`http://${ip}:${5050}/set-audio-source`, null, JSON.stringify(tx)).then(res => res.json())
+let setReceiverSource = async (ip, tx) => {
+  return http.post(`http://${ip}:${5050}/set-receiver-source`, null, JSON.stringify(tx)).then(res => res.json())
 }
 
 let setVolume = async (ip, value) => {
@@ -132,5 +132,5 @@ exports.NetworkServices = (type) => {
 }
 exports.Tx = new Devices('tx')
 exports.Rx = new Devices('rx')
-module.exports.setAudioSource = setAudioSource
+module.exports.setReceiverSource = setReceiverSource
 module.exports.setVolume = setVolume

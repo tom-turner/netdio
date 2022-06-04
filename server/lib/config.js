@@ -105,8 +105,8 @@ class Setup{
     this.config.set('tx.ip', this.ip() )
     this.config.set('tx.id', this.id() )
 
-    if(!this.config.get('tx')['source'])
-      this.config.set( "tx.source", this.config.getNewPort() )
+    if(!this.config.get('tx')['socket'])
+      this.config.set( "tx.socket", this.config.getNewPort() )
 
     return this.config.get('tx')
   }

@@ -18,8 +18,6 @@ export function Zone({ receiver, transmitters, muted, handleInputChange, handleV
 		return <option key={i} value={JSON.stringify(transmitter)}>{transmitter.name}</option>
 	})
 
-	console.log(receiver)
-
 	return(
 			<div className={`border shadow-sm w-full p-4 space-y-4 rounded ${ selected ? 'border-zinc-800' : 'border-zinc-300 shadow-sm' }`} >
 			 	
