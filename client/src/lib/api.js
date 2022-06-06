@@ -32,7 +32,7 @@ class Http {
 
 let http = new Http({
     'Content-Type': 'application/json',
-    'Authorization': () => process.env.AUTHORIZATION,
+    'Authorization': () => process.env.REACT_APP_AUTHORIZATION,
     'Accept': '*'
 });
 
@@ -46,7 +46,7 @@ let setVolume = async (ip, value) => {
 
 let getBonjourServices = async (type) => {
   let response = await http.get(`http://localhost:${serverPort}/get-bonjour-services/${type}`)
-  
+
   if(response.error || response.status !== 200)
     return { error: response.error || response.status }
 

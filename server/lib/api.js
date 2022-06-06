@@ -25,19 +25,23 @@ class Http {
     }
 
     async get(url, params) {
-        let response = await this.request('GET', url, params)
-        if(response.status !== 200)
-            return { error: response.status }
+        return await this.request('GET', url, params).then( res => {
+            if(res.status !== 200)
+                return { error: res.status }
 
-        return response.json()
+            return res.json()
+        })
     }
+
     async post(url, params, body) {
-        let response = await this.request('POST', url, params, body)
-        if(response.status !==200)
-            return { error: response.status }
+        return await this.request('POST', url, params, body).then( res => {
+            if(res.status !==200)
+                return { error: res.status }
 
-        return response.json()
+            return res.json()            
+        })
     }
+    
 }
 
 let http = new Http({

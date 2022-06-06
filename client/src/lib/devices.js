@@ -3,7 +3,7 @@ let { getBonjourServices, getDeviceConfig } = require("./api");
 
 class Devices {
     constructor(type) {
-        this.updateInterval = 500
+        this.updateInterval = process.env.REACT_APP_UPDATE_INTERVAL || 1000
         this.type = type
         this.services = []
         this.devices = []

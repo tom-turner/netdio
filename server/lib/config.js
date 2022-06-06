@@ -1,7 +1,7 @@
 const fs = require('fs')
-const ip = require('./getIp')();
 const SHA256 = require("crypto-js/sha256");
-let configFile = 'config/config.json'
+const configFile = 'config/config.json'
+const startupConfigFile = "config/startupconfig.json"
 
 function debounce(fn, timeout) {
   let interval = null
@@ -16,58 +16,10 @@ function debounce(fn, timeout) {
   }
 }
 
-class Setup{
-  constructor(config){
-    this.config = config
-    this.ip();
-    this.id();
-    this.tx();
-    this.rx();
-  }
-
-  ip(){
-    this.config.set("device.ip", require('./getIp')() )
-    return this.config.get('device')['ip']
-  }
-
-  id(){
-    this.config.set("device.id", this.config.hash(this.ip()))
-    return this.config.get('device')['id']
-  }
-
-  tx() {
-    if(!this.config.get('tx'))
-      return
-
-    this.config.set('tx.ip', this.ip() )
-    this.config.set('tx.id', this.id() )
-
-    if(!this.config.get('tx')['socket'])
-      this.config.set( "tx.socket", this.config.getNewPort() )
-
-    return this.config.get('tx')
-  }
-
-  rx() {
-    if(!this.config.get('rx'))
-      return
-
-    this.config.set('rx.ip', this.ip() )
-    this.config.set('rx.id', this.id() )
-
-    if(!this.config.get('source'))
-      this.config.set( "source.name", '-Mute-' )
-
-    return this.config.get('rx')
-  }
-}
-
-
 class Configuration {
   constructor(configFile, type, debounceTimeout) {
     this.configFile = configFile
     this.debouncedSave = debounce(() => this.save(), debounceTimeout || 100)
-    new Setup(this)
   }
 
   config() {
@@ -75,7 +27,7 @@ class Configuration {
       if (fs.existsSync(this.configFile))
         this.configObject = JSON.parse(fs.readFileSync(this.configFile))
       else
-        this.configObject = JSON.parse(fs.readFileSync("config/startupconfig.json"))
+        this.configObject = JSON.parse(fs.readFileSync(startupConfigFile))
 
     return this.configObject
   }

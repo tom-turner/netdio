@@ -3,6 +3,7 @@ const EventEmitter = require('events');
 const platform = require('./platform')
 const processes = require('./processes')
 const config = require('./config')
+const { audioStream } = require('./api')
 const emitter = new EventEmitter();
 
 //roc settings
@@ -44,19 +45,27 @@ class NetworkAudio {
       pid : rocRecv.pid
     })
 
+    let stream = setInterval( async ()=>{
+      return await audioStream(this.config.configObject.source).then( res => { 
+        if(res.error)
+          return console.log(res.error)
+      })
+    }, this.updateInterval )
+
     rocRecv.stdout.on('data', (data) => {
       console.log('rx stdout: ', data )
     })
     rocRecv.stderr.on('data', (data) => {
       console.log('rx stderr: ', data.toString('utf8'));
-      rocRecv.stdin.end()
     });
     rocRecv.on('close', (code) => {
       if (code !== 0) {
+        clearInterval(stream)
         console.log('rx process exited with code: ', code );
         rocRecv.stdin.end()
       }
     });
+
   }
 
   transmit(data) {

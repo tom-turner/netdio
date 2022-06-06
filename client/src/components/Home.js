@@ -31,8 +31,6 @@ let Home = () => {
 		setVolume( ip, value )
 	}
 
-
-
 	let zones = receivers.map((receiver, i) => {
 		return <Zone
 			key={i}
