@@ -65,13 +65,16 @@ let rx = () => {
 }
 
 let run = () => {
+
 	if(config.configObject.tx)
 		Tx.publish()
 
 	if(config.configObject.rx) {
 		Rx.publish()
-		audio.receive(config.configObject.source.socket)
+		//audio.receive(config.configObject.source.socket)
 	}
+
+
 }
 
 module.exports.setup = setup
