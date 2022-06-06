@@ -24,8 +24,8 @@ export function Zone({ receiver, inputOptions, handleInputChange, handleVolumeCh
 			 			<LoadingMeters className={`h-6 fill-s-800 ${ muted || selected ? 'hidden' : ''}`} />
 			 			<Muted className={`h-6 fill-s-800 ${ muted ? '' : 'hidden'} ${ selected ? 'hidden' : ''}`} />
 			 		</div>
-			 		<div className={`w-1/3 ${ selected ? '' : 'hidden'}`}>
-						<select className="text-right text-neutral-800 w-full" onChange={ (e) => { handleInputChange({ ip: receiver.ip , value: e.target.value }) } } defaultValue={'default'} >
+			 		<div className={` ${ selected ? '' : 'hidden'}`}>
+						<select className="text-right text-neutral-800 w-full" onChange={ (e) => { handleInputChange({ ip: receiver.ip , value: e.target.value }); setSelected({}) } } defaultValue={'default'} >
 							<option className="" disabled value={'default'} >{receiver.source.name}</option>
 							<option value={ JSON.stringify({ name: '-Mute-'})} >{'-Mute-'}</option>
 							{inputOptions}

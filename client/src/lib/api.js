@@ -49,7 +49,7 @@ let setName = async (ip, type, value) => {
 }
 
 let getBonjourServices = async (type) => {
-  let response = await http.get(`http://localhost:${serverPort}/get-bonjour-services/${type}`)
+  let response = await http.get(`http://${window.location.hostname}:${serverPort}/get-bonjour-services/${type}`)
 
   if(response.error || response.status !== 200)
     return { error: response.error || response.status }

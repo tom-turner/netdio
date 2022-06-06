@@ -58,9 +58,9 @@ let Settings = () => {
 	})
 
 	return(
-			<div className="w-full h-screen text-xl flex flex-col overflow-scroll justify-between">
+			<div className="w-full h-screen text-xl flex flex-col overflow-hidden justify-between">
 
-				<div className="border-b border-neutral-200 pt-12 pb-4 text-neutral-900 text-center font-bold shadow-inner">
+				<div className="border-b border-neutral-200 pt-8 pb-4 text-neutral-900 text-center font-bold shadow-inner">
 					<h2 >Settings</h2>
 				</div>
 
