@@ -4,7 +4,7 @@ const config = require('./config')
 const { getIp, getHostname } = require('./networkInfo')
 
 // run libs
-const audio = require("./NetworkAudio");
+const audio = require("./networkAudio");
 const { Tx, Rx, Spotify } = require('./networkServices')
 
 let setup = () => {
