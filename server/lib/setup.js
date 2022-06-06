@@ -84,10 +84,11 @@ let rx = () => {
 	if(!config.get('rx')['name'])
 		config.set('rx.name', `${getHostname()}` )
 	
-	if(!config.get('source'))
+	if(!config.get('source')) {
 		config.set( "source", {} )
 	  	config.set( "source.name", '-Mute-' )
-
+	}
+	
 	return config.get('rx')
 }
 
