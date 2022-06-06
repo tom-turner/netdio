@@ -19,6 +19,7 @@ function debounce(fn, timeout) {
 class Configuration {
   constructor(configFile, type, debounceTimeout) {
     this.configFile = configFile
+    this.startupConfigFile = startupConfigFile
     this.debouncedSave = debounce(() => this.save(), debounceTimeout || 100)
   }
 
@@ -27,7 +28,7 @@ class Configuration {
       if (fs.existsSync(this.configFile))
         this.configObject = JSON.parse(fs.readFileSync(this.configFile))
       else
-        this.configObject = JSON.parse(fs.readFileSync(startupConfigFile))
+        this.configObject = JSON.parse(fs.readFileSync(this.startupConfigFile))
 
     return this.configObject
   }

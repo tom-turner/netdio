@@ -1,7 +1,7 @@
 // setup libs
 const fs = require('fs')
 const config = require('./config')
-const deviceIp = require('./getIp')();
+const { getIp, getHostname } = require('./networkInfo')
 
 // run libs
 const audio = require("./NetworkAudio");
@@ -20,8 +20,6 @@ let setup = () => {
 	    console.log(err)
 	  })
 
-	ip();
-	id();
 	tx();
 	rx();
 
@@ -29,14 +27,21 @@ let setup = () => {
 }
 
 let ip = () => {
-	config.set("device.ip", deviceIp )
+	if(!config.get('device'))
+		config.set('device', {} )
+
+	config.set("device.ip", getIp() )
 	return config.get('device')['ip']
 }
 
 let id = () => {
+	if(!config.get('device'))
+		config.set('device', {} )
+
 	config.set("device.id", config.hash(ip()))
 	return config.get('device')['id']
 }
+
 
 let tx = () => {
 	if(!config.get('tx'))
@@ -44,6 +49,17 @@ let tx = () => {
 
 	config.set('tx.ip', ip() )
 	config.set('tx.id', id() )
+	config.set('tx.type', 'tx' )
+
+	if(!config.get('tx')['driver'])
+		config.set('tx.driver', '' )
+
+	if(!config.get('tx')['hardware'])
+		config.set('tx.hardware', '' )
+
+	if(!config.get('tx')['name'])
+		config.set('tx.name', `${getHostname()}` )
+	
 
 	if(!config.get('tx')['socket'])
 	  config.set( "tx.socket", config.getNewPort() )
@@ -57,9 +73,20 @@ let rx = () => {
 
 	config.set('rx.ip', ip() )
 	config.set('rx.id', id() )
+	config.set('rx.type', 'rx' )
 
+	if(!config.get('rx')['driver'])
+		config.set('rx.driver', '' )
+
+	if(!config.get('rx')['hardware'])
+		config.set('rx.hardware', '' )
+
+	if(!config.get('rx')['name'])
+		config.set('rx.name', `${getHostname()}` )
+	
 	if(!config.get('source'))
-	  config.set( "source.name", '-Mute-' )
+		config.set( "source", {} )
+	  	config.set( "source.name", '-Mute-' )
 
 	return config.get('rx')
 }
@@ -71,7 +98,7 @@ let run = () => {
 
 	if(config.configObject.rx) {
 		Rx.publish()
-		//audio.receive(config.configObject.source.socket)
+		audio.receive(config.configObject.source.socket)
 	}
 
 

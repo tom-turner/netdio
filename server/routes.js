@@ -27,6 +27,16 @@ routes.post('/blink', async (req, res) => {
 	res.status(200).send()
 });
 
+routes.post('/set-name/rx', async (req, res) => {
+	config.set( 'rx.name' , req.body.value )
+	res.status(200).json({success: true})
+});
+
+routes.post('/set-name/tx', async (req, res) => {
+	config.set( 'tx.name' , req.body.value )
+	res.status(200).json({success: true})
+});
+
 routes.post('/set-volume', async (req, res) => {
 	config.set( 'rx.volume' , req.body.value )
 	process.platform === 'linux' ? exec(`amixer -q sset Digital ${req.body.value}%`) : ''

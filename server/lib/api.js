@@ -41,7 +41,7 @@ class Http {
             return res.json()            
         })
     }
-    
+
 }
 
 let http = new Http({
@@ -59,5 +59,4 @@ let audioStream = async (source) => {
     return result
 }
 
-module.exports.http = http
 module.exports.audioStream = audioStream

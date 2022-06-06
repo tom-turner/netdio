@@ -15,17 +15,17 @@ export function Zone({ receiver, transmitters, muted, handleInputChange, handleV
 	let [ selected, setSelected ] = useState(true)
 
 	let inputOptions = transmitters.map((transmitter, i)=>{
-		return <option key={i} value={JSON.stringify(transmitter)}>{transmitter.name}</option>
+		return <option className="" key={i} value={JSON.stringify(transmitter)}>{transmitter.name}</option>
 	})
 
 	return(
 			<div className={`border shadow-sm w-full p-4 space-y-4 rounded ${ selected ? 'border-zinc-800' : 'border-zinc-300 shadow-sm' }`} >
 			 	
-				<div className="flex justify-between">
-			 		<p className="font-bold text-zinc-800"> {receiver.name} </p>
-			 		<div className={`${ muted || selected ? '' : 'hidden'}`}>
-						<select className="text-right" onChange={ (e) => { handleInputChange({ ip: receiver.ip , value: e.target.value }) } } defaultValue={'default'} >
-							<option disabled value={'default'} >{receiver.source.name}</option>
+				<div className="flex justify-between w-full space-x-4 ">
+			 		<p className="font-bold text-zinc-800 flex grow truncate"> {receiver.name} </p>
+			 		<div className={`w-1/3 ${ muted || selected ? '' : 'hidden'}`}>
+						<select className="text-right w-full" onChange={ (e) => { handleInputChange({ ip: receiver.ip , value: e.target.value }) } } defaultValue={'default'} >
+							<option className="" disabled value={'default'} >{receiver.source.name}</option>
 							<option value={ JSON.stringify({ name: '-Mute-'})} >{'-Mute-'}</option>
 							{inputOptions}
 						</select>

@@ -1,6 +1,7 @@
-var os = require('os')
+const os = require('os')
+const path = require('node:path');
 
-function getIp() {
+let getIp = () => {
 
 	var networkInterfaces = os.networkInterfaces()
 	networkInterfaces = Object.entries(networkInterfaces)
@@ -20,15 +21,12 @@ function getIp() {
 	return localInterface[0].address
 }
 
-function getNetmask() {
-	return localInterface[0].netmask
-}
-
-function getFamily() {
-	return localInterface[0].family
+let getHostname = () => {
+	return path.parse(os.hostname()).name
 }
 
 
-module.exports = getIp
+module.exports.getIp = getIp
+module.exports.getHostname = getHostname
 
 
