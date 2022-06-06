@@ -1,5 +1,5 @@
 require('dotenv').config()
-const port = process.env.PORT || 5000;
+const port = process.env.REACT_APP_SERVER_PORT || 5050;
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
@@ -15,9 +15,9 @@ const { audioStream } = require('./lib/api')
 
 
 app.use(cors({
-  origin: (origin, next) => next(null, origin),
-  credentials: true
+  origin: (origin, next) => next(null, origin)
 }))
+
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.urlencoded());
@@ -26,14 +26,14 @@ app.use(routes)
 if(config.configObject.tx)
   Tx.publish()
 
-// could refactor to encapsulate subscribing to the audio stream into the audio.receive() function
+// refactor to encapsulate subscribing to the audio stream into the audio.receive() function
 if(config.configObject.rx) {
   Rx.publish()
-  audio.receive(config.configObject.source.socket)
+//  audio.receive(config.configObject.source.socket)
 
   //then subscribe to the audio stream
   setInterval( async ()=>{
-    audioStream(config.configObject.source)
+  //  audioStream(config.configObject.source)
   },1000)
 }
 

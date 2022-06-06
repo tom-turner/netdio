@@ -24,8 +24,8 @@ export function Zone({ receiver, transmitters, muted, handleInputChange, handleV
 				<div className="flex justify-between">
 			 		<p className="font-bold text-zinc-800"> {receiver.name} </p>
 			 		<div className={`${ muted || selected ? '' : 'hidden'}`}>
-						<select onChange={ (e) => { handleInputChange({ ip: receiver.ip , value: e.target.value }) } } defaultValue={'default'} >
-							<option disabled value={'default'} >{`Input: ${receiver.source.name} `}</option>
+						<select className="text-right" onChange={ (e) => { handleInputChange({ ip: receiver.ip , value: e.target.value }) } } defaultValue={'default'} >
+							<option disabled value={'default'} >{receiver.source.name}</option>
 							<option value={ JSON.stringify({ name: '-Mute-'})} >{'-Mute-'}</option>
 							{inputOptions}
 						</select>

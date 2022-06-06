@@ -1,8 +1,10 @@
 const fetch = require('node-fetch');
+let port = process.env.REACT_APP_SERVER_PORT || 5050
 
 class Http {
     constructor(headers) {
         this.headers = headers
+        this.port = port
     }
 
     async request(method, url, params, body, headers) {
@@ -14,7 +16,6 @@ class Http {
         return fetch(`${url}`, {
           method,
           body,
-          credentials: 'include',
           headers: Object.fromEntries(Object.entries({ ...this.headers, ...headers }).map(([name, value]) => {
             return [name, typeof value === 'function' ? value() : value]
           }))
@@ -41,27 +42,18 @@ class Http {
 
 let http = new Http({
     'Content-Type': 'application/json',
-    'Authorization': () => process.env.AUTH,
+    'Authorization': () => process.env.REACT_APP_AUTHORIZATION,
     'Accept': '*'
 });
 
-let getDeviceConfig = async (device) => {
-    let result = await http.get(`http://${device.ip}:${process.env.PORT}/get-config/${this.type}`)
-    
-    if(result.error) 
-        return this.removeDevice(device)
-
-    return result
-}  
 
 let audioStream = async (source) => {
-    let result = await http.post(`http://${source.ip}:${process.env.PORT}/audio-stream`, null, JSON.stringify(source))
+    let result = await http.post(`http://${source.ip}:${port}/audio-stream`, null, JSON.stringify(source))
     if(result.error) 
-        return 
+        return { error: result.error }
 
     return result
 }
 
-
-module.exports.getDeviceConfig = getDeviceConfig
+module.exports.http = http
 module.exports.audioStream = audioStream

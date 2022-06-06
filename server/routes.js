@@ -45,13 +45,6 @@ routes.post('/audio-stream', async (req, res) => {
 	res.status(200).json({success: true})
 });
 
-routes.get('/get-devices', async (req, res) => {
-	res.json({
-		transmitters: Tx.getDeviceList(),
-		receivers: Rx.getDeviceList(),
-	})
-});
-
 routes.get('/get-bonjour-services/tx', async (req, res) => {
 	res.json( Tx.getServiceList() )
 });
@@ -68,5 +61,8 @@ routes.get('/get-config/rx', async (req, res) => {
 	res.json({ ...config.configObject.rx, source: config.configObject.source });
 });
 
+routes.get('/get-config', async (req, res) => {
+	res.json(config.configObject);
+});
 
 module.exports = routes

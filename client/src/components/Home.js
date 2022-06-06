@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Tx, Rx, setReceiverSource, setVolume } from '../lib/api'
+import { setReceiverSource, setVolume } from '../lib/api'
+import { Tx, Rx } from '../lib/devices'
 import Loading from './Loading'
 import { Zones, Zone } from './Zones'
 
@@ -17,7 +18,6 @@ let Home = () => {
 		})
 	}, []);
  
-
 	if(transmitters.length == 0 && receivers.length == 0 )
 		return <Loading loadedWhen={transmitters.length !== 0} />
 
@@ -32,6 +32,7 @@ let Home = () => {
 	}
 
 
+
 	let zones = receivers.map((receiver, i) => {
 		return <Zone
 			key={i}
@@ -41,8 +42,6 @@ let Home = () => {
 			handleVolumeChange={ (e) => { handleVolumeChange(e)} }
 		/>
 	})
-
-
 
 	return(
 			<div className="w-full h-screen text-xl flex flex-col overflow-hidden" >
