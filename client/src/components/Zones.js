@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import {ReactComponent as LoadingMeters}  from '../assets/loadingMeters.svg';
+import {ReactComponent as Muted}  from '../assets/muted.svg';
 
 
 export function Zones({ children }) {
@@ -11,26 +12,26 @@ export function Zones({ children }) {
 }
 
 
-export function Zone({ receiver, transmitters, muted, handleInputChange, handleVolumeChange }) {
-	let [ selected, setSelected ] = useState(true)
-
-	let inputOptions = transmitters.map((transmitter, i)=>{
-		return <option className="" key={i} value={JSON.stringify(transmitter)}>{transmitter.name}</option>
-	})
+export function Zone({ receiver, inputOptions, handleInputChange, handleVolumeChange, selected, setSelected }) {
+	
+	let muted = receiver.source.socket ? false : true
 
 	return(
-			<div className={`border shadow-sm w-full p-4 space-y-4 rounded ${ selected ? 'border-zinc-800' : 'border-zinc-300 shadow-sm' }`} >
+			<div className={`w-full p-4 space-y-4 rounded ${ selected ? 'border-neutral-500 border shadow-sm' : 'border border-neutral-200 shadow-lg' }`} >
 			 	
 				<div className="flex justify-between w-full space-x-4 ">
-			 		<p className="font-bold text-zinc-800 flex grow truncate"> {receiver.name} </p>
-			 		<div className={`w-1/3 ${ muted || selected ? '' : 'hidden'}`}>
-						<select className="text-right w-full" onChange={ (e) => { handleInputChange({ ip: receiver.ip , value: e.target.value }) } } defaultValue={'default'} >
+			 		<div className="flex w-full" onClick={ () => { setSelected( !selected ? receiver : null )} }>
+			 			<p  className={`font-bold text-neutral-800 w-full flex grow truncate `}> {receiver.name} </p>
+			 			<LoadingMeters className={`h-6 fill-s-800 ${ muted || selected ? 'hidden' : ''}`} />
+			 			<Muted className={`h-6 fill-s-800 ${ muted ? '' : 'hidden'} ${ selected ? 'hidden' : ''}`} />
+			 		</div>
+			 		<div className={`w-1/3 ${ selected ? '' : 'hidden'}`}>
+						<select className="text-right text-neutral-800 w-full" onChange={ (e) => { handleInputChange({ ip: receiver.ip , value: e.target.value }) } } defaultValue={'default'} >
 							<option className="" disabled value={'default'} >{receiver.source.name}</option>
 							<option value={ JSON.stringify({ name: '-Mute-'})} >{'-Mute-'}</option>
 							{inputOptions}
 						</select>
 			 		</div>
-			 		<LoadingMeters className={`h-6 fill-zinc-800 ${ muted || selected ? 'hidden' : ''}`} />
 			 	</div>
 
 			 	<input defaultValue={receiver.volume} type="range" className={`w-full `} onChange={ (e) => { handleVolumeChange({ ip: receiver.ip, value: e.target.value }) }} />

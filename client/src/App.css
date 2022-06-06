@@ -49,7 +49,7 @@ overflow: auto;
 
 input[type=range]{
   -webkit-appearance: none;
-  background: #e4e4e7;
+  background: #e5e5e5;
   overflow: hidden;
   border-radius: 0.25rem;
 }
@@ -62,9 +62,9 @@ input[type=range]::-webkit-slider-thumb {
   cursor: pointer;
   border-style: solid;
   border-width: 0px;
-  border-color: #27272a;
+  border-color: #262626;
   border-radius: 0.25rem;
-  background: #27272a;
-  box-shadow: -1800px 0 0 1790px #27272a;
+  background: #262626;
+  box-shadow: -1800px 0 0 1790px #525252;
 }
 

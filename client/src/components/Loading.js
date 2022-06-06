@@ -11,9 +11,9 @@ let Loading = ({loadedWhen}) => {
 	},10)
 
 	return(
-			<div className="w-full h-screen bg-zinc-100 flex flex-col justify-center
+			<div className="w-full h-screen bg-neutral-100 flex flex-col justify-center
 			 items-center" >
-				<LoadingMeters className={`mx-auto h-1/4 fill-zinc-800 transform transition-all duration-500 ease-in opacity-0 ${ ready ? 'opacity-100' : '' }` } />
+				<LoadingMeters className={`mx-auto h-1/4 fill-neutral-800 transform transition-all duration-500 ease-in opacity-0 ${ ready ? 'opacity-100' : '' }` } />
 			</div>
 	)	
 }
