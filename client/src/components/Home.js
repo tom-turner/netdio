@@ -1,18 +1,15 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { setReceiverSource, setVolume } from '../lib/api'
 import { Tx, Rx } from '../lib/devices'
 import Loading from './Loading'
+import Navbar from './Navbar'
 import { Zones, Zone } from './Zones'
-import {ReactComponent as Settings}  from '../assets/settings.svg';
-import {ReactComponent as Group}  from '../assets/group.svg';
-import {ReactComponent as Edit}  from '../assets/edit.svg';
+
 
 let Home = () => {
-	let [ error, setError] = useState(null)
+	let [ selected, setSelected ] = useState({})
 	let [ transmitters, setTransmitters ] = useState([])
 	let [ receivers, setReceivers ] = useState([])
-	let [ selected, setSelected ] = useState({})
 
 	useEffect(() => {
 		Tx.subscribe(({ devices, error }) =>{
@@ -23,9 +20,8 @@ let Home = () => {
 		})
 	}, []);
  
-	if(transmitters.length == 0 && receivers.length == 0 )
+	if(transmitters.length === 0 && receivers.length === 0 )
 		return <Loading loadedWhen={transmitters.length !== 0} />
-
 
 	let handleInputChange = ({ip, value}) => {
 		let tx = JSON.parse(value)
@@ -39,8 +35,6 @@ let Home = () => {
 	let inputOptions = transmitters.map((transmitter, i)=>{
 		return <option className="" key={i} value={JSON.stringify(transmitter)}>{transmitter.name}</option>
 	})
-
-	console.log(selected)
 
 	let zones = receivers.map((receiver, i) => {
 		return <Zone
@@ -57,9 +51,9 @@ let Home = () => {
 	})
 
 	return(
-			<div className="w-full h-screen text-xl flex flex-col overflow-hidden justify-between">
+			<div className="w-full h-screen text-xl flex flex-col overflow-scroll justify-between">
 
-				<div onClick={ () => { setSelected({}) } } className="border-b border-neutral-200 pt-12 pb-4 text-neutral-900 text-center font-bold shadow-inner">
+				<div className="border-b border-neutral-200 pt-12 pb-4 text-neutral-900 text-center font-bold shadow-inner">
 					<h2 >Home</h2>
 				</div>
 
@@ -69,16 +63,7 @@ let Home = () => {
 					</Zones >
 				</div>
 
-				<div className={`flex justify-center pt-4 px-12 pb-12 bg-neutral-900 text-white w-full transition-all duration-250 items-end ${ Object.keys(selected).length !== 0 ? '' : 'translate-y-full'}`}>
-					<div className="flex justify-between w-full max-w-md">
-						<button className={`font-bold py-2 px-4 `}>
-							<Group className="fill-white w-6 h-6" />
-						</button>						
-						<button className={`font-bold py-2 px-4 `}>
-							<Edit className="fill-white w-6 h-6" />
-						</button>
-					</div>
-				</div>
+			<Navbar />
 
 			</div>
 	)	

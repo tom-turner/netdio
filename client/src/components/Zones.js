@@ -13,7 +13,6 @@ export function Zones({ children }) {
 
 
 export function Zone({ receiver, inputOptions, handleInputChange, handleVolumeChange, selected, setSelected }) {
-	
 	let muted = receiver.source.socket ? false : true
 
 	return(
