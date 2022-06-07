@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {ReactComponent as LoadingMeters}  from '../assets/loadingMeters.svg';
 import {ReactComponent as Muted}  from '../assets/muted.svg';
 

@@ -1,12 +1,11 @@
 import './App.css';
 import { BrowserRouter } from "react-router-dom";
-import AnimatedRoutes from "./components/AnimatedRoutes"
-
+import Routes from "./components/Routes"
 
 function App() {
   return (
     <BrowserRouter>
-      <AnimatedRoutes />
+      <Routes />
     </BrowserRouter>
   )
 }

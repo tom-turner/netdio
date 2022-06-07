@@ -7,7 +7,6 @@ class Devices {
         this.type = type
         this.services = []
         this.devices = []
-        this.error = null
     }
 
     async subscribe(callback){
@@ -15,10 +14,10 @@ class Devices {
             let services = await getBonjourServices(this.type)
 
             if(!services || services.error)
-                this.error = services.error
+                callback({ error: services.error })
             else 
                 this.services = services
-                   
+
             return this.services.map( async (service) => {
                 let deviceConfig = await getDeviceConfig(service, this.type)
             
@@ -37,7 +36,7 @@ class Devices {
                 }
             })
         }
-        updateDevices()
+        //updateDevices()
         callback({ devices: this.getDeviceList() }) 
         setInterval( async () => {
             updateDevices()

@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from "react";
-import { Tx, Rx } from '../lib/devices'
+import { useState, useRef, useContext } from "react";
+import { DevicesContext } from '../context/Devices';
 import { setName } from '../lib/api'
-import Loading from './Loading'
 import { motion } from 'framer-motion'
 
 let Receiver = ({receiver}) => {
@@ -33,21 +32,8 @@ let Transmitter = ({transmitter}) => {
 }
 
 let Settings = () => {
-	let [ transmitters, setTransmitters ] = useState([])
-	let [ receivers, setReceivers ] = useState([])
-
-	useEffect(() => {
-		Tx.subscribe(({ devices, error }) =>{
-			setTransmitters(devices)
-		})
-		Rx.subscribe(({ devices, error }) =>{
-			setReceivers(devices)
-		})
-	}, []);
+	let { transmitters, receivers } = useContext(DevicesContext)
  
-	if(transmitters.length === 0 && receivers.length === 0 )
-		return <Loading loadedWhen={transmitters.length !== 0} />
-
 	let zones = receivers.map((receiver, i) => {
 		return <Receiver key={i} receiver={receiver} />
 	})

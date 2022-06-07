@@ -1,29 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
 import { setReceiverSource, setVolume } from '../lib/api'
-import { Tx, Rx } from '../lib/devices'
-import Loading from './Loading'
+import { DevicesContext } from '../context/Devices'
 import { Zones, Zone } from './Zones'
 import { motion } from 'framer-motion'
 
 
 let Home = () => {
+	let { transmitters, receivers } = useContext(DevicesContext)
 	let [ selected, setSelected ] = useState({})
-	let [ transmitters, setTransmitters ] = useState([])
-	let [ receivers, setReceivers ] = useState([])
-
-	useEffect(() => {
-		Tx.subscribe(({ devices, error }) =>{
-			setTransmitters(devices)
-		})
-		Rx.subscribe(({ devices, error }) =>{
-			setReceivers(devices)
-		})
-	}, []);
-
-	//console.log(transmitters)
- 
-	if(transmitters.length === 0 && receivers.length === 0 )
-		return <Loading loadedWhen={transmitters.length !== 0} />
 
 	let handleInputChange = ({ip, value}) => {
 		let tx = JSON.parse(value)
