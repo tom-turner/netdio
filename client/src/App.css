@@ -63,7 +63,7 @@ input[type=range]{
 input[type=range]::-webkit-slider-thumb {
   width: 1rem;
   -webkit-appearance: none;
-  height:0.3rem;
+  height:0.5rem;
   cursor: pointer;
   border-style: solid;
   border-width: 0px;

@@ -40,13 +40,13 @@ let Settings = () => {
 		return <Receiver key={i} receiver={receiver} />
 	})
 
-	let inputs = transmitters.map((transmitter, i) => {
+	let sources = transmitters.map((transmitter, i) => {
 		return <Transmitter key={i} transmitter={transmitter} />
 	})
 
 	return(
 			<motion.div 
-				className="w-full fixed top-0 text-xl flex flex-col overflow-hidden justify-between"
+				className="w-full text-xl flex flex-col overflow-hidden justify-between"
 				key={'settings'}
 				initial={{opacity: 0}}
 				animate={{opacity: 1}}
@@ -59,14 +59,19 @@ let Settings = () => {
 				</div>
 
 				<div className="h-full flex flex-col p-4 space-y-2">
+
 					<p className="font-bold">Zones</p>
 					{zones}
 
-					<p className="font-bold pt-4">Inputs</p>
-					{inputs}
-
-					<p className="font-bold pt-4">Groups</p>
+					<p className="font-bold pt-4">Sources</p>
+					{sources}
+					
+					<div className="flex pt-8 justify-between">
+						<p className="font-bold">Groups</p>
+						<button className="bg-neutral-800 px-4 text-base rounded text-white">Add</button>
+					</div>
 					{}
+					
 
 				</div>
 

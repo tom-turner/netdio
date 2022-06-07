@@ -8,7 +8,7 @@ let Navbar = () => {
 	let navigate = useNavigate();
 
 	return (
-		<div className={`flex justify-center fixed bottom-0 pt-1 px-4 pb-8 bg-neutral-900 text-white w-full `}>
+		<div className={`flex justify-center pt-1 px-4 pb-8 bg-neutral-900 text-white w-full `}>
 			<div className="flex justify-between w-full max-w-md">
 				<button className={`font-bold py-2 px-4 w-full`}>
 					<Group className="fill-white w-6 h-6 mx-auto" />

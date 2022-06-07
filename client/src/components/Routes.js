@@ -35,11 +35,13 @@ function AnimatedRoutes() {
 
 	return (
 		<DevicesContext.Provider value={{transmitters : transmitters, receivers: receivers}} >	
-			<Routes location={location} key={location.pathname} >
-				<Route path="/" element={ <Home /> } />
-				<Route path="/settings" element={ <Settings /> } />
-			</Routes>
-			<Navbar />
+			<div className="flex flex-col justify-between h-screen">
+				<Routes location={location} key={location.pathname} >
+					<Route path="/" element={ <Home /> } />
+					<Route path="/settings" element={ <Settings /> } />
+				</Routes>
+				<Navbar />
+			</div>
 		</DevicesContext.Provider>
 	);
 }

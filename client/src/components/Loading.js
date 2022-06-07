@@ -1,5 +1,5 @@
 import {ReactComponent as LoadingMeters}  from '../assets/loadingMeters.svg';
-import { motion, MotionConfig } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 let Loading = ({error}) => {
 	return(
