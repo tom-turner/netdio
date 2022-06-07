@@ -8,16 +8,19 @@ let Navbar = () => {
 	let navigate = useNavigate();
 
 	return (
-		<div className={`flex justify-center pt-1 px-12 pb-8 bg-neutral-900 text-white w-full transition-all duration-250 items-end `}>
+		<div className={`flex justify-center fixed bottom-0 pt-1 px-4 pb-8 bg-neutral-900 text-white w-full `}>
 			<div className="flex justify-between w-full max-w-md">
-				<button className={`font-bold py-2 px-4 `}>
-					<Group className="fill-white w-6 h-6" />
+				<button className={`font-bold py-2 px-4 w-full`}>
+					<Group className="fill-white w-6 h-6 mx-auto" />
+					<p className="text-sm" >Group</p>
 				</button>
-				<button className={`font-bold py-2 px-4 `}>
-					<Home className="fill-white w-6 h-6" onClick={ () => { navigate('/')}} />
+				<button className={`font-bold py-2 px-4 w-full`} onClick={ () => { navigate('/')}} >
+					<Home className="fill-white w-full h-6 mx-auto"  />
+					<p className="text-sm">Home</p>
 				</button>						
-				<button className={`font-bold py-2 px-4 `}>
-					<Settings className="fill-white w-6 h-6" onClick={ () => { navigate('/settings')}} />
+				<button className={`font-bold py-2 px-4 w-full`} onClick={ () => { navigate('/settings')}} >
+					<Settings className="fill-white w-full h-6 mx-auto" />
+					<p className="text-sm">Settings</p>
 				</button>
 			</div>
 		</div>

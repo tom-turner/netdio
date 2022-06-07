@@ -1,15 +1,14 @@
 import './App.css';
-import { Routes, Route, BrowserRouter } from "react-router-dom";
-import Home from "./components/Home"
-import Settings from "./components/Settings"
+import { BrowserRouter } from "react-router-dom";
+import AnimatedRoutes from "./components/AnimatedRoutes"
+
 
 function App() {
-  return <BrowserRouter>
-    <Routes>
-      <Route path="/" element={ <Home /> } />
-      <Route path="/settings" element={ <Settings /> } />
-    </Routes>
-  </BrowserRouter>
+  return (
+    <BrowserRouter>
+      <AnimatedRoutes />
+    </BrowserRouter>
+  )
 }
 
 export default App;

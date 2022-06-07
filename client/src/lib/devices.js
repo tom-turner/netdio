@@ -11,39 +11,58 @@ class Devices {
     }
 
     async subscribe(callback){
-        let getNetworkState = async () => {
+        let updateDevices = async () => {
             let services = await getBonjourServices(this.type)
 
             if(!services || services.error)
-              this.error = services.error
+                this.error = services.error
             else 
-              this.services = services
+                this.services = services
+                   
+            return this.services.map( async (service) => {
+                let deviceConfig = await getDeviceConfig(service, this.type)
             
-            this.services.map( async (service) => {
-              let deviceConfig = await getDeviceConfig(service, this.type)
+                if(!deviceConfig || deviceConfig.error){
+                    if(!this.changed(service, deviceConfig))
+                        return
 
-              if(!deviceConfig || deviceConfig.error)
-                    return this.removeDevice(service)
+                    this.removeDevice(service)
+                    return callback({ devices: this.getDeviceList() })
+                } else {
+                    if(!this.changed(service,deviceConfig))
+                        return
 
-              return this.devices[this.hash(service.id)] = deviceConfig  
-            })
-
-            callback({
-              devices: this.getDeviceList(this.devices),
-              error: this.error
+                    this.addDevice(service, deviceConfig)
+                    return callback({ devices: this.getDeviceList() }) 
+                }
             })
         }
-        getNetworkState()
-        setInterval( async () => { getNetworkState() }, this.updateInterval)
+        updateDevices()
+        callback({ devices: this.getDeviceList() }) 
+        setInterval( async () => {
+            updateDevices()
+        }, this.updateInterval)
     }
 
 
-    removeDevice(device){
-        delete this.devices[this.hash(device.id)] 
+    removeDevice(service){
+        return delete this.devices[this.hash(service.id)]
     }
 
-    getDeviceList() {
-        return Object.values(this.devices)
+    addDevice(service, config){
+        return this.devices[this.hash(service.id)] = config
+    }
+
+    exists(service){
+        return this.devices[this.hash(service.id)] ? true : false
+    }
+
+    changed(service, config){
+        return JSON.stringify(this.devices[this.hash(service.id)]) !== JSON.stringify(config)
+    }
+
+    getDeviceList(input) {
+        return Object.values( input || this.devices)
     }
 
     hash(input){

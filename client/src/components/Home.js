@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { setReceiverSource, setVolume } from '../lib/api'
 import { Tx, Rx } from '../lib/devices'
 import Loading from './Loading'
-import Navbar from './Navbar'
 import { Zones, Zone } from './Zones'
+import { motion } from 'framer-motion'
 
 
 let Home = () => {
@@ -19,6 +19,8 @@ let Home = () => {
 			setReceivers(devices)
 		})
 	}, []);
+
+	//console.log(transmitters)
  
 	if(transmitters.length === 0 && receivers.length === 0 )
 		return <Loading loadedWhen={transmitters.length !== 0} />
@@ -51,7 +53,12 @@ let Home = () => {
 	})
 
 	return(
-			<div className="w-full h-screen text-xl flex flex-col overflow-hidden justify-between">
+			<motion.div
+				className="w-full fixed top-0 text-xl flex flex-col overflow-hidden justify-between"
+				initial={{opacity: 0}}
+				animate={{opacity: 1}}
+				exit={{opacity: 0}}
+			>
 
 				<div className="border-b border-neutral-200 pt-8 pb-4 text-neutral-900 text-center font-bold shadow-inner">
 					<h2 >Home</h2>
@@ -63,9 +70,7 @@ let Home = () => {
 					</Zones >
 				</div>
 
-			<Navbar />
-
-			</div>
+			</motion.div>
 	)	
 }
 
