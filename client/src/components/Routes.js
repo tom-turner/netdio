@@ -6,7 +6,7 @@ import Settings from "./Settings"
 import Navbar from "./Navbar"
 import Loading from './Loading'
 import { DevicesContext } from '../context/Devices'
-import { AnimatePresence } from 'framer-motion'
+
 
 
 function AnimatedRoutes() {
@@ -30,23 +30,17 @@ function AnimatedRoutes() {
 		})
 	}, []);
 
-	if(transmitters.length === 0 && receivers.length === 0)
-		return ( 
-			<AnimatePresence>
-				<Loading error={error} />
-			</AnimatePresence>
-		)
+	if(transmitters.length === 0 && receivers.length === 0 )
+		return <Loading error={error} />
 
 	return (
-		<AnimatePresence>
-			<DevicesContext.Provider value={{transmitters : transmitters, receivers: receivers}} >	
-				<Routes location={location} key={location.pathname} >
-					<Route path="/" element={ <Home /> } />
-					<Route path="/settings" element={ <Settings /> } />
-				</Routes>
-			</DevicesContext.Provider>
+		<DevicesContext.Provider value={{transmitters : transmitters, receivers: receivers}} >	
+			<Routes location={location} key={location.pathname} >
+				<Route path="/" element={ <Home /> } />
+				<Route path="/settings" element={ <Settings /> } />
+			</Routes>
 			<Navbar />
-		</AnimatePresence>
+		</DevicesContext.Provider>
 	);
 }
 

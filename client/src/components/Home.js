@@ -39,9 +39,11 @@ let Home = () => {
 	return(
 			<motion.div
 				className="w-full fixed top-0 text-xl flex flex-col overflow-hidden justify-between"
+				key={'home'}
 				initial={{opacity: 0}}
 				animate={{opacity: 1}}
 				exit={{opacity: 0}}
+				transition={{ delay: 0, duration:0.3, ease: "easeInOut" }}
 			>
 
 				<div className="border-b border-neutral-200 pt-8 pb-4 text-neutral-900 text-center font-bold shadow-inner">

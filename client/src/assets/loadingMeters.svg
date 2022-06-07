@@ -7,7 +7,9 @@
       attributeType="XML"
       dur="1.5s"
       values="30; 100; 30"
-      repeatCount="indefinite"/>
+      repeatCount="indefinite"
+      begin="-1s"
+      />
 </rect>
 <rect x="16" width="3" height="100" transform="translate(0) rotate(180 20 50)">
   <animate
@@ -16,7 +18,7 @@
       dur="1.5s"
       values="30; 100; 30"
       repeatCount="indefinite"
-      begin="0.1s"/>
+      begin="-0.9s"/>
 </rect>
 <rect x="38" width="3" height="100" transform="translate(0) rotate(180 40 50)">
   <animate
@@ -25,7 +27,7 @@
       dur="1.5s"
       values="30; 100; 30"
       repeatCount="indefinite"
-      begin="0.3s"/>
+      begin="-.7s"/>
 </rect>
 <rect x="55" width="3" height="100" transform="translate(0) rotate(180 58 50)">
   <animate
@@ -34,7 +36,7 @@
       dur="1.5s"
       values="30; 100; 30"
       repeatCount="indefinite"
-      begin="0.5s"/>
+      begin="-0.5s"/>
 </rect>
 <rect x="73" width="3" height="100" transform="translate(0) rotate(180 76 50)">
   <animate
@@ -43,7 +45,7 @@
       dur="1.5s"
       values="30; 100; 30"
       repeatCount="indefinite"
-      begin="0.1s"/>
+      begin="-0.9s"/>
 </rect>
 <rect x="96" width="3" height="100" transform="translate(0) rotate(180 96 50)">
   <animate
@@ -52,7 +54,7 @@
       dur="1.5s"
       values="30; 100; 30"
       repeatCount="indefinite"
-      begin="0.3s"/>
+      begin="-0.7s"/>
 </rect>
 </svg>
 

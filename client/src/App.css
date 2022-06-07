@@ -38,16 +38,18 @@
 }
 
 html {
-touch-action: none;
-overflow: hidden;
-/* height: 100%; I commented out this declaration because it messes up your scrolling */
+  background-color: #ffffff;
+  touch-action: none;
+  overflow: hidden;
+  /* height: 100%; I commented out this declaration because it messes up your scrolling */
 }
 
 body {
-    height: 100%;
-    overflow: hidden;
-    width: 100%;
-    position: fixed;
+  background-color: #ffffff;
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+  position: fixed;
 }
 
 input[type=range]{

@@ -1,23 +1,17 @@
-import { useState, useEffect } from "react";
 import {ReactComponent as LoadingMeters}  from '../assets/loadingMeters.svg';
-import {ReactComponent as LoadingDots}  from '../assets/loadingDots.svg';
-import { motion } from 'framer-motion'
+import { motion, MotionConfig } from 'framer-motion'
 
 let Loading = ({error}) => {
-	let [ready, setReady] = useState(false)
-
-	setTimeout(()=>{
-		setReady(true)
-	},10)
-
 	return(
 			<motion.div
 				className="w-full h-screen bg-neutral-100 flex flex-col justify-center items-center"
+				key={'loading'}
 				initial={{opacity: 0}}
 				animate={{opacity: 1}}
 				exit={{opacity: 0}}
+				transition={{ delay: 0, duration:1 }}
 			 >
-				<LoadingMeters className={`mx-auto h-1/4 fill-neutral-800 transform transition-all duration-500 ease-in opacity-0 ${ ready ? 'opacity-100' : '' }` } />
+				<LoadingMeters className={`mx-auto h-1/4 fill-neutral-800 transform transition-all` } />
 				<p className="py-2 text-red-500">{ error ? 'Connection Error' : ''}</p>
 			</motion.div>
 	)	

@@ -1,11 +1,14 @@
 import './App.css';
 import { BrowserRouter } from "react-router-dom";
 import Routes from "./components/Routes"
+import { AnimatePresence } from 'framer-motion'
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes />
+      <AnimatePresence>
+        <Routes />
+      </AnimatePresence>
     </BrowserRouter>
   )
 }

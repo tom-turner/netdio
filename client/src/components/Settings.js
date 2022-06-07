@@ -4,14 +4,15 @@ import { setName } from '../lib/api'
 import { motion } from 'framer-motion'
 
 let Receiver = ({receiver}) => {
-	let [ toggle, setToggle ] = useState(false)
-	let nameInput = useRef()
+	let [ toggle, setToggle ] = useState(false);
+
 	return (
 		<div className="my-auto text-base px-4 py-2 flex justify-between rounded border border-neutral-200 shadow-lg">
-			<p onClick={ () => { setToggle(!toggle); nameInput.current.focus() }}  className={`truncate ${ toggle ? 'hidden' : '' }`} >{receiver.name}</p>
-			<input autoFocus ref={nameInput} className={`truncate ${ toggle ? '' : 'hidden' }`} type="text" placeholder={receiver.name} onChange={ e => setName(receiver.ip, receiver.type, e.target.value)} />
+			<p onClick={ () => { setToggle(!toggle); }}  className={`truncate ${ toggle ? 'hidden' : '' }`} >{receiver.name}</p>
+			<input className={`truncate ${ toggle ? '' : 'hidden' }`} type="text" placeholder={receiver.name} onChange={ e => setName(receiver.ip, receiver.type, e.target.value)} />
 			<div className="flex space-x-2">
-				<button onClick={ () => { setToggle(!toggle); nameInput.current.focus() }} className={`bg-neutral-800 px-4 rounded text-white `}>{ toggle ? 'Save' : 'Edit'}</button>
+				<button onClick={ () => { setToggle(!toggle);  }} className={`bg-neutral-800 px-4 rounded text-white ${ toggle ? 'hidden' : '' }`}>{ 'Edit'}</button>
+				<button onClick={ () => { setToggle(!toggle);  }} className={`bg-neutral-800 px-4 rounded text-white ${ toggle ? '' : 'hidden' }`}>{ 'Save'}</button>
 			</div>
 		</div>
 	)
@@ -19,13 +20,14 @@ let Receiver = ({receiver}) => {
 
 let Transmitter = ({transmitter}) => {
 	let [ toggle, setToggle ] = useState(false)
-	let nameInput = useRef()
+
 	return (
 		<div className="my-auto text-base px-4 py-2 flex justify-between rounded border border-neutral-200 shadow-lg">
-			<p onClick={ () => { setToggle(!toggle); nameInput.current.focus() }} className={`truncate ${ toggle ? 'hidden' : '' }`} >{transmitter.name}</p>
-			<input autoFocus ref={nameInput} className={`truncate ${ toggle ? '' : 'hidden' }`} type="text" placeholder={transmitter.name} onChange={ e => setName(transmitter.ip, transmitter.type, e.target.value)} />
+			<p onClick={ () => { setToggle(!toggle); }} className={`truncate ${ toggle ? 'hidden' : '' }`} >{transmitter.name}</p>
+			<input className={`truncate ${ toggle ? '' : 'hidden' }`} type="text" placeholder={transmitter.name} onChange={ e => setName(transmitter.ip, transmitter.type, e.target.value)} />
 			<div className="flex space-x-2">
-				<button onClick={ () => { setToggle(!toggle); nameInput.current.focus() }} className={`bg-neutral-800 px-4 rounded text-white `}>{ toggle ? 'Save' : 'Edit'}</button>
+				<button onClick={ () => { setToggle(!toggle);  }} className={`bg-neutral-800 px-4 rounded text-white ${ toggle ? 'hidden' : '' }`}>{ 'Edit'}</button>
+				<button onClick={ () => { setToggle(!toggle);  }} className={`bg-neutral-800 px-4 rounded text-white ${ toggle ? '' : 'hidden' }`}>{ 'Save'}</button>
 			</div>
 		</div>
 	)
@@ -45,9 +47,11 @@ let Settings = () => {
 	return(
 			<motion.div 
 				className="w-full fixed top-0 text-xl flex flex-col overflow-hidden justify-between"
+				key={'settings'}
 				initial={{opacity: 0}}
 				animate={{opacity: 1}}
 				exit={{opacity: 0}}
+				transition={{ delay: 0, duration:0.3, ease: "easeInOut" }}
 			>
 
 				<div className="border-b border-neutral-200 pt-8 pb-4 text-neutral-900 text-center font-bold shadow-inner">

@@ -36,6 +36,7 @@ class Devices {
                 }
             })
         }
+        
         //updateDevices()
         callback({ devices: this.getDeviceList() }) 
         setInterval( async () => {
