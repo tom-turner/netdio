@@ -32,12 +32,14 @@ class NetworkAudio {
   }
 
   receive(socket) {
-
     if(!socket)
       return
 
-    let rocRecv = spawn('roc-recv', ['-vv', '-s' ,`rtp+rs8m::${socket}`, '-r', `rs8m::${getRepairPort(socket)}`, this.config.configObject.rx.driver, this.config.configObject.rx.hardware, rate, resampling, latency, profile, poisoning]);
-    console.log('starting recv:', rocRecv.pid, this.config.configObject.rx.driver, this.config.configObject.rx.hardware)
+    let outputDevice = `-o${this.config.rx.hardware}` 
+    let outputDriver = `-d${this.config.rx.driver}`
+
+    let rocRecv = spawn('roc-recv', ['-vv', '-s' ,`rtp+rs8m::${socket}`, '-r', `rs8m::${getRepairPort(socket)}`, outputDriver, outputDevice, rate, resampling, latency, profile, poisoning]);
+    console.log('starting recv:', rocRecv.pid, outputDevice, outputDriver)
     this.processes.set({
       type : "rx",
       pid : rocRecv.pid
