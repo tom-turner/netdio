@@ -71,7 +71,7 @@ pactl unload-module $modulenumber
 https://brokkr.net/2018/05/24/down-the-drain-the-elusive-default-pulseaudio-sink/
 
 Alsa config 
-/etc/asound.conf
+~/.asoundrc
 
 Raspoitify on pulseaudio
 https://mathieu-requillart.medium.com/my-ultimate-guide-to-the-raspberry-pi-audio-server-i-wanted-spotify-ce549656af06

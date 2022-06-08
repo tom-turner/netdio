@@ -1,6 +1,7 @@
 // setup libs
 const fs = require('fs')
 const config = require('./config')
+const platform = require('./platform')
 const { getIp, getHostname } = require('./networkInfo')
 
 // run libs
@@ -52,10 +53,10 @@ let tx = () => {
 	config.set('tx.type', 'tx' )
 
 	if(!config.get('tx')['driver'])
-		config.set('tx.driver', '' )
+		config.set('tx.driver', platform.inputDriver() )
 
 	if(!config.get('tx')['hardware'])
-		config.set('tx.hardware', '' )
+		config.set('tx.hardware', platform.inputDevice() )
 
 	if(!config.get('tx')['name'])
 		config.set('tx.name', `${getHostname()}` )
@@ -76,10 +77,10 @@ let rx = () => {
 	config.set('rx.type', 'rx' )
 
 	if(!config.get('rx')['driver'])
-		config.set('rx.driver', '' )
+		config.set('rx.driver', platform.outputDriver() )
 
 	if(!config.get('rx')['hardware'])
-		config.set('rx.hardware', '' )
+		config.set('rx.hardware', platform.outputDevice() )
 
 	if(!config.get('rx')['name'])
 		config.set('rx.name', `${getHostname()}` )

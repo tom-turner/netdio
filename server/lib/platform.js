@@ -5,12 +5,14 @@ const Linux = {
 	outputDriver() {
 		return 'alsa'
 	},
-
 	inputDevice() {
-		return 'player' ? 'hw:Loopback,1' : 'hw:sndrpihifiberry,0'
+		return 'dsnoop:sndrpihifiberry,0'
 	},
 	outputDevice() {
-		return 'hw:1,0'
+		return 'adc'
+	},
+	spotifyDevice() {
+		return ''
 	}
 }
 
@@ -23,7 +25,7 @@ const Darwin = {
 	},
 
 	inputDevice() {
-		return 'BlackHole'
+		return 'BlackHole 2ch'
 	},
 	outputDevice() {
 		return ''
