@@ -75,7 +75,7 @@ class NetworkAudio {
     let inputDevice = data.device ? "-i" + data.device : ""
     let ref = `ref-${data.ip}:${data.socket}`
 
-    console.log(data)
+    console.log(ref)
 
     if(this.processes.get(ref).toString()){
       console.log('keep alive')
