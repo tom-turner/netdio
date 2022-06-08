@@ -35,8 +35,8 @@ class NetworkAudio {
     if(!socket)
       return
 
-    let outputDevice = `-o${this.config.configObject.rx.device}` 
-    let outputDriver = `-d${this.config.configObject.rx.driver}`
+    let outputDevice = this.config.configObject.rx.device ? `-o${this.config.configObject.rx.device}` : ''
+    let outputDriver = this.config.configObject.rx.driver ? `-d${this.config.configObject.rx.driver}` : ''
 
     let rocRecv = spawn('roc-recv', ['-vv', '-s' ,`rtp+rs8m::${socket}`, '-r', `rs8m::${getRepairPort(socket)}`, outputDriver, outputDevice, rate, resampling, latency, profile, poisoning]);
     console.log('starting recv:', rocRecv.pid, outputDevice, outputDriver)
@@ -76,6 +76,7 @@ class NetworkAudio {
     let inputDevice = data.device ? "-i" + data.device : ""
     let ref = `ref-${data.ip}:${data.socket}`
 
+    console.log(ref)
 
     if(this.processes.get(ref).toString()){
       console.log('keep alive')
