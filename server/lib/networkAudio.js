@@ -28,7 +28,6 @@ class NetworkAudio {
     this.config = config
     this.updateInterval = 1000
     this.processes = processes
-    this.file = "config/rocprocesses.json"
   }
 
   receive(socket) {
@@ -46,7 +45,7 @@ class NetworkAudio {
     })
 
     let stream = setInterval( async ()=>{
-      return await audioStream(this.config.configObject.source).then( res => { 
+      return await audioStream(this.config.configObject.source, this.config.configObject.rx.ip ).then( res => { 
         if(res.error)
           return console.log(res.error)
       })
@@ -76,7 +75,7 @@ class NetworkAudio {
     let inputDevice = data.device ? "-i" + data.device : ""
     let ref = `ref-${data.ip}:${data.socket}`
 
-    console.log(ref)
+    console.log(data)
 
     if(this.processes.get(ref).toString()){
       console.log('keep alive')
@@ -84,7 +83,7 @@ class NetworkAudio {
       return
     }
 
-    let rocSend = spawn('roc-send', ['--nbsrc=10', '--nbrpr=5', '-vv', '-s', `rtp+rs8m:${data.ip}:${data.socket}`, '-r', `rs8m:${data.ip}:${getRepairPort(data.socket)}`, '--interleaving', inputDriver, inputDevice, rate, resampling, profile, poisoning]);
+    let rocSend = spawn('roc-send', ['--nbsrc=10', '--nbrpr=5', '-vv', '-s', `rtp+rs8m:${data.recvIp}:${data.socket}`, '-r', `rs8m:${data.recvIp}:${getRepairPort(data.socket)}`, '--interleaving', inputDriver, inputDevice, rate, resampling, profile, poisoning]);
 
     this.timeout((dead)=>{
       dead ? this.processes.kill(this.processes.get(rocSend.pid)) : ''

@@ -51,8 +51,8 @@ let http = new Http({
 });
 
 
-let audioStream = async (source) => {
-    let result = await http.post(`http://${source.ip}:${port}/audio-stream`, null, JSON.stringify(source))
+let audioStream = async (source, recvIp) => {
+    let result = await http.post(`http://${source.ip}:${port}/audio-stream`, null, JSON.stringify({ ...source, recvIp: recvIp }))
     if(result.error) 
         return { error: result.error }
 
