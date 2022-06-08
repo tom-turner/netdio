@@ -111,3 +111,8 @@ default startup config:
 
 {"device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"Duckado"},
 "source":{"name":"-Mute-"}}
+
+
+working linux config :
+
+{"rx":{"name":"EtherDAC AMP","type":"rx","volume":84,"driver":"alsa","hardware":"adc"},"device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"EtherDAC AMP","ip":"192.168.1.103","id":"228084"},"source":{"send":"undefined","socket":"muted","name":"-Mute-","recv":"228084","txdata":{"tx":{"name":"-Mute-","source":"muted"}}},"devices":{"send":"192.168.1.103","socket":"41496","name":"Spotify Connect","recv":"192.168.1.103","txdata":{"tx":{"name":"Spotify Connect","type":"tx","driver":"alsa","hardware":"dsnoop:Loopback,1,0","source":"41496","ip":"228084"}}}}

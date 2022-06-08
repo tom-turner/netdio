@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 
 export function Zones({ children }) {
 	return(
-		<div className="flex flex-col w-full p-4 pt-8 space-y-4 ">
+		<div className="flex flex-col w-full ">
 			{children}
 		</div>
 	)	
@@ -16,13 +16,13 @@ export function Selector({selected, handleInputChange, setSelected, inputOptions
 
 	return (
 		<motion.div
-			className="bg-neutral-900 w-full p-8 "
+			className="bg-neutral-900 w-full p-8 flex justify-center"
 			initial={{opacity: 0}}
 			animate={{opacity: 1}}
 			exit={{opacity: 0}}
 			transition={{ delay: 0, duration:0.3 }}
 		> 
-			<select autoFocus onBlur={ () => { setSelected({}) } } className="text-right text-base my-auto text-neutral-800 w-full p-4 rounded" onChange={ (e) => { handleInputChange({ ip: selected.ip , value: e.target.value }); setSelected({}) } } defaultValue={'default'} >
+			<select autoFocus onBlur={ () => { setSelected({}) } } className="text-right max-w-2xl text-base my-auto text-neutral-800 w-full p-4 rounded" onChange={ (e) => { handleInputChange({ ip: selected.ip , value: e.target.value }); setSelected({}) } } defaultValue={'default'} >
 				<option className="" disabled value={'default'} >{selected.source.name}</option>
 				<option value={ JSON.stringify({ name: '-Mute-'})} >{'-Mute-'}</option>
 				{inputOptions}
@@ -38,7 +38,7 @@ export function Zone({ receiver, inputOptions, handleInputChange, handleVolumeCh
 	let muted = receiver.source.socket ? false : true
 
 	return(
-			<div className={`w-full rounded bg-white ${ selected ? 'border-neutral-500 border shadow-md' : 'border border-neutral-200 shadow-lg' }`} >
+			<div className={`w-full bg-white ${ selected ? 'border-neutral-500 border shadow-md' : 'border-b border-neutral-300' }`} >
 			 	
 				<div className="flex justify-between w-full space-x-4 px-4 pt-4" onClick={ () => { setSelected(  selected ? {} : receiver)  }}>
 			 		<div className="flex w-full" >

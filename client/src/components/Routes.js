@@ -2,7 +2,8 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Tx, Rx } from '../lib/devices'
 import Home from "./Home"
-import Settings from "./Settings"
+import Settings, { EditName, SettingsList } from "./Settings"
+import Groups from "./Groups"
 import Navbar from "./Navbar"
 import Loading from './Loading'
 import { DevicesContext } from '../context/Devices'
@@ -39,6 +40,9 @@ function AnimatedRoutes() {
 				<Routes location={location} key={location.pathname} >
 					<Route path="/" element={ <Home /> } />
 					<Route path="/settings" element={ <Settings /> } />
+					<Route path="/settings/edit-name" element={ <EditName /> }/>
+					<Route path="/groups" element={ <Groups /> } />
+					<Route path="*" element={ <Loading /> } />
 				</Routes>
 				<Navbar />
 			</div>

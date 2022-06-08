@@ -43,6 +43,11 @@ routes.post('/set-volume', async (req, res) => {
 	res.status(200).json({success: true})
 });
 
+routes.post('/set-group', async (req, res) => {
+	config.set( 'group' , req.body.value )
+	res.status(200).json({success: true})
+});
+
 routes.post('/set-receiver-source', async (req, res) => {
 	config.set( 'source' , req.body)
 	processes.kill(processes.get('rx'))
@@ -68,7 +73,7 @@ routes.get('/get-config/tx', async (req, res) => {
 });
 
 routes.get('/get-config/rx', async (req, res) => {
-	res.json({ ...config.configObject.rx, source: config.configObject.source });
+	res.json({ ...config.configObject.rx, source: config.configObject.source, group: config.configObject.group });
 });
 
 routes.get('/get-config', async (req, res) => {

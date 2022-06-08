@@ -49,7 +49,7 @@ let Home = () => {
 				</div>
 
 				<div className="flex-grow">
-					<Zones className="flex flex-col w-full p-4 pt-8 space-y-4 flex-grow ">
+					<Zones>
 						{zones}
 					</Zones >
 				</div>
