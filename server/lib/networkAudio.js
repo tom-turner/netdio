@@ -29,8 +29,6 @@ class NetworkAudio {
     this.updateInterval = 1000
     this.processes = processes
     this.file = "config/rocprocesses.json"
-    this.outputDriver = this.config.rx ? `-d${this.config.rx.driver}` : ''
-    this.outputDevice = this.config.rx ? `-o${this.config.rx.hardware}` : ''
   }
 
   receive(socket) {
@@ -38,10 +36,8 @@ class NetworkAudio {
     if(!socket)
       return
 
-    console.log(this.outputDriver, this.outputDevice)
-
-    let rocRecv = spawn('roc-recv', ['-vv', '-s' ,`rtp+rs8m::${socket}`, '-r', `rs8m::${getRepairPort(socket)}`, this.outputDriver, this.outputDevice, rate, resampling, latency, profile, poisoning]);
-    console.log('starting recv:', rocRecv.pid, this.outputDevice, this.outputDriver)
+    let rocRecv = spawn('roc-recv', ['-vv', '-s' ,`rtp+rs8m::${socket}`, '-r', `rs8m::${getRepairPort(socket)}`, this.config.configObject.rx.driver, this.config.configObject.rx.hardware, rate, resampling, latency, profile, poisoning]);
+    console.log('starting recv:', rocRecv.pid, this.config.configObject.rx.driver, this.config.configObject.rx.hardware)
     this.processes.set({
       type : "rx",
       pid : rocRecv.pid
