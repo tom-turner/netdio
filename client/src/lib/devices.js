@@ -72,4 +72,5 @@ class Devices {
 
 exports.Tx = new Devices('tx')
 exports.Rx = new Devices('rx')
+exports.Spotify = new Devices('spotify')
 

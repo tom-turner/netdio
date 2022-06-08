@@ -116,3 +116,50 @@ default startup config:
 working linux config :
 
 {"rx":{"name":"EtherDAC AMP","type":"rx","volume":84,"driver":"alsa","hardware":"adc"},"device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"EtherDAC AMP","ip":"192.168.1.103","id":"228084"},"source":{"send":"undefined","socket":"muted","name":"-Mute-","recv":"228084","txdata":{"tx":{"name":"-Mute-","source":"muted"}}},"devices":{"send":"192.168.1.103","socket":"41496","name":"Spotify Connect","recv":"192.168.1.103","txdata":{"tx":{"name":"Spotify Connect","type":"tx","driver":"alsa","hardware":"dsnoop:Loopback,1,0","source":"41496","ip":"228084"}}}}
+
+
+working ~/.asoundrc:
+
+pcm.!default {
+    type hw
+    card 0
+}
+ctl.!default{
+    type hw
+    card 1
+}
+pcm.librespot{
+    format S16_LE
+    rate 44100
+    type hw
+    card 0
+    device 0
+    subdevice 0
+}
+pcm.radio{
+    format S16_LE
+    rate 44100
+    type hw
+    card 0
+    device 0
+    subdevice 1
+}
+pcm.loopback{
+    format S16_LE
+    rate 44100
+    type dmix
+    card 0
+    device 1
+}
+ctl.equal {
+    type equal
+}
+pcm.plugequal {
+  type equal;
+  slave.pcm "plughw:1,0";
+}
+pcm.adc {
+  type plug;
+  slave.pcm plugequal;
+}
+

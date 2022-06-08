@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 
 
 let Home = () => {
-	let { transmitters, receivers } = useContext(DevicesContext)
+	let { transmitters, receivers, spotify } = useContext(DevicesContext)
 	let [ selected, setSelected ] = useState({})
 
 	let handleInputChange = ({ip, value}) => {
@@ -18,7 +18,9 @@ let Home = () => {
 		setVolume( ip, value )
 	}
 
-	let inputOptions = transmitters.map((transmitter, i)=>{
+	let allSources = [ ... transmitters, ...spotify]
+
+	let inputOptions = allSources.map((transmitter, i)=>{
 		return <option className="" key={i} value={JSON.stringify(transmitter)}>{transmitter.name}</option>
 	})
 

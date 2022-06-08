@@ -69,12 +69,20 @@ routes.get('/get-bonjour-services/rx', async (req, res) => {
 	res.json( Rx.getServiceList() )
 });
 
+routes.get('/get-bonjour-services/spotify', async (req, res) => {
+	res.json( Spotify.getServiceList() )
+});
+
 routes.get('/get-config/tx', async (req, res) => {
 	res.json(config.configObject.tx);
 });
 
 routes.get('/get-config/rx', async (req, res) => {
 	res.json({ ...config.configObject.rx, source: config.configObject.source, group: config.configObject.group });
+});
+
+routes.get('/get-config/spotify', async (req, res) => {
+	res.json(config.configObject.spotify);
 });
 
 routes.get('/get-config', async (req, res) => {
