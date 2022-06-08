@@ -38,6 +38,8 @@ class NetworkAudio {
     if(!socket)
       return
 
+    console.log(this.outputDriver, this.outputDevice)
+
     let rocRecv = spawn('roc-recv', ['-vv', '-s' ,`rtp+rs8m::${socket}`, '-r', `rs8m::${getRepairPort(socket)}`, this.outputDriver, this.outputDevice, rate, resampling, latency, profile, poisoning]);
     console.log('starting recv:', rocRecv.pid, this.outputDevice, this.outputDriver)
     this.processes.set({
