@@ -30,14 +30,13 @@ class NetworkAudio {
     this.processes = processes
   }
 
-  receive(socket) {
-    if(!socket)
-      return
+  receive() {
 
     let outputDevice = this.config.configObject.rx.device ? `-o${this.config.configObject.rx.device}` : ''
     let outputDriver = this.config.configObject.rx.driver ? `-d${this.config.configObject.rx.driver}` : ''
+    let socket = this.config.configObject.rx.socket
 
-    let rocRecv = spawn('roc-recv', ['-vv', '-s' ,`rtp+rs8m::${12000}`, '-r', `rs8m::${getRepairPort(12000)}`, outputDriver, outputDevice, rate, resampling, latency, profile, poisoning]);
+    let rocRecv = spawn('roc-recv', ['-vv', '-s' ,`rtp+rs8m::${socket}`, '-r', `rs8m::${getRepairPort(socket)}`, outputDriver, outputDevice, rate, resampling, latency, profile, poisoning]);
     console.log('starting recv:', rocRecv.pid, outputDevice, outputDriver)
     this.processes.set({
       type : "rx",
@@ -45,7 +44,7 @@ class NetworkAudio {
     })
 
     let stream = setInterval( async ()=>{
-      return await audioStream(this.config.configObject.source, this.config.configObject.rx.ip ).then( res => { 
+      return await audioStream(this.config.configObject.source, this.config.configObject.rx ).then( res => { 
         if(res.error)
           return console.log(res.error)
       })
@@ -73,7 +72,7 @@ class NetworkAudio {
 
     let inputDriver = data.driver ? "-d" + data.driver : ""
     let inputDevice = data.device ? "-i" + data.device : ""
-    let ref = `ref-${data.ip}:${data.socket}`
+    let ref = `ref-${data.rxIp}:${data.rxSocket}`
 
     console.log(ref)
 
@@ -83,7 +82,7 @@ class NetworkAudio {
       return
     }
 
-    let rocSend = spawn('roc-send', ['--nbsrc=10', '--nbrpr=5', '-vv', '-s', `rtp+rs8m:${data.recvIp}:${12000}`, '-r', `rs8m:${data.recvIp}:${getRepairPort(12000)}`, '--interleaving', inputDriver, inputDevice, rate, resampling, profile, poisoning]);
+    let rocSend = spawn('roc-send', ['--nbsrc=10', '--nbrpr=5', '-vv', '-s', `rtp+rs8m:${data.rxIp}:${data.rxSocket}`, '-r', `rs8m:${data.rxIp}:${getRepairPort(data.rxSocket)}`, '--interleaving', inputDriver, inputDevice, rate, resampling, profile, poisoning]);
 
     this.timeout((dead)=>{
       dead ? this.processes.kill(this.processes.get(rocSend.pid)) : ''

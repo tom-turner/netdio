@@ -63,9 +63,6 @@ let tx = () => {
 	if(!config.get('tx')['name'])
 		config.set('tx.name', `${getHostname()}` )
 	
-	if(!config.get('tx')['socket'])
-	  config.set( "tx.socket", config.getNewPort() )
-
 	return config.get('tx')
 }
 
@@ -85,6 +82,9 @@ let rx = () => {
 
 	if(!config.get('rx')['name'])
 		config.set('rx.name', `${getHostname()}` )
+
+	if(!config.get('rx')['socket'])
+	  config.set( "rx.socket", config.getNewPort() )
 	
 	if(!config.get('source')) {
 		config.set( "source", {} )
@@ -124,7 +124,7 @@ let run = () => {
 
 	if(config.configObject.rx) {
 		Rx.publish()
-		audio.receive(config.configObject.source.socket)
+		audio.receive()
 	}
 
 	if(config.configObject.spotify)
