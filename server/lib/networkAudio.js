@@ -35,9 +35,7 @@ class NetworkAudio {
     if(!socket)
       return
 
-    console.log(this.config.configObject)
-
-    let outputDevice = `-o${this.config.configObject.rx.hardware}` 
+    let outputDevice = `-o${this.config.configObject.rx.device}` 
     let outputDriver = `-d${this.config.configObject.rx.driver}`
 
     let rocRecv = spawn('roc-recv', ['-vv', '-s' ,`rtp+rs8m::${socket}`, '-r', `rs8m::${getRepairPort(socket)}`, outputDriver, outputDevice, rate, resampling, latency, profile, poisoning]);
@@ -75,7 +73,7 @@ class NetworkAudio {
       return
 
     let inputDriver = data.driver ? "-d" + data.driver : ""
-    let inputDevice = data.hardware ? "-i" + data.hardware : ""
+    let inputDevice = data.device ? "-i" + data.device : ""
     let ref = `ref-${data.ip}:${data.socket}`
 
 

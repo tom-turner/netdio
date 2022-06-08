@@ -1,9 +1,10 @@
 const { exec } = require('child_process');
 const { getPreview } = require('spotify-url-info')
 const fs = require('fs');
+const processes = require('./processes')
+const config = require('./config')
 const EventEmitter = require('events');
 const emitter = new EventEmitter();
-let name = '-n Duckado-Connect'
 let backend = '--backend alsa'
 let device ='--device librespot'
 let format = '--format S16'
@@ -21,13 +22,11 @@ let debounce = (callback, delay) =>{
 
 class Spotify {
 	constructor(updateInterval){
-		this.updateInterval = updateInterval
+		this.config = config
 		this.currentTrack = ''
 		this.spotify = ''
 		this.running = false
-    this.output = () => {
-    	return process.platform == 'linux' ? '--device hw:Loopback,0' : ''
-    }
+
 		// test current track '3neCnBouNr3Xkbpe7Mzxh4'
 	}
 
@@ -43,19 +42,10 @@ class Spotify {
 		}
 	}
 
-	startAndKeepUp(callback){
-
-		if(this.running){
-			//console.log('keeping spotify alive')
-			this.keepAlive()
-			return
-		}
-
-		this.running = true
-
+	start(callback){
 		console.log('starting spotify')
 		// would be best if this worked with dmix as the device
-		this.spotify = exec('~/librespot/target/release/librespot -n Duckado-Connect --enable-volume-normalisation --normalisation-pregain "0" --backend alsa --device librespot --format S16')
+		this.spotify = exec(`~/librespot/target/release/librespot -n ${config.configObject.spotify.name} --enable-volume-normalisation --normalisation-pregain "0" --backend alsa --device librespot --format S16`)
 		
 		this.spotify.stdout.on('data', (data) => {
 			console.log('stdout: ' + data.toString())
@@ -85,12 +75,8 @@ class Spotify {
 
 	}
 
-	keepAlive(){
-		debounce(()=>{
-			process.kill(this.spotify.pid)
-			this.running = false
-		},this.updateInterval * 2.5)
-	}
-
 }
-module.exports = Spotify
+
+
+let spotify = new Spotify()
+module.exports = spotify

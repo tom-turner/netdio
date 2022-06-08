@@ -11,8 +11,11 @@ const Linux = {
 	outputDevice() {
 		return 'adc'
 	},
-	spotifyDevice() {
-		return ''
+	spotifyInputDevice() {
+		return 'dsnoop:Loopback,1'
+	},
+	spotifyOutputDevice() {
+		return 'librespot'
 	}
 }
 
@@ -28,6 +31,12 @@ const Darwin = {
 		return 'BlackHole 2ch'
 	},
 	outputDevice() {
+		return ''
+	},
+	spotifyInputDevice() {
+		return ''
+	},
+	spotifyOutputDevice() {
 		return ''
 	}
 }
@@ -55,5 +64,13 @@ module.exports = {
 
 	outputDevice(){
 		return platforms[this.platform()].outputDevice()
+	},
+
+	spotifyInputDevice(){
+		return platforms[this.platform()].spotifyInputDevice()
+	},
+
+	spotifyOutputDevice(){
+		return platforms[this.platform()].spotifyOutputDevice()
 	}
 }

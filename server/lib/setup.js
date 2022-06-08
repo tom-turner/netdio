@@ -2,6 +2,7 @@
 const fs = require('fs')
 const config = require('./config')
 const platform = require('./platform')
+const librespot = require('./spotify')
 const { getIp, getHostname } = require('./networkInfo')
 
 // run libs
@@ -23,6 +24,7 @@ let setup = () => {
 
 	tx();
 	rx();
+	spotify();
 
 	return
 }
@@ -55,13 +57,12 @@ let tx = () => {
 	if(!config.get('tx')['driver'])
 		config.set('tx.driver', platform.inputDriver() )
 
-	if(!config.get('tx')['hardware'])
-		config.set('tx.hardware', platform.inputDevice() )
+	if(!config.get('tx')['device'])
+		config.set('tx.device', platform.inputDevice() )
 
 	if(!config.get('tx')['name'])
 		config.set('tx.name', `${getHostname()}` )
 	
-
 	if(!config.get('tx')['socket'])
 	  config.set( "tx.socket", config.getNewPort() )
 
@@ -79,8 +80,8 @@ let rx = () => {
 	if(!config.get('rx')['driver'])
 		config.set('rx.driver', platform.outputDriver() )
 
-	if(!config.get('rx')['hardware'])
-		config.set('rx.hardware', platform.outputDevice() )
+	if(!config.get('rx')['device'])
+		config.set('rx.device', platform.outputDevice() )
 
 	if(!config.get('rx')['name'])
 		config.set('rx.name', `${getHostname()}` )
@@ -93,6 +94,29 @@ let rx = () => {
 	return config.get('rx')
 }
 
+let spotify = () => {
+	if(!config.get('spotify'))
+	  return
+
+	config.set('spotify.ip', ip() )
+	config.set('spotify.id', id() )
+	config.set('spotify.type', 'spotify' )
+
+	if(!config.get('spotify')['driver'])
+		config.set('spotify.driver', platform.inputDriver() )
+
+	if(!config.get('spotify')['device'])
+		config.set('spotify.device', platform.spotifyInputDevice() )
+
+	if(!config.get('spotify')['name'])
+		config.set('spotify.name', `${getHostname()}-${id().slice(-4)}` )
+
+	if(!config.get('spotify')['socket'])
+	  config.set( "spotify.socket", config.getNewPort() )
+
+	return config.get('spotify')
+}
+
 let run = () => {
 
 	if(config.configObject.tx)
@@ -103,7 +127,10 @@ let run = () => {
 		audio.receive(config.configObject.source.socket)
 	}
 
-
+	if(config.configObject.spotify)
+		Spotify.publish()
+		librespot.start(({error}) => {
+		})
 }
 
 module.exports.setup = setup
