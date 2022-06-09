@@ -13,10 +13,11 @@ class Spotify {
 		this.config = config
 		this.currentTrack = ''
 		this.spotify = ''
-		this.running = false
+		this.started = false 
+		this.running = false // gets pulled into to networkAudio to prevent transmit before running
 
 		setInterval( () => {
-			if(!this.running && !this.irrecoverablyErrored)
+			if(!this.started &&)
 				this.start()
 		}, 5000)
 	}
@@ -42,9 +43,7 @@ class Spotify {
 		// would be best if this worked with dmix as the device
 		this.spotify = exec(`~/librespot/target/release/librespot -n ${config.configObject.spotify.name} --autoplay --enable-volume-normalisation --normalisation-pregain "0" ${backend} ${device} ${format}`)
 		
-		this.spotify.on('start', (data) => {
-			console.log(data)
-		})
+		this.started = true
 
 		this.spotify.stdout.on('data', (data) => {
 			console.log('spotify stdout: ' + data.toString())
@@ -70,12 +69,14 @@ class Spotify {
 			if(invalid) {
 				process.kill(this.spotify.pid)
 				this.running = false
+				this.started = false
 			}
 
 			let died = data.match('code: 49')
 			if (died) {
 				process.kill(this.spotify.pid)
 				this.running = false
+				this.started = false
 				console.log({ error : 'spotify ' +this.spotify.pid+ ' closed with code:49' })
 				
 			}
