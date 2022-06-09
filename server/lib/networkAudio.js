@@ -31,10 +31,9 @@ class NetworkAudio {
     this.processes = processes
   }
 
-  receive() {
+  receive(socket) {
     let outputDevice = this.config.configObject.rx.device ? `-o${this.config.configObject.rx.device}` : ''
     let outputDriver = this.config.configObject.rx.driver ? `-d${this.config.configObject.rx.driver}` : ''
-    let socket = this.config.configObject.rx.socket
 
     let rocRecv = spawn('roc-recv', ['-vv', '-s' ,`rtp+rs8m::${socket}`, '-r', `rs8m::${getRepairPort(socket)}`, outputDriver, outputDevice, rate, resampling, latency, profile, poisoning]);
     console.log('starting recv:', rocRecv.pid, outputDevice, outputDriver)
@@ -77,7 +76,7 @@ class NetworkAudio {
 
     let inputDriver = data.driver ? "-d" + data.driver : ""
     let inputDevice = data.device ? "-i" + data.device : ""
-    let ref = `ref-${data.rxIp}:${data.rxSocket}-${inputDevice}-${data.type}`
+    let ref = `ref-${data.rxIp}:${data.socket}-${inputDevice}-${data.type}`
 
     //console.log(inputDriver, inputDevice, ref)
 
@@ -87,7 +86,7 @@ class NetworkAudio {
       return
     }
 
-    let rocSend = spawn('roc-send', ['--nbsrc=10', '--nbrpr=5', '-vv', '-s', `rtp+rs8m:${data.rxIp}:${data.rxSocket}`, '-r', `rs8m:${data.rxIp}:${getRepairPort(data.rxSocket)}`, '--interleaving', inputDriver, inputDevice, rate, resampling, profile, poisoning]);
+    let rocSend = spawn('roc-send', ['--nbsrc=10', '--nbrpr=5', '-vv', '-s', `rtp+rs8m:${data.rxIp}:${data.socket}`, '-r', `rs8m:${data.rxIp}:${getRepairPort(data.socket)}`, '--interleaving', inputDriver, inputDevice, rate, resampling, profile, poisoning]);
 
     this.timeout((dead)=>{
       dead ? this.processes.kill(this.processes.get(rocSend.pid)) : ''

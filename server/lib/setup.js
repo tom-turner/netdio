@@ -62,6 +62,9 @@ let tx = () => {
 
 	if(!config.get('tx')['name'])
 		config.set('tx.name', `${getHostname()}` )
+
+	if(!config.get('rx')['socket'])
+	  config.set( "rx.socket", config.getNewPort() )
 	
 	return config.get('tx')
 }
@@ -83,9 +86,6 @@ let rx = () => {
 	if(!config.get('rx')['name'])
 		config.set('rx.name', `${getHostname()}` )
 
-	if(!config.get('rx')['socket'])
-	  config.set( "rx.socket", config.getNewPort() )
-	
 	if(!config.get('source')) {
 		config.set( "source", {} )
 	  	config.set( "source.name", '-Mute-' )
