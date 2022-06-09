@@ -85,6 +85,7 @@ class Spotify {
 
 		this.spotify.on('close', () => {
 			this.running = false
+			this.started = false
 			console.log({ error : 'spotify '+this.spotify.pid+' closed' })
 		})
 
