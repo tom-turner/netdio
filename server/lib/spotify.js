@@ -73,6 +73,14 @@ class Spotify {
 				this.started = false
 			}
 
+			let keyError = data.match(/KeyError(.*?)/)
+			if(keyError) {
+				process.kill(this.spotify.pid)
+				this.running = false
+				this.started = false
+			}
+
+
 			let died = data.match('code: 49')
 			if (died) {
 				process.kill(this.spotify.pid)
@@ -86,6 +94,7 @@ class Spotify {
 		this.spotify.on('close', () => {
 			this.running = false
 			this.started = false
+			process.kill(this.spotify.pid)
 			console.log({ error : 'spotify '+this.spotify.pid+' closed' })
 		})
 
