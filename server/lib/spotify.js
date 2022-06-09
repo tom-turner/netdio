@@ -55,7 +55,9 @@ class Spotify {
 
 			let loading = data.match(/Loading(.*?)/)
 			if(loading){
-				this.running = true
+				setTimeout( () => {
+					this.running = true
+				}, 5000)
 			}
 
 			let track = data.match(/<spotify:track:(.*?)>/)
