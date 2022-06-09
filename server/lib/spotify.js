@@ -17,7 +17,7 @@ class Spotify {
 		this.running = false // gets pulled into to networkAudio to prevent transmit before running
 
 		setInterval( () => {
-			if(!this.started &&)
+			if(!this.started)
 				this.start()
 		}, 5000)
 	}
