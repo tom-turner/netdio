@@ -69,7 +69,7 @@ class NetworkAudio {
     if(!data)
       return
 
-    console.log(data)
+    console.log(data, spotify.running)
 
     if(data.type === 'spotify'){
       if(!spotify.running)
