@@ -69,6 +69,8 @@ class NetworkAudio {
     if(!data)
       return
 
+    console.log(data)
+
     if(data.type === 'spotify'){
       if(!spotify.running)
         return console.log('preventing transmit before spotify is running')
