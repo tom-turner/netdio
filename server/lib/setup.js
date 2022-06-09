@@ -124,7 +124,7 @@ let run = () => {
 
 	if(config.configObject.rx) {
 		Rx.publish()
-		audio.receive()
+		audio.receive(config.configObject.source.socket)
 	}
 
 	if(config.configObject.spotify)
