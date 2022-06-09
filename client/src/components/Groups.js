@@ -3,7 +3,7 @@ import { useState, useRef, useContext } from "react";
 import { motion } from 'framer-motion'
 import {ReactComponent as LoadingMeters}  from '../assets/loadingMeters.svg';
 import {ReactComponent as Muted}  from '../assets/muted.svg';
-
+import { Header} from './Header'
 
 
 export function Group({ name, receiver, selected, setSelected, muted}) {
@@ -55,18 +55,7 @@ let Groups = ({error}) => {
 				transition={{ delay: 0, duration:0.3, ease: "easeInOut" }}
 			>
 
-				<div className="border-b border-neutral-200 flex justify-between pt-8 p-4 text-neutral-900 text-center shadow-inner">
-					<div className="my-auto w-full">
-						
-					</div>
-					<h2 className="font-bold w-full" >Groups</h2>
-					
-					<div className="flex justify-between w-full">
-						<p className="font-bold"></p>
-						<button className="bg-neutral-900 px-4 py-1 text-base rounded text-white">Add</button>
-					</div>
-
-				</div>
+				<Header title="Groups" />
 
 				<div className="h-full flex flex-col p-4 space-y-2">
 					

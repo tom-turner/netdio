@@ -1,12 +1,12 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Tx, Rx, Spotify } from '../lib/devices'
-import Home from "./Home"
-import Settings, { EditName, SettingsList } from "./Settings"
-import Groups from "./Groups"
-import Navbar from "./Navbar"
-import Loading from './Loading'
-import { DevicesContext } from '../context/Devices'
+import { Tx, Rx, Spotify } from './lib/devices'
+import Home from "./components/Home"
+import { Settings, DeviceSettings, SpotifySettings } from "./components/Settings"
+import Groups from "./components/Groups"
+import Navbar from "./components/Navbar"
+import Loading from './components/Loading'
+import { DevicesContext } from './context/Devices'
 
 
 
@@ -47,7 +47,8 @@ function AnimatedRoutes() {
 				<Routes location={location} key={location.pathname} >
 					<Route path="/" element={ <Home /> } />
 					<Route path="/settings" element={ <Settings /> } />
-					<Route path="/settings/edit-name" element={ <EditName /> }/>
+					<Route path="/settings/device" element={ <DeviceSettings /> }/>
+					<Route path="/settings/spotify" element={ <SpotifySettings /> }/>
 					<Route path="/groups" element={ <Groups /> } />
 					<Route path="*" element={ <Loading /> } />
 				</Routes>

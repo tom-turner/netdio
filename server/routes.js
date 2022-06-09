@@ -1,5 +1,6 @@
 let express = require('express');
 let routes = express.Router();
+const fs = require('fs')
 const { exec } = require('child_process');
 const config = require('./lib/config')
 const { Tx, Rx, Spotify } = require('./lib/networkServices')
@@ -8,11 +9,8 @@ const processes = require('./lib/processes')
 
 
 routes.post('/reset', () => {
-	fs.copyFile('public/images/duckado-logo.jpg', 'public/images/logo', (err) => {
-		if (err) { console.log('error resetting logo file:', err)}
-	})
 	fs.unlinkSync('config/config.json')
-	setTimeout( () => { exec('sudo reboot') },250)
+	process.exit()
 })
 
 routes.post('/reboot', () => {

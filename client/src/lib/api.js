@@ -52,6 +52,10 @@ let setGroup = async (ip, type, value) => {
   return http.post(`http://${ip}:${serverPort}/set-group`, null, JSON.stringify({ value: value })).then(res => res.json())
 }
 
+let resetDevice = async (ip) => {
+  return http.post(`http://${ip}:${serverPort}/reset`, null, null).then(res => res.json())
+}
+
 let getBonjourServices = async (type) => {
   let response = await http.get(`http://${window.location.hostname}:${serverPort}/get-bonjour-services/${type}`)
 
@@ -62,7 +66,7 @@ let getBonjourServices = async (type) => {
 }
 
 let getDeviceConfig = async (device, type) => {
-  let response = await http.get(`http://${device.ip}:${serverPort}/get-config/${type}`)
+  let response = await http.get(`http://${device.ip}:${serverPort}/get-config${type ? '/' + type : ''}`)
   
   if(response.error || response.status !== 200)
     return { error: response.error || response.status }
@@ -74,6 +78,7 @@ module.exports.setReceiverSource = setReceiverSource
 module.exports.setVolume = setVolume
 module.exports.setName = setName
 module.exports.setGroup = setGroup
+module.exports.resetDevice = resetDevice
 module.exports.getBonjourServices = getBonjourServices
 module.exports.getDeviceConfig = getDeviceConfig
 

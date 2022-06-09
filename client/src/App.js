@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter } from "react-router-dom";
-import Routes from "./components/Routes"
+import Routes from "./Routes"
 import { AnimatePresence } from 'framer-motion'
 
 function App() {
