@@ -22,11 +22,12 @@ class Configuration {
   }
 
   getFirstRunConfig(){
-    let services = process.env.SERVICES.split(',')
     let config = {}
 
-    for (let service of services){
-      config[service] = {}
+    if(process.env.SERVICES) {
+      for (let service of process.env.SERVICES.split(',')){
+        config[service] = {}
+      }
     }
 
     return config

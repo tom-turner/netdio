@@ -4,6 +4,8 @@ TO CREATE A DEVICE CONFIG:
     e.g. SERVICES="rx,tx,spotify"
 
 
+If having issues starting the app try removing config.json and .env
+
 Usefull RPI links and install bits:
 
 #Check what runs at boot
