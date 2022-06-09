@@ -50,6 +50,7 @@ routes.post('/set-group', async (req, res) => {
 });
 
 routes.post('/set-receiver-source', async (req, res) => {
+	console.log(req.body)
 	config.set( 'source' , req.body)
 	processes.kill(processes.get('rx'))
     audio.receive(req.body.socket)
