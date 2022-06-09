@@ -2,6 +2,7 @@ const { spawn } = require('child_process');
 const EventEmitter = require('events');
 const platform = require('./platform')
 const processes = require('./processes')
+const spotify = require('./spotify')
 const config = require('./config')
 const { audioStream } = require('./api')
 const emitter = new EventEmitter();
@@ -70,11 +71,16 @@ class NetworkAudio {
     if(!data)
       return
 
+    if(data.type === 'spotify'){
+      if(!spotify.running)
+        return console.log('preventing transmit before spotify is running')
+    }
+
     let inputDriver = data.driver ? "-d" + data.driver : ""
     let inputDevice = data.device ? "-i" + data.device : ""
     let ref = `ref-${data.rxIp}:${data.rxSocket}`
 
-    console.log(ref)
+    //console.log(ref)
 
     if(this.processes.get(ref).toString()){
       console.log('keep alive')
