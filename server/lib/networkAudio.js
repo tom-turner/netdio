@@ -32,7 +32,6 @@ class NetworkAudio {
   }
 
   receive() {
-
     let outputDevice = this.config.configObject.rx.device ? `-o${this.config.configObject.rx.device}` : ''
     let outputDriver = this.config.configObject.rx.driver ? `-d${this.config.configObject.rx.driver}` : ''
     let socket = this.config.configObject.rx.socket
@@ -78,9 +77,9 @@ class NetworkAudio {
 
     let inputDriver = data.driver ? "-d" + data.driver : ""
     let inputDevice = data.device ? "-i" + data.device : ""
-    let ref = `ref-${data.rxIp}:${data.rxSocket}`
+    let ref = `ref-${data.rxIp}:${data.rxSocket}-${inputDevice}-${data.type}`
 
-    //console.log(ref)
+    //console.log(inputDriver, inputDevice, ref)
 
     if(this.processes.get(ref).toString()){
       console.log('keep alive')
