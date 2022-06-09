@@ -42,8 +42,6 @@ class Spotify {
 		// would be best if this worked with dmix as the device
 		this.spotify = exec(`~/librespot/target/release/librespot -n ${config.configObject.spotify.name} --autoplay --enable-volume-normalisation --normalisation-pregain "0" ${backend} ${device} ${format}`)
 		
-		this.running = true 
-
 		this.spotify.on('start', (data) => {
 			console.log(data)
 		})
