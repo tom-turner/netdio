@@ -63,8 +63,8 @@ let tx = () => {
 	if(!config.get('tx')['name'])
 		config.set('tx.name', `${getHostname()}` )
 
-	if(!config.get('rx')['socket'])
-	  config.set( "rx.socket", config.getNewPort() )
+	if(!config.get('tx')['socket'])
+	  config.set( "tx.socket", config.getNewPort() )
 	
 	return config.get('tx')
 }
