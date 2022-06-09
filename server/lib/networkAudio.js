@@ -69,8 +69,6 @@ class NetworkAudio {
     if(!data)
       return
 
-    console.log(data, spotify.running)
-
     if(data.type === 'spotify'){
       if(!spotify.running)
         return console.log('preventing transmit before spotify is running')
@@ -79,8 +77,6 @@ class NetworkAudio {
     let inputDriver = data.driver ? "-d" + data.driver : ""
     let inputDevice = data.device ? "-i" + data.device : ""
     let ref = `ref-${data.rxIp}:${data.socket}-${inputDevice}-${data.type}`
-
-    //console.log(inputDriver, inputDevice, ref)
 
     if(this.processes.get(ref).toString()){
       console.log('keep alive')
