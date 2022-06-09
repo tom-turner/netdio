@@ -129,8 +129,7 @@ let run = () => {
 
 	if(config.configObject.spotify)
 		Spotify.publish()
-		librespot.start(({error}) => {
-		})
+		librespot.start()
 }
 
 module.exports.setup = setup

@@ -3,20 +3,10 @@ const { getPreview } = require('spotify-url-info')
 const fs = require('fs');
 const processes = require('./processes')
 const config = require('./config')
-let backend = '--backend alsa'
-let device ='--device librespot'
+const platform = require('./platform')
+let backend = `--backend ${platform.outputDriver()}`
+let device =`--device ${platform.spotifyOutputDevice()}`
 let format = '--format S16'
-
-let debounce = (callback, delay) =>{
-	let interval;
-	return (...args) => {
-		clearTimeout(interval)
-		interval = setTimeout(() => {
-			callback(...args)
-			interval = null
-		},delay)
-	}
-}
 
 class Spotify {
 	constructor(updateInterval){
@@ -25,7 +15,10 @@ class Spotify {
 		this.spotify = ''
 		this.running = false
 
-		// test current track '3neCnBouNr3Xkbpe7Mzxh4'
+		setInterval( () => {
+			if(!this.running && !this.irrecoverablyErrored)
+				this.start()
+		}, 5000)
 	}
 
 	async getCurrentTrack(callback){
@@ -40,11 +33,16 @@ class Spotify {
 		}
 	}
 
+
+	// needs refactor to restart spotify when it dies, plus starting network audio transmitters calling for spotify only once its open
 	start(callback){
 		console.log('starting spotify')
+
 		// would be best if this worked with dmix as the device
-		this.spotify = exec(`~/librespot/target/release/librespot -n ${config.configObject.spotify.name} --enable-volume-normalisation --normalisation-pregain "0" --backend alsa --device librespot --format S16`)
+		this.spotify = exec(`~/librespot/target/release/librespot -n ${config.configObject.spotify.name} --autoplay --enable-volume-normalisation --normalisation-pregain "0" ${backend} ${device} ${format}`)
 		
+		this.running = true 
+
 		this.spotify.stdout.on('data', (data) => {
 			console.log('stdout: ' + data.toString())
 		})
@@ -52,23 +50,35 @@ class Spotify {
 		this.spotify.stderr.on('data', (data) => {
 			console.log('stderr: ' + data.toString())
 
-			let match = data.match(/<spotify:track:(.*?)>/)
-			if (match) {
-				let id = match[1]
+			let loading = data.match(/Loading(.*?)/)
+			if(loading){
+				this.running = true
+			}
+
+			let track = data.match(/<spotify:track:(.*?)>/)
+			if (track) {
+				let id = track[1]
 				this.currentTrack = id
+			}
+
+			let invalid = data.match(/Invalid(.*?)/)
+			if(invalid) {
+				process.kill(this.spotify.pid)
+				this.running = false
 			}
 
 			let died = data.match('code: 49')
 			if (died) {
 				process.kill(this.spotify.pid)
 				this.running = false
-				callback({ error : 'spotify ' +this.spotify.pid+ ' closed with code:49' })
+				console.log({ error : 'spotify ' +this.spotify.pid+ ' closed with code:49' })
 				
 			}
-			this.spotify.on('close', () => {
-				this.running = false
-				callback({ error : 'spotify '+this.spotify.pid+' closed' })
-			})
+		})
+
+		this.spotify.on('close', () => {
+			this.running = false
+			console.log({ error : 'spotify '+this.spotify.pid+' closed' })
 		})
 
 	}
