@@ -34,7 +34,8 @@ class Spotify {
 	}
 
 
-	// needs refactor to restart spotify when it dies, plus starting network audio transmitters calling for spotify only once its open
+	// needs refactor to start network audio transmitters calling for spotify only once its playing
+	// but how can we know when its playing?
 	start(callback){
 		console.log('starting spotify')
 
@@ -43,12 +44,16 @@ class Spotify {
 		
 		this.running = true 
 
+		this.spotify.on('start', (data) => {
+			console.log(data)
+		})
+
 		this.spotify.stdout.on('data', (data) => {
-			console.log('stdout: ' + data.toString())
+			console.log('spotify stdout: ' + data.toString())
 		})
 
 		this.spotify.stderr.on('data', (data) => {
-			console.log('stderr: ' + data.toString())
+			console.log('spotify stderr: ' + data.toString())
 
 			let loading = data.match(/Loading(.*?)/)
 			if(loading){
