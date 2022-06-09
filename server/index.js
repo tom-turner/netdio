@@ -1,5 +1,5 @@
-require('./lib/setup').setup() // setup device first
-require('dotenv').config()
+require('./lib/setup').env()
+require('./lib/setup').device()
 const port = process.env.REACT_APP_SERVER_PORT || 5050;
 const express = require('express');
 const app = express();

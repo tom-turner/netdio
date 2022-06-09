@@ -1,7 +1,6 @@
 const fs = require('fs')
 const SHA256 = require("crypto-js/sha256");
 const configFile = 'config/config.json'
-const startupConfigFile = "config/startupconfig.json"
 
 function debounce(fn, timeout) {
   let interval = null
@@ -19,8 +18,18 @@ function debounce(fn, timeout) {
 class Configuration {
   constructor(configFile, type, debounceTimeout) {
     this.configFile = configFile
-    this.startupConfigFile = startupConfigFile
     this.debouncedSave = debounce(() => this.save(), debounceTimeout || 100)
+  }
+
+  getFirstRunConfig(){
+    let services = process.env.SERVICES.split(',')
+    let config = {}
+
+    for (let service of services){
+      config[service] = {}
+    }
+
+    return config
   }
 
   config() {
@@ -28,7 +37,7 @@ class Configuration {
       if (fs.existsSync(this.configFile))
         this.configObject = JSON.parse(fs.readFileSync(this.configFile))
       else
-        this.configObject = JSON.parse(fs.readFileSync(this.startupConfigFile))
+        this.configObject = this.getFirstRunConfig()
 
     return this.configObject
   }

@@ -9,7 +9,15 @@ const { getIp, getHostname } = require('./networkInfo')
 const audio = require("./networkAudio");
 const { Tx, Rx, Spotify } = require('./networkServices')
 
-let setup = () => {
+let device = () => {
+	return {
+		tx: tx(),
+		rx: rx(),
+		spotify: spotify()
+	}
+}
+
+let env = () => {
 	// copy example.env to .env on first run
 	if(!fs.existsSync('.env'))
 	  fs.writeFileSync('.env', fs.readFileSync('.example.env'), (err) => {
@@ -20,13 +28,9 @@ let setup = () => {
 	// .env variables need REACT_APP_ formatting for security on client side
 	fs.writeFileSync('client/.env', fs.readFileSync('.env'), (err) => {
 	    console.log(err)
-	  })
+	})
 
-	tx();
-	rx();
-	spotify();
-
-	return
+	return require('dotenv').config()
 }
 
 let ip = () => {
@@ -127,10 +131,12 @@ let run = () => {
 		audio.receive(config.configObject.source.socket)
 	}
 
-	if(config.configObject.spotify)
+	if(config.configObject.spotify){
 		Spotify.publish()
 		librespot.start()
+	}
 }
 
-module.exports.setup = setup
+module.exports.device = device
+module.exports.env = env
 module.exports.run = run

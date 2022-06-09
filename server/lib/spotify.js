@@ -15,11 +15,6 @@ class Spotify {
 		this.spotify = ''
 		this.started = false 
 		this.running = false // gets pulled into to networkAudio to prevent transmit before running
-
-		setInterval( () => {
-			if(!this.started)
-				this.start()
-		}, 5000)
 	}
 
 	async getCurrentTrack(callback){
@@ -34,12 +29,18 @@ class Spotify {
 		}
 	}
 
+	keepAlive(){
+		setInterval( () => {
+			if(!this.started)
+				this.start()
+		}, 5000)
+	}
 
 	// needs refactor to start network audio transmitters calling for spotify only once its playing
 	// but how can we know when its playing?
 	start(callback){
 		console.log('starting spotify')
-
+		this.keepAlive()
 		// would be best if this worked with dmix as the device
 		this.spotify = exec(`~/librespot/target/release/librespot -n ${config.configObject.spotify.name} --autoplay --enable-volume-normalisation --normalisation-pregain "0" ${backend} ${device} ${format}`)
 		

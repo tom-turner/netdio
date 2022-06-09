@@ -1,9 +1,8 @@
-FEATURE REQUESTS :\
-- need to figure out why when a message is sent around the network it sends tonnes of copies of the message
-- EQ/Delay on audio output, pulse audio plugins or something\
-- music player, Spotify and loopback\
-- Can we get ROC latency down more? or replace ROC
--Can we get better touch screen pi performance
+TO CREATE A DEVICE CONFIG:
+    add the devices services you need to you .env file seperated by commas ','
+    this will tell the device which configs to setup on first run.  
+    e.g. SERVICES="rx,tx,spotify"
+
 
 Usefull RPI links and install bits:
 
@@ -107,18 +106,8 @@ EOT
 # alsamixer -D equal
 
 
-default startup config:
 
-{"device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"Duckado"},
-"source":{"name":"-Mute-"}}
-
-
-working linux config :
-
-{"rx":{"name":"EtherDAC AMP","type":"rx","volume":84,"driver":"alsa","hardware":"adc"},"device":{"color":"#ADDDD8","colordark":"#85b5b0","name":"EtherDAC AMP","ip":"192.168.1.103","id":"228084"},"source":{"send":"undefined","socket":"muted","name":"-Mute-","recv":"228084","txdata":{"tx":{"name":"-Mute-","source":"muted"}}},"devices":{"send":"192.168.1.103","socket":"41496","name":"Spotify Connect","recv":"192.168.1.103","txdata":{"tx":{"name":"Spotify Connect","type":"tx","driver":"alsa","hardware":"dsnoop:Loopback,1,0","source":"41496","ip":"228084"}}}}
-
-
-working ~/.asoundrc:
+Working ~/.asoundrc:
 
 pcm.!default {
     type hw
@@ -147,7 +136,7 @@ pcm.radio{
 pcm.loopback{
     format S16_LE
     rate 44100
-    type dmix
+    type hw
     card 0
     device 1
 }
