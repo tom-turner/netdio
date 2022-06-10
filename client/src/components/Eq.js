@@ -56,7 +56,7 @@ export function Eq(){
 	if(eqState.error)
 		return (
 			<div>
-				<Header title="Settings" back="/settings" />
+				<Header title="Settings" back={`/settings/device?ip=${ip}&name=${name}`} />
 				<p className="pt-4 px-4 font-bold text-xl ">{name}</p>
 				<p className="p-4"> This device does not have EQ </p>
 			</div>
@@ -64,7 +64,7 @@ export function Eq(){
 
 	return(
 		<div>
-		<Header title="Settings" back="/settings" />
+		<Header title="Settings" back={`/settings/device?ip=${ip}&name=${name}`}/>
 			<div className="flex justify-between pt-4 px-4">
 				<p className="font-bold text-xl ">{name + ' EQ'}</p>
 				<p className="rounded bg-neutral-800 px-2 my-auto text-white" onClick={() => { setEqFlat(ip); window.location.reload() }} >Flat EQ</p>

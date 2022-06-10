@@ -64,6 +64,10 @@ let resetDevice = async (ip) => {
   return http.post(`http://${ip}:${serverPort}/reset`, null, null).then(res => res.json())
 }
 
+let resetSpotify = async (ip) => {
+  return http.post(`http://${ip}:${serverPort}/reset-spotify`, null, null).then(res => res.json())
+}
+
 let getBonjourServices = async (type) => {
   let response = await http.get(`http://${window.location.hostname}:${serverPort}/get-bonjour-services/${type}`)
 
@@ -98,6 +102,7 @@ module.exports.setGroup = setGroup
 module.exports.setEq = setEq
 module.exports.setEqFlat = setEqFlat
 module.exports.resetDevice = resetDevice
+module.exports.resetSpotify = resetSpotify
 module.exports.getBonjourServices = getBonjourServices
 module.exports.getDeviceConfig = getDeviceConfig
 module.exports.getEq = getEq

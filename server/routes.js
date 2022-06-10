@@ -14,6 +14,10 @@ routes.post('/reset', () => {
 	return process.exit()
 })
 
+routes.post('/reset-spotify', () => {
+	return process.exit()
+})
+
 routes.post('/reboot', () => {
 	console.log('rebooting')
 	return exec('sudo reboot')

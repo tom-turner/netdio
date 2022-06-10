@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { DevicesContext } from '../context/Devices';
-import { setName, resetDevice, getDeviceConfig } from '../lib/api'
+import { setName, resetDevice, getDeviceConfig, resetSpotify } from '../lib/api'
 import { motion } from 'framer-motion'
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Header } from './Header'
@@ -8,6 +8,48 @@ import Loading from './Loading'
 import {ReactComponent as Arrow}  from '../assets/arrow.svg';
 import {ReactComponent as Dots}  from '../assets/dots.svg';
 import {ReactComponent as Available}  from '../assets/available.svg';
+
+export function Reset() {
+	let navigate = useNavigate()
+	let [ searchParams ] = useSearchParams()
+	let ip = searchParams.get('ip')
+	let name = searchParams.get('name')
+	return (
+		<div>
+			<Header title="Reset Device" back={`/settings/device?ip=${ip}&name=${name}`}/>
+			<div className="p-4 space-y-4">
+				<p className="font-bold text-xl">{name}</p>
+				<p className="text-red-600">This will reset your device configuration back to it's factory settings.</p>
+				<div className="w-full flex space-x-4 text-center">	
+					<p className="bg-neutral-800 text-white rounded px-4 py-1" onClick={()=>{ resetDevice(ip) ;navigate(`/settings`)}} > Reset Device </p>
+					<p className="bg-neutral-800 text-white rounded px-4 py-1" onClick={()=>{ alert('lol jk, call Tom') }} > Contact Support</p>
+				</div>
+				
+			</div>
+		</div>
+	)
+}
+
+export function ResetSpotify() {
+	let navigate = useNavigate()
+	let [ searchParams ] = useSearchParams()
+	let ip = searchParams.get('ip')
+	let name = searchParams.get('name')
+	return (
+		<div>
+			<Header title="Reset Device" back={`/settings/spotify?ip=${ip}&name=${name}`}/>
+			<div className="p-4 space-y-4">
+				<p className="font-bold text-xl">{name}</p>
+				<p className="text-red-600">This will Restart spotify on your device.</p>
+				<div className="w-full flex space-x-4 text-center">	
+					<p className="bg-neutral-800 text-white rounded px-4 py-1" onClick={()=>{ resetSpotify(ip) ;navigate(`/settings`)}} > Restart Spotify </p>
+					<p className="bg-neutral-800 text-white rounded px-4 py-1" onClick={()=>{ alert('lol jk, call Tom') }} > Contact Support</p>
+				</div>
+				
+			</div>
+		</div>
+	)
+}
 
 export function DeviceSettings() {
 	let navigate = useNavigate()
@@ -97,7 +139,7 @@ export function DeviceSettings() {
 				<ol>
 					{rxItems()}
 					{txItems()}
-					<li className="px-4 py-4 flex justify-between border-b border-neutral-300" onClick={ () => { navigate('/settings/reset')}}> 
+					<li className="px-4 py-4 flex justify-between border-b border-neutral-300" onClick={ () => { navigate(`/settings/reset?ip=${ip}&name=${name}`)}}> 
 						<p className="my-auto">Reset</p>
 						<Arrow className="rotate-180 my-auto fill-neutral-500" />
 					</li>
@@ -126,14 +168,17 @@ export function SpotifySettings() {
 	return (
 		<div>
 		<Header title="Settings" back="/settings" />
-			<p className="p-4">{JSON.stringify(config)}</p>
+			<p className="pt-4 px-4 font-bold text-xl">{name}</p>
+			<div className="text-base bg-white p-4 flex justify-between" onClick={ ()=>{  }}>
+				<div className="flex space-x-4 w-full">
+					<Available className="fill-green-400 animate-pulse h-5 w-5 my-auto" />
+					<p className="my-auto">Spotify</p>
+					<p>{name} </p>
+				</div>
+			</div>
 			<div className="flex flex-col">
 				<ol>
-					<li className="px-4 py-4 flex justify-between border-b border-neutral-300" onClick={ () => { navigate(`${window.location.pathname}/spotify/name?ip=${ip}`)}}> 
-						<p className="my-auto">Name</p>
-						<Arrow className="rotate-180 my-auto fill-neutral-500" />
-					</li>
-					<li className="px-4 py-4 flex justify-between border-b border-neutral-300" onClick={ () => { navigate('/settings/reset')}}> 
+					<li className="px-4 py-4 flex justify-between border-b border-neutral-300" onClick={ () => { navigate(`/settings/reset-spotify/?ip=${ip}&name=${name}`)}}> 
 						<p className="my-auto">Reset</p>
 						<Arrow className="rotate-180 my-auto fill-neutral-500" />
 					</li>
@@ -160,7 +205,7 @@ export function Settings() {
 		let muted = device.rx ? device.rx.socket ? false : true : true
 		let name = device.rx ? device.rx.name : device.tx ? device.tx.name : null // this sets device name with a preferance for RX, then TX.
 		return (
-			<div key={i} className="font-bold bg-white p-4 border-b border-neutral-300 flex justify-between" onClick={ ()=>{ navigate(`${window.location.pathname}/device?ip=${device.ip}&name=${name}`) }}>
+			<div key={i} className="font-bold bg-white p-4 border-b border-neutral-300 flex justify-between" onClick={ ()=>{ navigate(`device?ip=${device.ip}&name=${name}`) }}>
 				<p>{name}</p>
 				<Dots className="my-auto h-6" />
 			</div>
@@ -169,7 +214,7 @@ export function Settings() {
 
 	let spotify = devicesContext.spotify.map((device, i)=>{
 		return (
-			<div key={i} className="text-base bg-white p-4  flex justify-between" onClick={ ()=>{ navigate(`${window.location.pathname}/spotify?ip=${device.ip}`) }}>
+			<div key={i} className="text-base bg-white p-4  flex justify-between" onClick={ ()=>{ navigate(`spotify?ip=${device.ip}&name=${device.name}`) }}>
 				<div className="flex space-x-4">
 					<Available className="fill-green-400 animate-pulse h-5 my-auto" />
 					<p>Spotify</p>
