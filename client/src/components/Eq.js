@@ -20,6 +20,8 @@ export function Eq(){
 	if(!eqState)
 		return <Loading />
 
+	console.log(eqState)
+
 	if(eqState.error)
 		return (
 			<div>

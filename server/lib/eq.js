@@ -9,7 +9,9 @@ let set = (param, level) => {
 
 let get = async () => {
 	let { stdout, stderr } = await exec(`amixer -D equal`)
-	
+
+	console.log(format(stdout))
+
 	if(stderr)
 		return { error: true }
 
