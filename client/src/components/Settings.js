@@ -243,11 +243,11 @@ export function Settings() {
 				<div>
 					{devices}
 				</div>
-				<div className="border-b border-neutral-300">
-					<p className="p-4 font-bold">Streaming Services</p>
-					{spotify}
-				</div>
-				
+				{ spotify.length > 0 ?
+					<div className="border-b border-neutral-300">
+					 	<p className="p-4 font-bold">Streaming Services</p> 
+						{spotify}
+					</div> : '' }
 			</div>
 
 		</div>
