@@ -71,11 +71,11 @@ routes.post('/set-eq-flat', (req,res) => {
 })
 
 routes.get('/get-eq', async (req, res) => {
-	eq.get(	(e) => {
+	return eq.get(	(e) => {
 		if(e.error)
 			return res.json({error: e.error})
 
-		return res.json({ eq: e });
+		res.json({ eq: e });
 	})
 });
 

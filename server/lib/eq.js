@@ -9,11 +9,7 @@ let set = (param, level) => {
 
 let get = (callback) => {
 	exec(`amixer -D equal`,  (err,stdout,stderr) => {
-		
-		console.log(err, stdout)
-		
 		if(err) { return callback({ error: true }) }
-
 		return callback(format(stdout))
 	})		
 }
