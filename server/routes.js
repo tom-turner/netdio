@@ -71,7 +71,12 @@ routes.post('/set-eq-flat', (req,res) => {
 })
 
 routes.get('/get-eq', async (req, res) => {
-    res.json( await eq.get() );
+	eq.get(	(e) => {
+		if(e.error)
+			return res.json({error: e.error})
+
+		return res.json({ eq: e });
+	})
 });
 
 routes.get('/get-bonjour-services/tx', async (req, res) => {

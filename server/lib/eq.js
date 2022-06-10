@@ -7,15 +7,15 @@ let set = (param, level) => {
 	})
 }
 
-let get = async () => {
-	let { stdout, stderr } = await exec(`amixer -D equal`)
+let get = (callback) => {
+	exec(`amixer -D equal`,  (err,stdout,stderr) => {
+		
+		console.log(err, stdout)
+		
+		if(err) { return callback({ error: true }) }
 
-	console.log(format(stdout))
-
-	if(stderr)
-		return { error: true }
-
-	return format(stdout)	
+		return callback(format(stdout))
+	})		
 }
 
 let format = (str) =>{
