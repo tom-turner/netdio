@@ -11,17 +11,13 @@ let Zone = ({ receiver, inputOptions, handleInputChange, handleVolumeChange, sel
 	let muted = receiver.source.socket ? false : true
 
 	return(
-		<div className={`w-full bg-white ${ selected ? 'border-neutral-500 border shadow-md' : 'border-b border-neutral-300' }`} >
+		<div className={`w-full bg-white ${ selected ? 'border-neutral-500 border shadow-md' : 'border-b border-neutral-300' }`}  onClick={ () => { setSelected(  receiver )  }}>
 		 	
-			<div className="flex justify-between w-full space-x-4 px-4 pt-4" onClick={ () => { setSelected(  selected ? {} : receiver)  }}>
+			<div className="flex justify-between w-full space-x-4 px-4 pt-4 z-10">
 		 		<div className="flex w-full" >
 		 			<p  className={`font-bold my-auto text-neutral-800 w-full flex grow truncate `}> {receiver.name} </p>
-		 			<LoadingMeters className={`h-6 fill-s-800 ${ muted || selected ? 'hidden' : ''}`} />
-		 			<Muted className={`h-6 fill-s-800 ${ muted ? '' : 'hidden'} ${ selected ? 'hidden' : ''}`} />
 		 		</div>
-		 		<div className={`text-right w-full ${ selected ? '' : 'hidden'}`}>
-		 			<p className={`text-base my-auto text-neutral-800 truncate`}>{ ` Source: ${receiver.source.name} `}</p>
-		 		</div>
+		 		<Selector selected={selected} receiver={receiver} muted={muted} handleInputChange={handleInputChange} setSelected={setSelected} inputOptions={inputOptions} />
 		 	</div>
 		 	<div className="px-4 pb-4">
 		 		<input defaultValue={receiver.volume} type="range" className={`w-full`} onChange={ (e) => { handleVolumeChange({ ip: receiver.ip, value: e.target.value }) }} />
@@ -30,24 +26,29 @@ let Zone = ({ receiver, inputOptions, handleInputChange, handleVolumeChange, sel
 	)	
 }
 
-let Selector = ({selected, handleInputChange, setSelected, inputOptions}) => {
-	if(Object.values(selected).length === 0)
-		return 
+let Selector = ({selected, muted, receiver, handleInputChange, setSelected, inputOptions}) => {
+	if(!selected)
+		return (
+			<div>
+				<LoadingMeters className={`h-6 w-6 fill-s-800 my-auto ${ muted || selected ? 'hidden' : ''}`} />
+		 		<Muted className={`h-6 fill-s-800 my-auto w-6 ${ muted ? '' : 'hidden'} ${ selected ? 'hidden' : ''}`} />
+			</div>
+		)
 
 	return (
-		<motion.div
-			className="bg-neutral-900 w-full p-8 flex justify-center"
-			initial={{opacity: 0}}
-			animate={{opacity: 1}}
-			exit={{opacity: 0}}
-			transition={{ delay: 0, duration:0.3 }}
-		> 
-			<select autoFocus onBlur={ () => { setSelected({}) } } className="text-right max-w-2xl text-base my-auto text-neutral-800 w-full p-4 rounded" onChange={ (e) => { handleInputChange({ ip: selected.ip , value: e.target.value }); setSelected({}) } } defaultValue={'default'} >
-				<option className="" disabled value={'default'} >{selected.source.name}</option>
+		<div> 
+			<select autoFocus 
+				onBlur={ () => { setSelected({}) } } 
+				className="text-right text-base my-auto text-neutral-800 w-full rounded z-50 px-2" 
+				onChange={ (e) => { handleInputChange({ ip: receiver.ip , value: e.target.value }); setSelected({}) } } 
+				defaultValue={'default'}
+				style={{'WebkitAppearance': 'none','MozAppearance': 'none', 'appearance': 'none'}}
+			>
+				<option className="" disabled value={'default'} >{receiver.source.name}</option>
 				<option value={ JSON.stringify({ name: '-Mute-'})} >{'-Mute-'}</option>
 				{inputOptions}
 			</select>
-		</motion.div>
+		</div>
 	)
 }
 
@@ -98,8 +99,6 @@ let Home = () => {
 						{zones}
 					</div>
 				</div>
-
-				<Selector selected={selected} handleInputChange={handleInputChange} setSelected={setSelected} inputOptions={inputOptions} />
 
 			</motion.div>
 	)	
