@@ -38,6 +38,10 @@ function AnimatedRoutes() {
 		})
 	}, []);
 
+	console.log('spotify devices:', spotify.length )
+	console.log('rx devices:', receivers.length )
+	console.log('tx devices:', transmitters.length )
+
 	if(transmitters.length === 0 && receivers.length === 0 )
 		return <Loading error={error} />
 

@@ -20,7 +20,10 @@ class Devices {
 
             return this.services.map( async (service) => {
                 let deviceConfig = await getDeviceConfig(service, this.type)
-            
+
+                // LOGGING -- encounters a weird bug the getDeviceConfig fetch error does not reach here sometimes, but not all. No idea what is going on.
+                deviceConfig.error ? console.log(2, deviceConfig.error ) : console.log() 
+
                 if(!deviceConfig || deviceConfig.error){
                     if(!this.changed(service, deviceConfig))
                         return
@@ -46,21 +49,20 @@ class Devices {
 
 
     removeDevice(service){
-        return delete this.devices[this.hash(service.id)]
         delete this.devices[this.hash(service.ip)]
         return
     }
 
     addDevice(service, config){
-        return this.devices[this.hash(service.id)] = config
+        return this.devices[this.hash(service.ip)] = config
     }
 
     exists(service){
-        return this.devices[this.hash(service.id)] ? true : false
+        return this.devices[this.hash(service.ip)] ? true : false
     }
 
     changed(service, config){
-        return JSON.stringify(this.devices[this.hash(service.id)]) !== JSON.stringify(config)
+        return JSON.stringify(this.devices[this.hash(service.ip)]) !== JSON.stringify(config)
     }
 
     getDeviceList(input) {

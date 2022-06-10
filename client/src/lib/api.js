@@ -18,6 +18,7 @@ class Http {
         return [name, typeof value === 'function' ? value() : value]
       }))
     }).catch(error => {
+      console.log(1, error)
       return { error: error }
     })
   }
