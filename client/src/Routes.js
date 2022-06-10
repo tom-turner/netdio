@@ -6,8 +6,8 @@ import { Settings, DeviceSettings, SpotifySettings } from "./components/Settings
 import Groups from "./components/Groups"
 import Navbar from "./components/Navbar"
 import Loading from './components/Loading'
+import Eq from './components/Eq'
 import { DevicesContext } from './context/Devices'
-
 
 
 function AnimatedRoutes() {
@@ -49,6 +49,7 @@ function AnimatedRoutes() {
 					<Route path="/settings" element={ <Settings /> } />
 					<Route path="/settings/device" element={ <DeviceSettings /> }/>
 					<Route path="/settings/spotify" element={ <SpotifySettings /> }/>
+					<Route path="/settings/eq" element={ <Eq /> }/>
 					<Route path="/groups" element={ <Groups /> } />
 					<Route path="*" element={ <Loading /> } />
 				</Routes>

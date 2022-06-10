@@ -3,6 +3,7 @@ let routes = express.Router();
 const fs = require('fs')
 const { exec } = require('child_process');
 const config = require('./lib/config')
+const eq = require('./lib/eq')
 const { Tx, Rx, Spotify } = require('./lib/networkServices')
 const audio = require('./lib/networkAudio')
 const processes = require('./lib/processes')
@@ -10,12 +11,12 @@ const processes = require('./lib/processes')
 
 routes.post('/reset', () => {
 	fs.unlinkSync('config/config.json')
-	process.exit()
+	return process.exit()
 })
 
 routes.post('/reboot', () => {
 	console.log('rebooting')
-	exec('sudo reboot')
+	return exec('sudo reboot')
 });
 
 routes.post('/blink', async (req, res) => {
@@ -57,6 +58,20 @@ routes.post('/set-receiver-source', async (req, res) => {
 routes.post('/audio-stream', async (req, res) => {
 	audio.transmit(req.body)
 	res.status(200).json({success: true})
+});
+
+routes.post('/set-eq', (req,res) => {
+    eq.set(req.body.param, req.body.value)
+ 	res.json({successful: true})
+})
+
+routes.post('/set-eq-flat', (req,res) => {
+    eq.flat() 
+  	res.json({successful: true})
+})
+
+routes.get('/get-eq', async (req, res) => {
+    res.json( await eq.get() );
 });
 
 routes.get('/get-bonjour-services/tx', async (req, res) => {

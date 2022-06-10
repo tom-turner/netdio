@@ -2,14 +2,12 @@ import { useState, useContext, useEffect } from "react";
 import { DevicesContext } from '../context/Devices';
 import { setName, resetDevice, getDeviceConfig } from '../lib/api'
 import { motion } from 'framer-motion'
-import { useNavigate, Outlet } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Header } from './Header'
 import Loading from './Loading'
 import {ReactComponent as Arrow}  from '../assets/arrow.svg';
 import {ReactComponent as Dots}  from '../assets/dots.svg';
 import {ReactComponent as Available}  from '../assets/available.svg';
-import { useSearchParams } from "react-router-dom";
-
 
 export function DeviceSettings() {
 	let navigate = useNavigate()
@@ -74,7 +72,7 @@ export function DeviceSettings() {
 					<p className="my-auto">Groups</p>
 					<Arrow className="rotate-180 my-auto fill-neutral-500" />
 				</li>
-				<li className="px-4 py-4 flex justify-between border-b border-neutral-300" onClick={ () => { navigate('/settings/eq')}}> 
+				<li className="px-4 py-4 flex justify-between border-b border-neutral-300" onClick={ () => { navigate(`/settings/eq?ip=${config.rx.ip}&name=${config.rx.name}`)}}> 
 					<p className="my-auto">EQ</p>
 					<Arrow className="rotate-180 my-auto fill-neutral-500" />
 				</li>
