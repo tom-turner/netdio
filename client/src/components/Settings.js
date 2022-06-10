@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { DevicesContext } from '../context/Devices';
-import { setName, resetDevice, getDeviceConfig, resetSpotify } from '../lib/api'
+import { setName, resetDevice, getDeviceConfig, resetSpotify, rebootDevice } from '../lib/api'
 import { motion } from 'framer-motion'
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Header } from './Header'
@@ -19,12 +19,12 @@ export function Reset() {
 			<Header title="Reset Device" back={`/settings/device?ip=${ip}&name=${name}`}/>
 			<div className="p-4 space-y-4">
 				<p className="font-bold text-xl">{name}</p>
-				<p className="text-red-600">This will reset your device configuration back to it's factory settings.</p>
+				<p className="text-red-600">Resetting your device will take its configuration back to it's factory settings.</p>
 				<div className="w-full flex space-x-4 text-center">	
 					<p className="bg-neutral-800 text-white rounded px-4 py-1" onClick={()=>{ resetDevice(ip) ;navigate(`/settings`)}} > Reset Device </p>
+					<p className="bg-neutral-800 text-white rounded px-4 py-1" onClick={()=>{ rebootDevice(ip) ;navigate(`/settings`)}} > Reboot Device </p>
 					<p className="bg-neutral-800 text-white rounded px-4 py-1" onClick={()=>{ alert('lol jk, call Tom') }} > Contact Support</p>
 				</div>
-				
 			</div>
 		</div>
 	)

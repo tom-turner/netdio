@@ -61,27 +61,37 @@ let setEqFlat = async (ip) => {
 }
 
 let resetDevice = async (ip) => {
-  return http.post(`http://${ip}:${serverPort}/reset`, null, null).then(res => res.json())
+  return http.post(`http://${ip}:${serverPort}/reset`, null, null)
 }
 
 let resetSpotify = async (ip) => {
-  return http.post(`http://${ip}:${serverPort}/reset-spotify`, null, null).then(res => res.json())
+  return http.post(`http://${ip}:${serverPort}/reset-spotify`, null, null)
+}
+
+let rebootDevice = async (ip) => {
+  return http.post(`http://${ip}:${serverPort}/reboot`, null, null)
 }
 
 let getBonjourServices = async (type) => {
   let response = await http.get(`http://${window.location.hostname}:${serverPort}/get-bonjour-services/${type}`)
 
-  if(response.error || response.status !== 200)
-    return { error: response.error || response.status }
+    if(response.error)
+      return { error: response.error }
+    
+    if(response.status !== 200)
+      return { error: response.status }
 
-  return response.json()
-}
+    return response.json()
+  }
 
 let getDeviceConfig = async (device, type) => {
   let response = await http.get(`http://${device.ip}:${serverPort}/get-config${type ? '/' + type : ''}`)
+
+  if(response.error)
+    return { error: response.error }
   
-  if(response.error || response.status !== 200)
-    return { error: response.error || response.status }
+  if(response.status !== 200)
+    return { error: response.status }
 
   return response.json()
 }
@@ -89,8 +99,11 @@ let getDeviceConfig = async (device, type) => {
 let getEq = async (ip) => {
   let response = await http.get(`http://${ip}:${serverPort}/get-eq`)
   
-  if(response.error || response.status !== 200)
-    return { error: response.error || response.status }
+  if(response.error)
+    return { error: response.error }
+  
+  if(response.status !== 200)
+    return { error: response.status }
 
   return response.json()
 }
@@ -103,6 +116,7 @@ module.exports.setEq = setEq
 module.exports.setEqFlat = setEqFlat
 module.exports.resetDevice = resetDevice
 module.exports.resetSpotify = resetSpotify
+module.exports.rebootDevice = rebootDevice
 module.exports.getBonjourServices = getBonjourServices
 module.exports.getDeviceConfig = getDeviceConfig
 module.exports.getEq = getEq

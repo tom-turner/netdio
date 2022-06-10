@@ -19,7 +19,6 @@ routes.post('/reset-spotify', () => {
 })
 
 routes.post('/reboot', () => {
-	console.log('rebooting')
 	return exec('sudo reboot')
 });
 

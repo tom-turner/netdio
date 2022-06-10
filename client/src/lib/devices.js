@@ -47,6 +47,8 @@ class Devices {
 
     removeDevice(service){
         return delete this.devices[this.hash(service.id)]
+        delete this.devices[this.hash(service.ip)]
+        return
     }
 
     addDevice(service, config){
