@@ -75,7 +75,7 @@ routes.get('/get-eq', async (req, res) => {
 		if(e.error)
 			return res.json({error: e.error})
 
-		res.json({ eq: e });
+		res.json(e);
 	})
 });
 
