@@ -25,7 +25,7 @@ class Devices {
                 deviceConfig.error ? console.log(2, deviceConfig.error ) : console.log() 
 
                 if(!deviceConfig || deviceConfig.error){
-                    if(!this.changed(service, deviceConfig))
+                    if(!this.exists(service))
                         return
 
                     this.removeDevice(service)
