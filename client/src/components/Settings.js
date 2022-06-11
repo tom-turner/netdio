@@ -51,26 +51,7 @@ export function ResetSpotify() {
 	)
 }
 
-export function DeviceSettings() {
-	let navigate = useNavigate()
-	let [ searchParams ] = useSearchParams()
-	let devicesContext = useContext(DevicesContext)
-	let ip = searchParams.get('ip')
-	let name = searchParams.get('name')
-
-	let config = []
-	Object.values(devicesContext).map((type, i)=>{
-		type.map((service, i) => {
-			if(service.ip === ip)
-				config[service.type] = service
-		})
-	})
-
-	if(!config)
-		return <Loading />
-
-
-	let Name = ({service}) => {
+let Name = ({service}) => {
 		let [clicked, setClicked] = useState(false) // clicked gets reset every time state updates, this might cause bugs if updates happen at the same time as user input. 
 
 		if(!clicked)
@@ -95,6 +76,25 @@ export function DeviceSettings() {
 		)
 	}
 
+export function DeviceSettings() {
+	let navigate = useNavigate()
+	let [ searchParams ] = useSearchParams()
+	let devicesContext = useContext(DevicesContext)
+	let ip = searchParams.get('ip')
+	let name = searchParams.get('name')
+
+	let config = []
+	Object.values(devicesContext).map((type, i)=>{
+		type.map((service, i) => {
+			if(service.ip === ip)
+				config[service.type] = service
+		})
+	})
+
+	if(!config)
+		return <Loading />
+
+
 	let services = Object.values(config).map((service, i)=>{
 		let key = Object.keys(config)[i]
 		return (
@@ -103,8 +103,7 @@ export function DeviceSettings() {
 					<Available className="fill-green-400 animate-pulse h-5 w-5 my-auto" />
 					<p className="my-auto">{service.type.toUpperCase()}</p>
 					<Name service={service} />
-				</div>
-			</div>
+				</div> </div>
 		)
 	})
 
@@ -169,11 +168,11 @@ export function SpotifySettings() {
 		<div>
 		<Header title="Settings" back="/settings" />
 			<p className="pt-4 px-4 font-bold text-xl">{name}</p>
-			<div className="text-base bg-white p-4 flex justify-between" onClick={ ()=>{  }}>
+			<div className="text-base border-b border-neutral-300 bg-white p-4 flex justify-between" onClick={ ()=>{  }}>
 				<div className="flex space-x-4 w-full">
 					<Available className="fill-green-400 animate-pulse h-5 w-5 my-auto" />
 					<p className="my-auto">Spotify</p>
-					<p>{name} </p>
+					<Name service={config}/>
 				</div>
 			</div>
 			<div className="flex flex-col">

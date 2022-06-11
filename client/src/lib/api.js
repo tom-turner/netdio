@@ -46,7 +46,7 @@ let setVolume = async (ip, value) => {
 }
 
 let setName = async (ip, type, value) => {
-  return http.post(`http://${ip}:${serverPort}/set-name/${type}`, null, JSON.stringify({ value: value })).then(res => res.json())
+  return http.post(`http://${ip}:${serverPort}/set-name`, null, JSON.stringify({ type: type, value: value })).then(res => res.json())
 }
 
 let setGroup = async (ip, value) => {

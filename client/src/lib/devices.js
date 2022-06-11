@@ -22,7 +22,7 @@ class Devices {
                 let deviceConfig = await getDeviceConfig(service, this.type)
 
                 // LOGGING -- encounters a weird bug the getDeviceConfig fetch error does not reach here sometimes, but not all. No idea what is going on.
-                deviceConfig.error ? console.log(2, deviceConfig.error ) : console.log() 
+                //deviceConfig.error ? console.log(2, deviceConfig.error ) : console.log() 
 
                 if(!deviceConfig || deviceConfig.error){
                     if(!this.exists(service))

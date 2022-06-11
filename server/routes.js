@@ -30,13 +30,8 @@ routes.post('/blink', async (req, res) => {
 	res.status(200).send()
 });
 
-routes.post('/set-name/rx', async (req, res) => {
-	config.set( 'rx.name' , req.body.value )
-	res.status(200).json({success: true})
-});
-
-routes.post('/set-name/tx', async (req, res) => {
-	config.set( 'tx.name' , req.body.value )
+routes.post('/set-name', async (req, res) => {
+	config.set( `${req.body.type}.name` , req.body.value )
 	res.status(200).json({success: true})
 });
 
