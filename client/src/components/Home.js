@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import { setReceiverSource, setVolume } from '../lib/api'
+import { getLin, getLog } from '../lib/controls'
 import { DevicesContext } from '../context/Devices'
 import { Header} from './Header'
 import { motion } from 'framer-motion'
@@ -20,7 +21,7 @@ let Zone = ({ receiver, inputOptions, handleInputChange, handleVolumeChange, sel
 		 		<Selector selected={selected} receiver={receiver} muted={muted} handleInputChange={handleInputChange} setSelected={setSelected} inputOptions={inputOptions} />
 		 	</div>
 		 	<div className="px-4 pb-4">
-		 		<input defaultValue={receiver.volume} type="range" className={`w-full`} onChange={ (e) => { handleVolumeChange({ ip: receiver.ip, value: e.target.value }) }} />
+		 		<input defaultValue={getLin(receiver.volume)} type="range" className={`w-full`} onChange={ (e) => { handleVolumeChange({ ip: receiver.ip, value: getLog(e.target.value) }) }} />
 		 	</div>
 		</div>
 	)	
