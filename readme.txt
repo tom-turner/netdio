@@ -1,9 +1,10 @@
-FEATURE REQUESTS :\
-- need to figure out why when a message is sent around the network it sends tonnes of copies of the message
-- EQ/Delay on audio output, pulse audio plugins or something\
-- music player, Spotify and loopback\
-- Can we get ROC latency down more? or replace ROC
--Can we get better touch screen pi performance
+TO CREATE A DEVICE CONFIG:
+    add the devices services you need to you .env file seperated by commas ','
+    this will tell the device which configs to setup on first run.  
+    e.g. SERVICES="rx,tx,spotify"
+
+
+If having issues starting the app try removing config.json and .env
 
 Usefull RPI links and install bits:
 
@@ -71,7 +72,7 @@ pactl unload-module $modulenumber
 https://brokkr.net/2018/05/24/down-the-drain-the-elusive-default-pulseaudio-sink/
 
 Alsa config 
-/etc/asound.conf
+~/.asoundrc
 
 Raspoitify on pulseaudio
 https://mathieu-requillart.medium.com/my-ultimate-guide-to-the-raspberry-pi-audio-server-i-wanted-spotify-ce549656af06
@@ -105,3 +106,51 @@ pcm.!default {
 }
 EOT
 # alsamixer -D equal
+
+
+
+Working ~/.asoundrc:
+
+pcm.!default {
+    type hw
+    card 0
+}
+ctl.!default{
+    type hw
+    card 1
+}
+pcm.librespot{
+    format S16_LE
+    rate 44100
+    type hw
+    card 0
+    device 0
+    subdevice 0
+}
+pcm.radio{
+    format S16_LE
+    rate 44100
+    type hw
+    card 0
+    device 0
+    subdevice 1
+}
+pcm.loopback{
+    format S16_LE
+    rate 44100
+    type hw
+    card 0
+    device 1
+}
+ctl.equal {
+    type equal
+}
+pcm.plugequal {
+  type equal;
+  slave.pcm "plughw:1,0";
+}
+pcm.adc {
+  type plug;
+  slave.pcm plugequal;
+}
+

@@ -1,11 +1,12 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path')
+const config = require('./config')
 const EventEmitter = require('events');
 const emitter = new EventEmitter();
 
 class Processes {
-  constructor(config) {
+  constructor() {
     this.config = config
     this.childProcesses = []
     this.file = "config/runningprocesses.json"
@@ -26,7 +27,7 @@ class Processes {
       return depreciated
   }
 
-  update(data){
+  set(data){
     this.kill(this.depreciated())
     this.childProcesses.push(data)
 
@@ -38,25 +39,31 @@ class Processes {
   get(value){
     return this.childProcesses.filter((item) => {
       if (value) {
-        return item.type == value || item.pid == value || item.ip == value
+        return item.type == value || item.pid == value || item.ref == value
       } else return true
     })
   }
 
   kill(array){
+    
+    if(array.length === 0)
+      return console.log('process not in array: likely already dead')
+
     for ( var obj of array) {
       this.childProcesses = this.childProcesses.filter((item) => {
         return item !== this.get(obj.pid)[0]
       })
       try { 
         process.kill(obj.pid)
-        console.log(obj.pid, 'killed')
+        console.log('killing old procesess:', obj.pid, 'killed')
       } catch {
-        console.log(obj.pid, 'process already dead')
+        console.log('killing old procesess:', obj.pid, 'process already dead')
       }
     }
   }
 
 }
 
-module.exports = Processes
+let processes = new Processes()
+
+module.exports = processes

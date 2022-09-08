@@ -1,4 +1,6 @@
 const fs = require('fs')
+const SHA256 = require("crypto-js/sha256");
+const configFile = 'config/config.json'
 
 function debounce(fn, timeout) {
   let interval = null
@@ -13,21 +15,30 @@ function debounce(fn, timeout) {
   }
 }
 
-
 class Configuration {
   constructor(configFile, type, debounceTimeout) {
     this.configFile = configFile
     this.debouncedSave = debounce(() => this.save(), debounceTimeout || 100)
   }
-  
 
+  getFirstRunConfig(){
+    let config = {}
+
+    if(process.env.SERVICES) {
+      for (let service of process.env.SERVICES.split(',')){
+        config[service] = {}
+      }
+    }
+
+    return config
+  }
 
   config() {
     if (!this.configObject)
       if (fs.existsSync(this.configFile))
         this.configObject = JSON.parse(fs.readFileSync(this.configFile))
       else
-        this.configObject = JSON.parse(fs.readFileSync("config/startupconfig.json"))
+        this.configObject = this.getFirstRunConfig()
 
     return this.configObject
   }
@@ -63,13 +74,7 @@ class Configuration {
   }
 
   hash(input){
-    let str = JSON.stringify(input)
-    let hash = ''
-    for (let i = 0; i < str.split('').length; i++) {
-      let char = str.slice(i,i+1)
-      hash = Number(char.charCodeAt(0)) + Number(hash) * i
-    }
-    return hash.toString().slice(-6)
+    return SHA256(input).toString()
   }
 
   getNewPort(){
@@ -85,4 +90,6 @@ class Configuration {
   }
 }
 
-module.exports = Configuration
+const config = new Configuration(configFile)
+
+module.exports = config
